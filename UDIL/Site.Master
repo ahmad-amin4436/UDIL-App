@@ -1,0 +1,606 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="UDIL.SiteMaster" %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Tester — PITC/UDIL/3.3-25029017</title>
+    <meta name="description" content="UDIL Release 33 automated compliance testing tool for AMI engineers at Pakistani DISCOs. Validates MDC/Head-End system compliance." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <style>
+        /* Command Progress Tracker Styles */
+        .progress-tracker {
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #333;
+            z-index: 1;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background: #dc3545;
+            width: 0%;
+            transition: width 1s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .stages-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        .stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .stage-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #1e1e1e;
+            border: 4px solid #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #6c757d;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stage.completed .stage-circle {
+            border-color: #6c757d;
+            background: #1e1e1e;
+            color: #6c757d;
+        }
+
+        .stage.active .stage-circle {
+            border-color: #6c757d;
+            background: #6c757d;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .stage.pending .stage-circle {
+            border-color: #6c757d;
+            background: #1e1e1e;
+            color: #6c757d;
+        }
+
+        .stage-circle i {
+            font-size: 1.5rem;
+        }
+
+        .stage-label {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #b0b0b0;
+            max-width: 120px;
+            line-height: 1.3;
+        }
+
+        .stage.completed .stage-label {
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .stage.active .stage-label {
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .stage-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #dc3545;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-card {
+            background: #1e1e1e;
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #333;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #dee2e6;
+            border-top: 2px solid #dc3545;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .status-details .row {
+            margin: 0;
+        }
+
+        .status-details .col-md-3 {
+            padding: 10px;
+            background: #252525;
+            border-radius: 8px;
+            margin: 0 5px 10px 0;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+            }
+        }
+
+        @keyframes fillStage {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stages-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .progress-line {
+                display: none;
+            }
+
+            .stage-circle {
+                width: 60px;
+                height: 60px;
+            }
+
+            .stage-label {
+                font-size: 0.8rem;
+                max-width: 150px;
+            }
+
+            .status-details .col-md-3 {
+                margin: 0 0 10px 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stage-circle {
+                width: 50px;
+                height: 50px;
+                font-size: 1rem;
+            }
+
+            .stage-circle i {
+                font-size: 1.2rem;
+            }
+
+            .stage-label {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Button Loading Spinner */
+        .btn-loading {
+            position: relative;
+            padding-left: 40px !important;
+            pointer-events: none;
+        }
+
+        .btn-loading::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #212529;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: #f8f9fa !important;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .navbar-brand {
+            color: #dc3545 !important;
+            font-weight: 600;
+        }
+        .sidebar {
+            background-color: #f8f9fa;
+            color: #212529;
+            height: 100vh;
+            position: fixed;
+            width: 280px;
+            left: 0;
+            top: 0;
+            padding-top: 70px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .sidebar .nav-link {
+            color: #495057;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 10px;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover {
+            color: #212529;
+            background-color: #e9ecef;
+        }
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: #dc3545;
+            box-shadow: 0 0 16px rgba(220,53,69,0.2);
+        }
+        .sidebar .sidebar-heading {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 20px 10px;
+        }
+        .main-content {
+            margin-left: 280px;
+            padding-top: 80px;
+            padding: 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            border-radius: 12px 12px 0 0;
+            font-weight: 600;
+        }
+        .table {
+            background-color: #ffffff;
+            color: #212529;
+        }
+        .table th {
+            background-color: #f8f9fa;
+            border-top: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table td {
+            border-color: #dee2e6;
+        }
+        .form-control, .form-select {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #212529;
+            border-radius: 8px;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: #dc3545;
+            color: #212529;
+            box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.25);
+        }
+        .btn-primary {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #bb2d3b;
+            border-color: #bb2d3b;
+        }
+        .btn-secondary {
+            background-color: #555;
+            border-color: #555;
+            border-radius: 8px;
+        }
+        .badge.bg-success {
+            background-color: #28a745 !important;
+        }
+        .badge.bg-danger {
+            background-color: #dc3545 !important;
+        }
+        .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #000;
+        }
+        .alert {
+            border-radius: 8px;
+        }
+        .section-header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                padding-top: 0;
+                min-height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding-top: 20px;
+            }
+            .navbar-toggler {
+                display: block;
+            }
+            .sidebar .nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .sidebar .nav-link {
+                margin: 2px;
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+        }
+        @media (max-width: 576px) {
+            .table-responsive {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body data-bs-theme="light">
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+        <asp:UpdatePanel ID="upMain" runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">UDIL Testing Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-person-circle"></i>Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-gear"></i>Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+                <div class="sidebar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard"><i class="bi bi-house-door"></i>Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#authorization"><i class="bi bi-shield-lock"></i>Authorization</a>
+                        </li>
+                        <li>
+                            <h6 class="sidebar-heading">Write Requests</h6>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#device-creation"><i class="bi bi-plus-circle"></i>Device Creation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#aux-relay-operations"><i class="bi bi-toggle-on"></i>Aux Relay Operations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#time-synchronization"><i class="bi bi-clock"></i>Time Synchronization</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#load-control"><i class="bi bi-lightning"></i>Load Control</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#load-shedding-scheduling"><i class="bi bi-calendar-x"></i>Load Shedding Scheduling</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#update-tou"><i class="bi bi-clock-history"></i>Update TOU</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="#update-ip-port"><i class="bi bi-gear"></i>Update IP/Port</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#meter-sampling"><i class="bi bi-sampling"></i>Meter Sampling</a>
+                        </li>
+                        <li>
+                            <h6 class="sidebar-heading">Read Requests</h6>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#instantaneous-data"><i class="bi bi-graph-up"></i>Instantaneous Data</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#billing-data"><i class="bi bi-receipt"></i>Billing Data</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#monthly-billing"><i class="bi bi-calendar"></i>Monthly Billing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#load-profile"><i class="bi bi-bar-chart"></i>Load Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#events"><i class="bi bi-exclamation-triangle"></i>Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#meter-visuals"><i class="bi bi-eye"></i>Meter Visuals</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#device-communication-history"><i class="bi bi-chat-dots"></i>Device Communication History</a>
+                        </li>
+
+                        <li>
+                            <h6 class="sidebar-heading">On-Demand APIs</h6>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#data-read"><i class="bi bi-cloud-download"></i>Data Read</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#parameter-read"><i class="bi bi-file-earmark-text"></i>Parameter Read</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#transaction-status"><i class="bi bi-check-circle"></i>Transaction Status</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#transaction-cancel"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#test-results-logs"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
+                        </li>
+                    </ul>
+                </div>
+                <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+                <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+        <!-- ═══════════════ MODAL & TOASTS ═══════════════ -->
+                        <div id="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:1060;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;">
+                            <div class="bg-dark text-light rounded shadow-lg" style="max-width:90vw;width:100%;max-height:90vh;overflow-y:auto;">
+                                <div class="d-flex justify-content-between align-items-center p-3 border-bottom border-secondary">
+                                    <span class="h5 mb-0" id="modal-ttl"></span>
+                                    <button type="button" class="btn-close btn-close-white" id="modal-close" aria-label="Close"></button>
+                                </div>
+                                <div class="p-3" id="modal-body"></div>
+                            </div>
+                        </div>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1050;">
+            <div id="toast-rack" aria-live="polite"></div>
+        </div>
+    </form>
+    <script>
+        // Handle navigation active state
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all nav links
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Prevent default if it's an anchor with #
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        
+                        // Smooth scroll to section if it exists
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+            
+            // Set Dashboard as active by default
+            const dashboardLink = document.querySelector('a[href="#dashboard"]');
+            if (dashboardLink) {
+                dashboardLink.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,688 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDIL Testing Portal</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* Custom dark theme polishing */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: #1e1e1e !important;
+            border-bottom: 1px solid #333;
+        }
+        .navbar-brand {
+            color: #4a90e2 !important;
+            font-weight: 600;
+        }
+        .sidebar {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            position: fixed;
+            width: 280px;
+            left: 0;
+            top: 0;
+            padding-top: 70px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+        }
+        .sidebar .nav-link {
+            color: #b0b0b0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 4px 10px;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover {
+            color: #ffffff;
+            background-color: #2a2a2a;
+        }
+        .sidebar .nav-link.active {
+            color: #ffffff;
+            background-color: #4a90e2;
+            box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+        }
+        .sidebar .sidebar-heading {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 20px 10px;
+        }
+        .main-content {
+            margin-left: 280px;
+            padding-top: 80px;
+            padding: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            background-color: #252525;
+            border-bottom: 1px solid #333;
+            border-radius: 12px 12px 0 0;
+            font-weight: 600;
+        }
+        .table {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        .table th {
+            background-color: #252525;
+            border-top: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table td {
+            border-color: #333;
+        }
+        .form-control, .form-select {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            border-radius: 8px;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #2a2a2a;
+            border-color: #4a90e2;
+            color: #e0e0e0;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+        .btn-primary {
+            background-color: #4a90e2;
+            border-color: #4a90e2;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #357abd;
+            border-color: #357abd;
+        }
+        .btn-secondary {
+            background-color: #555;
+            border-color: #555;
+            border-radius: 8px;
+        }
+        .badge.bg-success {
+            background-color: #28a745 !important;
+        }
+        .badge.bg-danger {
+            background-color: #dc3545 !important;
+        }
+        .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #000;
+        }
+        .alert {
+            border-radius: 8px;
+        }
+        .section-header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                padding-top: 0;
+                min-height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+                padding-top: 20px;
+            }
+            .navbar-toggler {
+                display: block;
+            }
+            .sidebar .nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            .sidebar .nav-link {
+                margin: 2px;
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+        }
+        @media (max-width: 576px) {
+            .table-responsive {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">UDIL Testing Portal</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-person-circle"></i> Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#dashboard"><i class="bi bi-house-door"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#authorization"><i class="bi bi-shield-lock"></i> Authorization</a>
+            </li>
+            <li>
+                <h6 class="sidebar-heading">Read Requests</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#instantaneous-data"><i class="bi bi-graph-up"></i> Instantaneous Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#billing-data"><i class="bi bi-receipt"></i> Billing Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#monthly-billing"><i class="bi bi-calendar"></i> Monthly Billing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#load-profile"><i class="bi bi-bar-chart"></i> Load Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#events"><i class="bi bi-exclamation-triangle"></i> Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#meter-visuals"><i class="bi bi-eye"></i> Meter Visuals</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#device-communication-history"><i class="bi bi-chat-dots"></i> Device Communication History</a>
+            </li>
+            <li>
+                <h6 class="sidebar-heading">Write Requests</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#aux-relay-operations"><i class="bi bi-toggle-on"></i> Aux Relay Operations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#time-synchronization"><i class="bi bi-clock"></i> Time Synchronization</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#load-control"><i class="bi bi-lightning"></i> Load Control</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#load-shedding-scheduling"><i class="bi bi-calendar-x"></i> Load Shedding Scheduling</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#update-tou"><i class="bi bi-clock-history"></i> Update TOU</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#device-creation"><i class="bi bi-plus-circle"></i> Device Creation</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#update-ip-port"><i class="bi bi-gear"></i> Update IP/Port</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#meter-sampling"><i class="bi bi-sampling"></i> Meter Sampling</a>
+            </li>
+            <li>
+                <h6 class="sidebar-heading">On-Demand APIs</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#data-read"><i class="bi bi-cloud-download"></i> Data Read</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#parameter-read"><i class="bi bi-file-earmark-text"></i> Parameter Read</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#transaction-status"><i class="bi bi-check-circle"></i> Transaction Status</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#transaction-cancel"><i class="bi bi-x-circle"></i> Transaction Cancel</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#test-results-logs"><i class="bi bi-journal-text"></i> Test Results / Logs</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <!-- Dashboard Section -->
+            <section id="dashboard">
+                <h2 class="section-header">Dashboard</h2>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-activity"></i> System Status</h5>
+                                <p class="card-text">All systems operational.</p>
+                                <span class="badge bg-success">Online</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-play-circle"></i> Active Tests</h5>
+                                <p class="card-text">5 tests running.</p>
+                                <span class="badge bg-warning">In Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-clock-history"></i> Recent Logs</h5>
+                                <p class="card-text">Last update: 2026-04-07</p>
+                                <span class="badge bg-info">Updated</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Authorization Section -->
+            <section id="authorization">
+                <h2 class="section-header">Authorization</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-shield-lock"></i> API Authorization
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="apiKey" class="form-label">API Key / Token</label>
+                                    <input type="text" class="form-control" id="apiKey" placeholder="Enter your API key or token">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="deviceId" class="form-label">Device ID</label>
+                                    <input type="text" class="form-control" id="deviceId" placeholder="Enter device identifier">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Authorize</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Instantaneous Data Section -->
+            <section id="instantaneous-data">
+                <h2 class="section-header">Instantaneous Data</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-graph-up"></i> Real-time Meter Data
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="voltageA" class="form-label">Voltage Phase A (V)</label>
+                                    <input type="number" step="0.01" class="form-control" id="voltageA" placeholder="230.5">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="voltageB" class="form-label">Voltage Phase B (V)</label>
+                                    <input type="number" step="0.01" class="form-control" id="voltageB" placeholder="231.2">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="voltageC" class="form-label">Voltage Phase C (V)</label>
+                                    <input type="number" step="0.01" class="form-control" id="voltageC" placeholder="229.8">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="currentA" class="form-label">Current Phase A (A)</label>
+                                    <input type="number" step="0.01" class="form-control" id="currentA" placeholder="15.3">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="currentB" class="form-label">Current Phase B (A)</label>
+                                    <input type="number" step="0.01" class="form-control" id="currentB" placeholder="14.8">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="currentC" class="form-label">Current Phase C (A)</label>
+                                    <input type="number" step="0.01" class="form-control" id="currentC" placeholder="16.1">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="frequency" class="form-label">Frequency (Hz)</label>
+                                    <input type="number" step="0.01" class="form-control" id="frequency" placeholder="50.0">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="powerFactor" class="form-label">Power Factor</label>
+                                    <input type="number" step="0.001" min="0" max="1" class="form-control" id="powerFactor" placeholder="0.95">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <label for="aggregatePower" class="form-label">Aggregate Power (kW)</label>
+                                    <input type="number" step="0.01" class="form-control" id="aggregatePower" placeholder="5.2">
+                                </div>
+                                <div class="col-lg-6 mb-3">
+                                    <label for="timestamp" class="form-label">Timestamp</label>
+                                    <input type="datetime-local" class="form-control" id="timestamp">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Data</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                        <hr>
+                        <h5>Data Preview</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Voltage A (V)</th>
+                                        <th>Voltage B (V)</th>
+                                        <th>Voltage C (V)</th>
+                                        <th>Current A (A)</th>
+                                        <th>Current B (A)</th>
+                                        <th>Current C (A)</th>
+                                        <th>Frequency (Hz)</th>
+                                        <th>Power Factor</th>
+                                        <th>Aggregate Power (kW)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2026-04-07 10:00:00</td>
+                                        <td>230.5</td>
+                                        <td>231.2</td>
+                                        <td>229.8</td>
+                                        <td>15.3</td>
+                                        <td>14.8</td>
+                                        <td>16.1</td>
+                                        <td>50.0</td>
+                                        <td>0.95</td>
+                                        <td>5.2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-04-07 10:01:00</td>
+                                        <td>231.0</td>
+                                        <td>230.8</td>
+                                        <td>230.1</td>
+                                        <td>14.9</td>
+                                        <td>15.2</td>
+                                        <td>15.7</td>
+                                        <td>50.0</td>
+                                        <td>0.96</td>
+                                        <td>5.1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Billing Data Section -->
+            <section id="billing-data">
+                <h2 class="section-header">Billing Data</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-receipt"></i> Tariff-Based Energy Data
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="t1Energy" class="form-label">T1 Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="t1Energy" placeholder="500.25">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="t2Energy" class="form-label">T2 Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="t2Energy" placeholder="300.50">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="t3Energy" class="form-label">T3 Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="t3Energy" placeholder="200.75">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="t4Energy" class="form-label">T4 Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="t4Energy" placeholder="150.00">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="importEnergy" class="form-label">Import Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="importEnergy" placeholder="1151.50">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="exportEnergy" class="form-label">Export Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="exportEnergy" placeholder="0.00">
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="absoluteEnergy" class="form-label">Absolute Energy (kWh)</label>
+                                    <input type="number" step="0.01" class="form-control" id="absoluteEnergy" placeholder="1151.50">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Billing Data</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                        <hr>
+                        <h5>Billing Data Preview</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Billing Period</th>
+                                        <th>T1 (kWh)</th>
+                                        <th>T2 (kWh)</th>
+                                        <th>T3 (kWh)</th>
+                                        <th>T4 (kWh)</th>
+                                        <th>Import (kWh)</th>
+                                        <th>Export (kWh)</th>
+                                        <th>Absolute (kWh)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2026-03</td>
+                                        <td>450.25</td>
+                                        <td>280.50</td>
+                                        <td>180.75</td>
+                                        <td>120.00</td>
+                                        <td>1031.50</td>
+                                        <td>0.00</td>
+                                        <td>1031.50</td>
+                                        <td><span class="badge bg-success">Billed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-04</td>
+                                        <td>500.25</td>
+                                        <td>300.50</td>
+                                        <td>200.75</td>
+                                        <td>150.00</td>
+                                        <td>1151.50</td>
+                                        <td>0.00</td>
+                                        <td>1151.50</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Write Commands Example -->
+            <section id="aux-relay-operations">
+                <h2 class="section-header">Aux Relay Operations</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-toggle-on"></i> Relay Control Command
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="commandType" class="form-label">Command Type</label>
+                                    <select class="form-select" id="commandType">
+                                        <option selected>Choose command</option>
+                                        <option value="turn-on">Turn On</option>
+                                        <option value="turn-off">Turn Off</option>
+                                        <option value="toggle">Toggle</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="relayId" class="form-label">Relay ID</label>
+                                    <input type="text" class="form-control" id="relayId" placeholder="Enter relay identifier">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Execute Command</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transaction Status Section -->
+            <section id="transaction-status">
+                <h2 class="section-header">Transaction Status</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-check-circle"></i> Check Transaction Status
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="transactionId" class="form-label">Transaction ID</label>
+                                <input type="text" class="form-control" id="transactionId" placeholder="Enter transaction ID">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Check Status</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                        <hr>
+                        <h5>Transaction History</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Command</th>
+                                        <th>Status</th>
+                                        <th>Timestamp</th>
+                                        <th>Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>TXN001</td>
+                                        <td>Data Read</td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>2026-04-07 09:00:00</td>
+                                        <td>Success</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TXN002</td>
+                                        <td>Relay Operation</td>
+                                        <td><span class="badge bg-danger">Failed</span></td>
+                                        <td>2026-04-07 09:05:00</td>
+                                        <td>Timeout</td>
+                                    </tr>
+                                    <tr>
+                                        <td>TXN003</td>
+                                        <td>Billing Query</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>2026-04-07 09:10:00</td>
+                                        <td>Processing</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Test Results / Logs Section -->
+            <section id="test-results-logs">
+                <h2 class="section-header">Test Results / Logs</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-journal-text"></i> Testing Logs
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Test logs are displayed below. Refresh to update.
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Test Case</th>
+                                        <th>Status</th>
+                                        <th>Duration (ms)</th>
+                                        <th>Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2026-04-07 08:00:00</td>
+                                        <td>Authorization Test</td>
+                                        <td><span class="badge bg-success">Pass</span></td>
+                                        <td>1250</td>
+                                        <td>Token validated successfully</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-04-07 08:05:00</td>
+                                        <td>Instantaneous Data Read</td>
+                                        <td><span class="badge bg-success">Pass</span></td>
+                                        <td>890</td>
+                                        <td>Data retrieved successfully</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-04-07 08:10:00</td>
+                                        <td>Billing Data Query</td>
+                                        <td><span class="badge bg-danger">Fail</span></td>
+                                        <td>5000</td>
+                                        <td>Connection timeout</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-04-07 08:15:00</td>
+                                        <td>Relay Operation</td>
+                                        <td><span class="badge bg-warning">Pending</span></td>
+                                        <td>-</td>
+                                        <td>Command queued</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Placeholder for other sections -->
+            <section id="monthly-billing">
+                <h2 class="section-header">Monthly Billing</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <p>Monthly billing data forms and tables will be implemented here.</p>
+                    </div>
+                </div>
+            </section>
+            <!-- Add similar placeholders for other sections as needed -->
+        </div>
+    </div>
+</body>
+</html>

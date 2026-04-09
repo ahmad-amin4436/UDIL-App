@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UDIL Compliance Tester — PITC/UDIL/3.3-25029017</title>
+  <meta name="description"
+    content="UDIL Release 33 automated compliance testing tool for AMI engineers at Pakistani DISCOs. Validates MDC/Head-End system compliance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link runat="server" rel="stylesheet" href="udil-tester.css">
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+            <rect width="34" height="34" rx="9" fill="rgba(0,212,170,0.12)" />
+            <path d="M9 22 L17 9 L25 22" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" fill="none" />
+            <line x1="12" y1="22" x2="22" y2="22" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round" />
+            <circle cx="17" cy="26" r="2" fill="#00d4aa" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">UDIL Tester</span>
+          <span class="brand-ver">PITC/UDIL/3.3</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-section="config" id="nav-config">
+          <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg></span>
+          <span class="nav-label">Configuration</span>
+          <span class="nav-dot" id="nav-dot-config"></span>
+        </button>
+
+        <button class="nav-item" data-section="read" id="nav-read">
+          <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg></span>
+          <span class="nav-label">Read Tests</span>
+          <span class="nav-badge" id="nbadge-read"></span>
+        </button>
+
+        <button class="nav-item" data-section="write" id="nav-write">
+          <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg></span>
+          <span class="nav-label">Write Tests</span>
+          <span class="nav-badge" id="nbadge-write"></span>
+        </button>
+
+        <button class="nav-item" data-section="ondemand" id="nav-ondemand">
+          <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10 8 16 12 10 16 10 8" />
+            </svg></span>
+          <span class="nav-label">On-Demand</span>
+          <span class="nav-badge" id="nbadge-ondemand"></span>
+        </button>
+
+        <button class="nav-item" data-section="report" id="nav-report">
+          <span class="nav-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg></span>
+          <span class="nav-label">Test Report</span>
+          <span class="nav-badge" id="nbadge-report"></span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <label class="mock-toggle" for="toggle-mock">
+          <div class="mock-toggle-left">
+            <span class="mock-icon">⚡</span>
+            <span class="mock-text">Mock Mode</span>
+          </div>
+          <div class="toggle-track">
+            <input type="checkbox" id="toggle-mock" checked>
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+        <div class="footer-info">
+          <span>AMI Testing Tool</span><span>v3.3.0</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" id="menu-btn" aria-label="Toggle sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <h1 class="page-title" id="page-title">Configuration</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="auth-pill" id="auth-pill">
+            <span class="auth-dot" id="auth-dot"></span>
+            <span id="auth-text">Not Connected</span>
+          </div>
+          <div class="token-pill" id="token-pill" style="display:none">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span id="token-time">30:00</span>
+          </div>
+          <div class="mock-pill" id="mock-pill">MOCK</div>
+        </div>
+      </header>
+
+      <main class="content-area">
+        <section class="section active" id="section-config"></section>
+        <section class="section" id="section-read"></section>
+        <section class="section" id="section-write"></section>
+        <section class="section" id="section-ondemand"></section>
+        <section class="section" id="section-report"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MODAL ═══════════════ -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box" id="modal-box">
+      <div class="modal-hdr">
+        <span class="modal-ttl" id="modal-ttl">Details</span>
+        <button class="modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TOASTS ═══════════════ -->
+  <div class="toast-rack" id="toast-rack" aria-live="polite"></div>
+
+  <script src="udil-tester.js"></script>
+  <script src="udil-app.js"></script>
+</body>
+
+</html>
