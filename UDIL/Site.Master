@@ -16,6 +16,44 @@
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <style>
+.tracker-step {
+    flex: 1;
+    position: relative;
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.tracker-step::before {
+    content: "";
+    display: block;
+    margin: 0 auto 8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #dee2e6;
+}
+
+.tracker-step.active {
+    color: #00dd2c;
+}
+
+.tracker-step.active::before {
+    background: #00dd2c;
+    transform: scale(1.2);
+    box-shadow: 0 0 8px rgba(108,117,125,0.3);
+}
+
+.tracker-step.completed {
+    color: #dc3545;
+}
+
+.tracker-step.completed::before {
+    background: #dc3545;
+    box-shadow: 0 0 6px rgba(220,53,69,0.3);
+}
+</style>
+    <style>
         /* Command Progress Tracker Styles */
         .progress-tracker {
             position: relative;
@@ -479,7 +517,7 @@
                             <h6 class="sidebar-heading">Write Requests</h6>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#device-creation"><i class="bi bi-plus-circle"></i>Device Creation</a>
+                            <a class="nav-link" runat="server" href="~/Pages/DeviceCreation.aspx"><i class="bi bi-plus-circle"></i>Device Creation</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#aux-relay-operations"><i class="bi bi-toggle-on"></i>Aux Relay Operations</a>

@@ -2,44 +2,7 @@
    CodeBehind="Default.aspx.cs" Inherits="UDIL._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-   <style>
-.tracker-step {
-    flex: 1;
-    position: relative;
-    font-size: 12px;
-    color: #6c757d;
-    font-weight: 500;
-}
-
-.tracker-step::before {
-    content: "";
-    display: block;
-    margin: 0 auto 8px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #dee2e6;
-}
-
-.tracker-step.active {
-    color: #00dd2c;
-}
-
-.tracker-step.active::before {
-    background: #00dd2c;
-    transform: scale(1.2);
-    box-shadow: 0 0 8px rgba(108,117,125,0.3);
-}
-
-.tracker-step.completed {
-    color: #dc3545;
-}
-
-.tracker-step.completed::before {
-    background: #dc3545;
-    box-shadow: 0 0 6px rgba(220,53,69,0.3);
-}
-</style>
+   
     <div class="main-content">
         <div class="container-fluid">
             <section id="dashboard">
@@ -75,6 +38,83 @@
                 </div>
             </section>
 
+            <section id="configuration">
+                <h2 class="section-header">Configuration</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-gear"></i> API Configuration
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="txtBaseUrl" class="form-label">Base URL of APIs</label>
+                                <asp:TextBox ID="txtBaseUrl" runat="server" Text="http://116.58.46.245:4050/UIP" CssClass="form-control" placeholder="Enter base URL"></asp:TextBox>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="txtConfigName" class="form-label">Configuration Name</label>
+                                <asp:TextBox ID="txtConfigName" runat="server" CssClass="form-control" placeholder="Enter configuration name"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="ddlSavedConfigs" class="form-label">Saved Configurations</label>
+                                <asp:DropDownList ID="ddlSavedConfigs" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlSavedConfigs_SelectedIndexChanged">
+                                    <asp:ListItem Text="-- Select Configuration --" Value=""></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="txtTimeout" class="form-label">Timeout (seconds)</label>
+                                <asp:TextBox ID="txtTimeout" runat="server" Text="60" CssClass="form-control" placeholder="Enter timeout in seconds"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <h6 class="text-primary">Database Configuration</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="txtDbServer" class="form-label">Database Server</label>
+                                <asp:TextBox ID="txtDbServer" runat="server" Text="116.58.46.245" CssClass="form-control" placeholder="Database server IP"></asp:TextBox>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="txtDbPort" class="form-label">Port</label>
+                                <asp:TextBox ID="txtDbPort" runat="server" Text="4000" CssClass="form-control" placeholder="Port"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="txtDbName" class="form-label">Database Name</label>
+                                <asp:TextBox ID="txtDbName" runat="server" Text="udil33" CssClass="form-control" placeholder="Database name"></asp:TextBox>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="txtDbUid" class="form-label">Username</label>
+                                <asp:TextBox ID="txtDbUid" runat="server" Text="accurate" CssClass="form-control" placeholder="Database username"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="txtDbPwd" class="form-label">Password</label>
+                                <asp:TextBox ID="txtDbPwd" runat="server" Text="Accurate@123" CssClass="form-control" placeholder="Database password"></asp:TextBox>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="txtDbProvider" class="form-label">Provider</label>
+                                <asp:TextBox ID="txtDbProvider" runat="server" Text="MySql.Data.MySqlClient" CssClass="form-control" placeholder="Database provider"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <asp:Button ID="btnSaveConfig" runat="server" Text="Save Configuration" CssClass="btn btn-success me-2" OnClick="btnSaveConfig_Click" />
+                                <asp:Button ID="btnLoadConfig" runat="server" Text="Load Configuration" CssClass="btn btn-info me-2" OnClick="btnLoadConfig_Click" />
+                                <asp:Button ID="btnDeleteConfig" runat="server" Text="Delete Configuration" CssClass="btn btn-danger me-2" OnClick="btnDeleteConfig_Click" />
+                                <asp:Button ID="btnApplyConfig" runat="server" Text="Apply Configuration" CssClass="btn btn-primary" OnClick="btnApplyConfig_Click" />
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <asp:Label ID="lblConfigMessage" runat="server" CssClass="text-info"></asp:Label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="authorization">
                 <h2 class="section-header">Authorization</h2>
                 <div class="card">
@@ -89,7 +129,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="txtPassword" class="form-label">Password</label>
-                                <asp:TextBox ID="txtPassword" runat="server" Text="Hello@123" TextMode="Password" CssClass="form-control" placeholder="Enter password"></asp:TextBox>
+                                <asp:TextBox ID="txtPassword" runat="server" Text="Helloaccurate@987"  CssClass="form-control" placeholder="Enter password"></asp:TextBox>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="txtCode" class="form-label">Code</label>
@@ -105,183 +145,7 @@
                 </div>
             </section>
 
-            <section id="device-creation">
-                <h2 class="section-header">Device Creation</h2>
-                <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-plus-circle"></i> Device Creation
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcTransactionId" runat="server" AssociatedControlID="dcTransactionId" CssClass="form-label" Text="Transaction ID"></asp:Label>
-                                <asp:TextBox ID="dcTransactionId" runat="server" CssClass="form-control" placeholder="createdevice1959" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcPrivateKey" runat="server" AssociatedControlID="dcPrivateKey" CssClass="form-label" Text="Private Key"></asp:Label>
-                                <asp:TextBox ID="dcPrivateKey" runat="server" CssClass="form-control" placeholder="private key from session" Enabled="false" />
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <asp:Label ID="lblDcDeviceIdentity" runat="server" AssociatedControlID="dcDeviceIdentity" CssClass="form-label" Text="Device Identity JSON"></asp:Label>
-                                <asp:TextBox ID="dcDeviceIdentity" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3">[{"dsn":"2998999997","global_device_id":"m98999997"}]</asp:TextBox>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcRequestDateTime" runat="server" AssociatedControlID="dcRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="dcRequestDateTime" runat="server" Text="2024-06-27 11:29:00" CssClass="form-control" placeholder="2024-06-27 11:29:00" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcDeviceType" runat="server" AssociatedControlID="dcDeviceType" CssClass="form-label" Text="Device Type"></asp:Label>
-                                <asp:DropDownList ID="dcDeviceType" runat="server" CssClass="form-select">
-                                    <asp:ListItem Value="1">1 - Meter</asp:ListItem>
-                                    <asp:ListItem Value="2">2 - DCU</asp:ListItem>
-                                    <asp:ListItem Value="3">3 - APMS</asp:ListItem>
-                                    <asp:ListItem Value="4">4 - Grid meter</asp:ListItem>
-                                    <asp:ListItem Value="5">5 - Others</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <asp:Label ID="lblDcMdiResetDate" runat="server" AssociatedControlID="dcMdiResetDate" CssClass="form-label" Text="MDI Reset Date"></asp:Label>
-                                <asp:TextBox ID="dcMdiResetDate" runat="server" CssClass="form-control" TextMode="Number" placeholder="19" />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <asp:Label ID="lblDcMdiResetTime" runat="server" AssociatedControlID="dcMdiResetTime" CssClass="form-label" Text="MDI Reset Time"></asp:Label>
-                                <asp:TextBox ID="dcMdiResetTime" runat="server" CssClass="form-control" TextMode="Time"  />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <asp:Label ID="lblDcBidirectionalDevice" runat="server" AssociatedControlID="dcBidirectionalDevice" CssClass="form-label" Text="Bidirectional Device"></asp:Label>
-                                <asp:DropDownList ID="dcBidirectionalDevice" runat="server" CssClass="form-select">
-                                    <asp:ListItem Value="0">0 - False</asp:ListItem>
-                                    <asp:ListItem Value="1">1 - True</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcSimNumber" runat="server" AssociatedControlID="dcSimNumber" CssClass="form-label" Text="SIM Number"></asp:Label>
-                                <asp:TextBox ID="dcSimNumber" runat="server" CssClass="form-control" Text="03464436525"  placeholder="03464436525" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcSimId" runat="server" AssociatedControlID="dcSimId" CssClass="form-label" Text="SIM ID"></asp:Label>
-                                <asp:TextBox ID="dcSimId" runat="server" CssClass="form-control" Text="899204390623445447" placeholder="899204390623445447" />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <asp:Label ID="lblDcPhase" runat="server" AssociatedControlID="dcPhase" CssClass="form-label" Text="Phase"></asp:Label>
-                                <asp:DropDownList ID="dcPhase" runat="server" CssClass="form-select">
-                                    <asp:ListItem Value="1">1 - Single</asp:ListItem>
-                                    <asp:ListItem Value="2">2 - Other</asp:ListItem>
-                                    <asp:ListItem Value="3">3 - Three-phase</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <asp:Label ID="lblDcMeterType" runat="server" AssociatedControlID="dcMeterType" CssClass="form-label" Text="Meter Type"></asp:Label>
-                                <asp:DropDownList ID="dcMeterType" runat="server" CssClass="form-select">
-                                    <asp:ListItem Value="1">1 - Normal</asp:ListItem>
-                                    <asp:ListItem Value="2">2 - Whole Current</asp:ListItem>
-                                    <asp:ListItem Value="3">3 - CTO</asp:ListItem>
-                                    <asp:ListItem Value="4">4 - CTPT</asp:ListItem>
-                                    <asp:ListItem Value="5">5 - Other</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <asp:Label ID="lblDcCommunicationMode" runat="server" AssociatedControlID="dcCommunicationMode" CssClass="form-label" Text="Communication Mode"></asp:Label>
-                                <asp:DropDownList ID="dcCommunicationMode" runat="server" CssClass="form-select">
-                                    <asp:ListItem Value="1">1 - GPRS/3G/4G</asp:ListItem>
-                                    <asp:ListItem Value="2">2 - RF</asp:ListItem>
-                                    <asp:ListItem Value="3">3 - PLC</asp:ListItem>
-                                    <asp:ListItem Value="4">4 - Ethernet</asp:ListItem>
-                                    <asp:ListItem Value="5">5 - Other</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcCommunicationType" runat="server" AssociatedControlID="dcCommunicationType" CssClass="form-label" Text="Communication Type"></asp:Label>
-                                <asp:DropDownList ID="dcCommunicationType" runat="server" CssClass="form-select">
-                                    <asp:ListItem Value="1">1 - Mode-I / Non-Keepalive</asp:ListItem>
-                                    <asp:ListItem Value="2">2 - Mode-II / Keep-alive</asp:ListItem>
-                                </asp:DropDownList>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcCommunicationInterval" runat="server" AssociatedControlID="dcCommunicationInterval" CssClass="form-label" Text="Communication Interval"></asp:Label>
-                                <asp:TextBox ID="dcCommunicationInterval" runat="server" CssClass="form-control" TextMode="Number" placeholder="30" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblDcInitialCommunicationTime" runat="server" AssociatedControlID="dcInitialCommunicationTime" CssClass="form-label" Text="Initial Communication Time"></asp:Label>
-                                <asp:TextBox ID="dcInitialCommunicationTime" runat="server" CssClass="form-control" TextMode="Time" Text="00:00:00" />
-                            </div>
-                        </div>
-                        <div class="position-relative d-inline-block">
-    <asp:Button 
-        ID="btnDeviceCreation" 
-        runat="server" 
-        CssClass="btn btn-primary" 
-        Text="Send Device Creation" 
-        OnClick="btnDeviceCreation_Click"
-        OnClientClick="showDeviceCreationLoading(this); return true;" />
-        
-    <span id="deviceCreationSpinner" 
-          class="position-absolute top-50 start-50 translate-middle" 
-          style="display:none;">
-        <span class="spinner-border spinner-border-sm"></span>
-    </span>
-</div>
-                        <button type="reset" class="btn btn-secondary ms-2">Reset</button>
-                        <asp:Label ID="lblDeviceCreationMessage" runat="server" CssClass="mt-3 d-block"></asp:Label>
-                    </div>
-                </div>
-                
-              <asp:UpdatePanel ID="updTracker" runat="server">
-    <ContentTemplate>
-
-        <asp:Panel ID="pnlTracker" runat="server" Visible="false" CssClass="card shadow-sm border-0 mt-4">
-
-            <div class="card-header border-0">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-0">Device Creation Tracker</h5>   
-                        <small class="text-muted">
-                            Transaction: <asp:Label ID="lblTrackerTransactionId" runat="server" />
-                        </small>
-                    </div>
-                    <asp:Label ID="lblStage" runat="server" CssClass="badge bg-info px-3 py-2" />
-                </div>
-            </div>
-
-            <div class="card-body">
-
-                <!-- Progress Bar -->
-                <div class="progress mb-4" style="height:6px;">
-                    <asp:Panel ID="progressBar" runat="server"
-                        CssClass="progress-bar bg-primary"
-                        Style="width:0%">
-                    </asp:Panel>
-                </div>
-
-                <!-- Steps -->
-                <div class="d-flex justify-content-between text-center">
-
-                    <asp:Label ID="step0" runat="server" CssClass="tracker-step">Waiting</asp:Label>
-                    <asp:Label ID="step1" runat="server" CssClass="tracker-step">Start</asp:Label>
-                    <asp:Label ID="step2" runat="server" CssClass="tracker-step">Request Sent</asp:Label>
-                    <asp:Label ID="step3" runat="server" CssClass="tracker-step">Connected</asp:Label>
-                    <asp:Label ID="step4" runat="server" CssClass="tracker-step">Command Sent</asp:Label>
-                    <asp:Label ID="step5" runat="server" CssClass="tracker-step">Completed</asp:Label>
-
-                </div>
-
-                <!-- Description -->
-                <div class="mt-4 text-center">
-                    <asp:Label ID="lblStageDescription" runat="server" CssClass="text-muted" />
-                </div>
-
-            </div>
-        </asp:Panel>
-
-        <asp:Timer ID="timerTracker" runat="server" Interval="2000"
-            OnTick="timerTracker_Tick" Enabled="false" />
-
-    </ContentTemplate>
-    <Triggers>
-        <asp:AsyncPostBackTrigger ControlID="btnDeviceCreation" EventName="Click" />
-    </Triggers>
-</asp:UpdatePanel>
-            </section>
+           
 
             <section id="instantaneous-data">
                 <h2 class="section-header">Instantaneous Data</h2>
@@ -631,69 +495,3 @@
     
 </asp:Content>
 
-<asp:Content ID="ScriptsContent" ContentPlaceHolderID="ScriptsContent" runat="server">
-    <script>
-function showDeviceCreationLoading(button) {
-    if (!button) return;
-
-    const spinner = document.getElementById('deviceCreationSpinner');
-
-    // Show spinner and change text immediately
-    if (spinner) {
-        spinner.style.display = 'inline-block';
-    }
-
-    // Change text
-    const originalText = button.value;
-    button.value = 'Sending...';
-
-    // store original text
-    button.setAttribute('data-original-text', originalText);
-
-    // Don't disable button immediately - let server handle it
-    // This ensures the server-side event fires properly
-    return true;
-}
-
-// Function to disable button after successful processing
-function disableDeviceCreationButton() {
-    const button = document.getElementById('<%= btnDeviceCreation.ClientID %>');
-    const spinner = document.getElementById('deviceCreationSpinner');
-            
-
-    if (button) {
-        button.disabled = true;
-        button.style.opacity = '0.7';
-        button.style.cursor = 'not-allowed';
-        
-        // Keep "Sending..." text to show completion
-        button.value = 'Processing...';
-    }
-    
-    if (spinner) {
-        spinner.style.display = 'inline-block';
-    }
-}
-
-// Optional reset function
-function resetDeviceCreationLoading() {
-    const button = document.getElementById('<%= btnDeviceCreation.ClientID %>');
-    const spinner = document.getElementById('deviceCreationSpinner');
-
-    if (button) {
-        button.disabled = false;
-        button.style.opacity = '1';
-        button.style.cursor = 'pointer';
-
-        const originalText = 'Send Device Creation';
-        if (originalText) {
-            button.value = originalText;
-        }
-    }
-
-    if (spinner) {
-        spinner.style.display = 'none';
-    }
-}
-</script>
-</asp:Content>

@@ -9,6 +9,8 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using UDIL.DAL;
+using UDIL.Common;
 
 namespace UDIL
 {
@@ -20,9 +22,29 @@ namespace UDIL
         protected Label lblAuthMessage;
         protected Button btnAuthorize;
 
+        // Configuration controls
+        protected TextBox txtBaseUrl;
+        protected TextBox txtConfigName;
+        protected TextBox txtTimeout;
+        protected DropDownList ddlSavedConfigs;
+        protected Button btnSaveConfig;
+        protected Button btnLoadConfig;
+        protected Button btnDeleteConfig;
+        protected Button btnApplyConfig;
+        protected Label lblConfigMessage;
+
+        // Database configuration controls
+        protected TextBox txtDbServer;
+        protected TextBox txtDbPort;
+        protected TextBox txtDbName;
+        protected TextBox txtDbUid;
+        protected TextBox txtDbPwd;
+        protected TextBox txtDbProvider;
+
         protected TextBox dcTransactionId;
         protected TextBox dcPrivateKey;
-        protected TextBox dcDeviceIdentity;
+        protected TextBox dcDsn;
+        protected TextBox dcGlobalDeviceId;
         protected TextBox dcRequestDateTime;
         protected DropDownList dcDeviceType;
         protected TextBox dcMdiResetDate;
@@ -42,10 +64,13 @@ namespace UDIL
         protected void Page_Load(object sender, EventArgs e)
         {
             // Handle AJAX requests for transaction status
-            if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
+            
+
+            // Initialize configuration dropdown if not postback
+            if (!IsPostBack)
             {
-                HandleTransactionStatusRequest();
-                return;
+                LoadConfigurations();
+                LoadCurrentConfiguration();
             }
 
             if (!IsPostBack)
@@ -55,56 +80,13 @@ namespace UDIL
                 {
                     dcPrivateKey.Text = Session["PrivateKey"].ToString();
                 }
+
+                // Generate unique transaction ID
+                AppCommon.GenerateTransactionId();
             }
         }
 
-        private void HandleTransactionStatusRequest()
-        {
-            try
-            {
-                string transactionId = Request["transactionId"];
-                string privateKey = Session["PrivateKey"] as string;
-
-                if (string.IsNullOrEmpty(privateKey))
-                {
-                    Response.Clear();
-                    Response.ContentType = "application/json";
-                    Response.Write("{\"status\":\"error\",\"message\":\"Not authenticated\"}");
-                    Response.End();
-                    return;
-                }
-
-                TransactionStatusResponse statusResponse = GetTransactionStatus(transactionId, privateKey);
-                
-                Response.Clear();
-                Response.ContentType = "application/json";
-                
-                if (statusResponse != null)
-                {
-                    var jsonResponse = new
-                    {
-                        status = "success",
-                        data = statusResponse.data,
-                        message = statusResponse.message
-                    };
-                    Response.Write(new JavaScriptSerializer().Serialize(jsonResponse));
-                }
-                else
-                {
-                    Response.Write("{\"status\":\"error\",\"message\":\"Failed to get transaction status\"}");
-                }
-                
-                Response.End();
-            }
-            catch (Exception ex)
-            {
-                Response.Clear();
-                Response.ContentType = "application/json";
-                Response.Write($"{{\"status\":\"error\",\"message\":\"{ex.Message.Replace("\"", "\\\"")}\"}}");
-                Response.End();
-            }
-        }
-
+        
         protected void btnAuthorize_Click(object sender, EventArgs e)
         {
             string username = txtUsername.Text.Trim();
@@ -118,7 +100,8 @@ namespace UDIL
                 return;
             }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://116.58.46.245:4050/UIP/authorization_service");
+            string baseUrl = GetBaseUrl();
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/authorization_service");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.Headers.Add("username", username);
@@ -162,343 +145,33 @@ namespace UDIL
             }
         }
 
-        protected void btnDeviceCreation_Click(object sender, EventArgs e)
+        private string ExtractGlobalDeviceId(string deviceIdentityJson)
         {
-            lblDeviceCreationMessage.Text = string.Empty;
-            string transactionId = dcTransactionId.Text.Trim();
-            string deviceIdentity = dcDeviceIdentity.Text.Trim();
-            string requestDateTime = dcRequestDateTime.Text.Trim();
-            string deviceType = dcDeviceType.SelectedValue;
-            string mdiResetDate = dcMdiResetDate.Text.Trim();
-            string mdiResetTime = NormalizeTimeWithSeconds(dcMdiResetTime.Text.Trim());
-            string bidirectionalDevice = dcBidirectionalDevice.SelectedValue;
-            string simNumber = dcSimNumber.Text.Trim();
-            string simId = dcSimId.Text.Trim();
-            string phase = dcPhase.SelectedValue;
-            string meterType = dcMeterType.SelectedValue;
-            string communicationMode = dcCommunicationMode.SelectedValue;
-            string communicationType = dcCommunicationType.SelectedValue;
-            string communicationInterval = dcCommunicationInterval.Text.Trim();
-            string initialCommunicationTime = NormalizeTimeWithSeconds(dcInitialCommunicationTime.Text.Trim());
-
-            string privateKey = Session["PrivateKey"] as string;
-            if (string.IsNullOrEmpty(privateKey))
-            {
-                lblDeviceCreationMessage.Text = "Please authorize first to obtain a private key.";
-                lblDeviceCreationMessage.CssClass = "text-danger";
-                return;
-            }
-
-            dcPrivateKey.Text = privateKey;
-
-            if (string.IsNullOrEmpty(transactionId) || string.IsNullOrEmpty(deviceIdentity) || string.IsNullOrEmpty(requestDateTime))
-            {
-                lblDeviceCreationMessage.Text = "Transaction ID, Device Identity JSON, and Request DateTime are required.";
-                lblDeviceCreationMessage.CssClass = "text-danger";
-                return;
-            }
-
-            string postData = $"device_identity={HttpUtility.UrlEncode(deviceIdentity)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&device_type={HttpUtility.UrlEncode(deviceType)}&mdi_reset_date={HttpUtility.UrlEncode(mdiResetDate)}&mdi_reset_time={HttpUtility.UrlEncode(mdiResetTime)}&sim_number={HttpUtility.UrlEncode(simNumber)}&sim_id={HttpUtility.UrlEncode(simId)}&phase={HttpUtility.UrlEncode(phase)}&meter_type={HttpUtility.UrlEncode(meterType)}&communication_mode={HttpUtility.UrlEncode(communicationMode)}&communication_type={HttpUtility.UrlEncode(communicationType)}&initial_communication_time={HttpUtility.UrlEncode(initialCommunicationTime)}&communication_interval={HttpUtility.UrlEncode(communicationInterval)}&bidirectional_device={HttpUtility.UrlEncode(bidirectionalDevice)}";
-
             try
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting device creation for transaction: {transactionId}");
+                if (string.IsNullOrEmpty(deviceIdentityJson))
+                    return string.Empty;
+
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                var deviceIdentity = serializer.Deserialize<List<Dictionary<string, object>>>(deviceIdentityJson);
                 
-                DeviceCreationResponse creationResponse = PostDeviceCreation(transactionId, privateKey, postData);
-
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] PostDeviceCreation returned: {(creationResponse == null ? "NULL" : $"status={creationResponse.status}, message={creationResponse.message}")}");
-
-                if (creationResponse == null)
+                if (deviceIdentity != null && deviceIdentity.Count > 0)
                 {
-                    lblDeviceCreationMessage.Text = "Failed to get a response from the device creation endpoint.";
-                    lblDeviceCreationMessage.CssClass = "text-danger";
-                    return;
-                }
-
-                if (creationResponse.status != "1")
-                {
-                    lblDeviceCreationMessage.Text = $"Device creation failed: {creationResponse.message}";
-                    lblDeviceCreationMessage.CssClass = "text-danger";
-                    return;
-                }
-
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Device creation succeeded, polling transaction status...");
-                TransactionStatusResponse statusResponse = PollTransactionStatus(transactionId, privateKey);
-
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] PollTransactionStatus returned: {(statusResponse == null ? "NULL" : $"status={statusResponse.status}, datacount={statusResponse.data?.Count ?? 0}")}");
-
-                if (statusResponse == null)
-                {
-                    lblDeviceCreationMessage.Text = "Device creation accepted, but transaction status could not be retrieved.";
-                    lblDeviceCreationMessage.CssClass = "text-warning";
-                    return;
-                }
-
-                int maxStatusLevel = 0;
-                if (statusResponse.data != null)
-                {
-                    foreach (var item in statusResponse.data)
+                    if (deviceIdentity[0].ContainsKey("global_device_id"))
                     {
-                        if (int.TryParse(item.status_level, out int level) && level > maxStatusLevel)
-                        {
-                            maxStatusLevel = level;
-                        }
+                        return deviceIdentity[0]["global_device_id"].ToString();
                     }
                 }
-
-                string stageText = GetStageDescription(maxStatusLevel);
-                lblDeviceCreationMessage.Text = $"Device creation succeeded. Transaction status: {statusResponse.status}. Latest status level: {maxStatusLevel} ({stageText}).";
-                lblDeviceCreationMessage.CssClass = "text-success";
-
-                // After success
-                Session["CurrentTransactionId"] = transactionId;
-                Session["CurrentPrivateKey"] = privateKey;
-                pnlTracker.Visible = true;
-                lblTrackerTransactionId.Text = transactionId;
-
-                timerTracker.Enabled = true;
-                // Hide loader after work
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableDeviceCreationBtn", "disableDeviceCreationButton();", true);
-                
-                // Save initial tracker state to ViewState
-            }
-            catch (WebException ex)
-            {
-                lblDeviceCreationMessage.Text = "HTTP Error: " + ex.Message;
-                lblDeviceCreationMessage.CssClass = "text-danger";
             }
             catch (Exception ex)
             {
-                lblDeviceCreationMessage.Text = "Error: " + ex.Message;
-                lblDeviceCreationMessage.CssClass = "text-danger";
+                System.Diagnostics.Debug.WriteLine($"Error extracting global_device_id: {ex.Message}");
             }
+            
+            return string.Empty;
         }
-        protected void timerTracker_Tick(object sender, EventArgs e)
-        {
-            string transactionId = Session["CurrentTransactionId"] as string;
-            string privateKey = Session["CurrentPrivateKey"] as string;
+        
 
-            var statusResponse = GetTransactionStatus(transactionId, privateKey);
-
-            if (statusResponse?.data == null)
-                return;
-
-            int maxLevel = 0;
-
-            foreach (var item in statusResponse.data)
-            {
-                if (int.TryParse(item.status_level, out int lvl) && lvl > maxLevel)
-                    maxLevel = lvl;
-            }
-
-            UpdateTrackerUI(maxLevel);
-
-            // Save current state to ViewState
-
-            if (maxLevel >= 5)
-            {
-                timerTracker.Enabled = false;
-                lblStage.Text = "Completed";
-                lblStage.CssClass = "badge bg-success px-3 py-2";
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetDeviceCreationLoading", "resetDeviceCreationLoading();", true);
-
-                // Hide tracker only when level 5 is reached
-                //pnlTracker.Visible = false;
-
-                // Clear ViewState when completed
-                ViewState["TrackerLevel"] = null;
-                ViewState["TrackerTransactionId"] = null;
-            }
-        }
-        private void UpdateTrackerUI(int level)
-        {
-            ResetSteps();
-
-            for (int i = 0; i <= 5; i++)
-            {
-                var step = pnlTracker.FindControl("step" + i) as Label;
-
-                if (step == null) continue;
-
-                if (i < level)
-                    step.CssClass = "tracker-step completed";
-                else if (i == level)
-                    step.CssClass = "tracker-step active";
-                else
-                    step.CssClass = "tracker-step";
-            }
-
-            lblStage.Text = $"Stage {level}";
-            lblStageDescription.Text = GetStageDescription(level);
-
-            int percent = (level * 100) / 5;
-            progressBar.Style["width"] = percent + "%";
-        }
-        private void ResetSteps()
-        {
-            for (int i = 0; i <= 5; i++)
-            {
-                var step = FindControl("step" + i) as Label;
-                if (step != null)
-                    step.CssClass = "tracker-step";
-            }
-        }
-        private DeviceCreationResponse PostDeviceCreation(string transactionId, string privateKey, string postData)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://116.58.46.245:4050/UIP/device_creation");
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Accept = "*/*";
-            request.Headers.Add("transactionid", transactionId);
-            request.Headers.Add("privatekey", privateKey);
-            request.UserAgent = "UDILTester/1.0";
-
-            byte[] requestBytes = System.Text.Encoding.UTF8.GetBytes(postData);
-            request.ContentLength = requestBytes.Length;
-
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                requestStream.Write(requestBytes, 0, requestBytes.Length);
-            }
-
-            try
-            {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                {
-                    string responseContent = reader.ReadToEnd();
-                    JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    return serializer.Deserialize<DeviceCreationResponse>(responseContent);
-                }
-            }
-            catch (WebException ex)
-            {
-                string body = ReadWebExceptionResponse(ex);
-                throw new WebException($"Device creation request failed: {ex.Message}. Response body: {body}", ex);
-            }
-        }
-
-        private TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://116.58.46.245:4050/UIP/transaction_status");
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Accept = "*/*";
-            request.Headers.Add("transactionid", transactionId);
-            request.Headers.Add("privatekey", privateKey);
-            request.ContentLength = 0;
-            request.UserAgent = "UDILTester/1.0";
-
-            try
-            {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                {
-                    string responseContent = reader.ReadToEnd();
-                    JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    return serializer.Deserialize<TransactionStatusResponse>(responseContent);
-                }
-            }
-            catch (WebException ex)
-            {
-                string body = ReadWebExceptionResponse(ex);
-                throw new WebException($"Transaction status request failed: {ex.Message}. Response body: {body}", ex);
-            }
-        }
-
-        private string ReadWebExceptionResponse(WebException ex)
-        {
-            if (ex.Response == null)
-            {
-                return string.Empty;
-            }
-
-            try
-            {
-                using (var responseStream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(responseStream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
-        }
-
-        private TransactionStatusResponse PollTransactionStatus(string transactionId, string privateKey)
-        {
-            TransactionStatusResponse lastResponse = null;
-            int maxAttempts = 10;
-            int attempt = 0;
-
-            while (attempt < maxAttempts)
-            {
-                lastResponse = GetTransactionStatus(transactionId, privateKey);
-                if (lastResponse?.data != null)
-                {
-                    bool reachedFinal = lastResponse.data.All(item => int.TryParse(item.status_level, out int statusLevel) && statusLevel >= 5);
-                    if (reachedFinal)
-                    {
-                        break;
-                    }
-                }
-
-                attempt++;
-                Thread.Sleep(2000);
-            }
-
-            return lastResponse;
-        }
-
-        private string GetStageDescription(int statusLevel)
-        {
-            switch (statusLevel)
-            {
-                case 0: return "Waiting for processing";
-                case 1: return "Commencing command processing";
-                case 2: return "Communication request sent to meter";
-                case 3: return "Communication established with meter";
-                case 4: return "Command sent to meter";
-                case 5: return "Command executed by meter";
-                default: return "Unknown stage";
-            }
-        }
-
-        private string NormalizeTimeWithSeconds(string timeValue)
-        {
-            if (string.IsNullOrEmpty(timeValue))
-            {
-                return timeValue;
-            }
-
-            string[] parts = timeValue.Split(':');
-            if (parts.Length == 2)
-            {
-                string hour = parts[0].PadLeft(2, '0');
-                string minute = parts[1].PadLeft(2, '0');
-                return $"{hour}:{minute}:00";
-            }
-
-            return timeValue;
-        }
-
-        public class DeviceCreationResponse
-        {
-            public string status { get; set; }
-            public string transactionid { get; set; }
-            public string message { get; set; }
-            public object data { get; set; }
-        }
-
-        public class TransactionStatusResponse
-        {
-            public string status { get; set; }
-            public string transactionid { get; set; }
-            public string message { get; set; }
-            public List<TransactionStatusData> data { get; set; }
-        }
 
         public class TransactionStatusData
         {
@@ -527,6 +200,208 @@ namespace UDIL
             public string message { get; set; }
         }
 
-      
+                        
+        #region Configuration Management
+
+        private void LoadConfigurations()
+        {
+            try
+            {
+                var configs = UDIL.Common.ConfigurationManager.GetAllConfigurations();
+                
+                ddlSavedConfigs.Items.Clear();
+                ddlSavedConfigs.Items.Add(new ListItem("-- Select Configuration --", ""));
+                
+                foreach (var config in configs)
+                {
+                    ddlSavedConfigs.Items.Add(new ListItem(config.Key, config.Key));
+                }
+            }
+            catch (Exception ex)
+            {
+                lblConfigMessage.Text = "Error loading configurations: " + ex.Message;
+                lblConfigMessage.CssClass = "text-danger";
+            }
+        }
+
+        private void LoadCurrentConfiguration()
+        {
+            // Load current configuration from ConfigurationManager
+            var config = UDIL.Common.ConfigurationManager.Current;
+            
+            txtBaseUrl.Text = config.BaseUrl;
+            txtTimeout.Text = config.Timeout.ToString();
+            
+            // Load database configuration
+            txtDbServer.Text = config.DbServer;
+            txtDbPort.Text = config.DbPort;
+            txtDbName.Text = config.DbName;
+            txtDbUid.Text = config.DbUid;
+            txtDbPwd.Text = config.DbPwd;
+            txtDbProvider.Text = config.DbProvider;
+        }
+
+        protected void btnSaveConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string configName = txtConfigName.Text.Trim();
+                if (string.IsNullOrEmpty(configName))
+                {
+                    lblConfigMessage.Text = "Please enter a configuration name.";
+                    lblConfigMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                var config = new UDIL.Common.Configuration
+                {
+                    BaseUrl = txtBaseUrl.Text.Trim(),
+                    Timeout = Convert.ToInt32(txtTimeout.Text.Trim()),
+                    
+                    // Database configuration
+                    DbServer = txtDbServer.Text.Trim(),
+                    DbPort = txtDbPort.Text.Trim(),
+                    DbName = txtDbName.Text.Trim(),
+                    DbUid = txtDbUid.Text.Trim(),
+                    DbPwd = txtDbPwd.Text.Trim(),
+                    DbProvider = txtDbProvider.Text.Trim()
+                };
+
+                UDIL.Common.ConfigurationManager.SaveConfiguration(configName, config);
+
+                lblConfigMessage.Text = "Configuration saved successfully!";
+                lblConfigMessage.CssClass = "text-success";
+                
+                // Refresh dropdown
+                LoadConfigurations();
+                ddlSavedConfigs.SelectedValue = configName;
+            }
+            catch (Exception ex)
+            {
+                lblConfigMessage.Text = "Error saving configuration: " + ex.Message;
+                lblConfigMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void btnLoadConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string configName = ddlSavedConfigs.SelectedValue;
+                if (string.IsNullOrEmpty(configName))
+                {
+                    lblConfigMessage.Text = "Please select a configuration to load.";
+                    lblConfigMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                var config = UDIL.Common.ConfigurationManager.LoadConfiguration(configName);
+                
+                txtBaseUrl.Text = config.BaseUrl;
+                txtTimeout.Text = config.Timeout.ToString();
+                txtConfigName.Text = config.Name;
+
+                // Load database configuration
+                txtDbServer.Text = config.DbServer;
+                txtDbPort.Text = config.DbPort;
+                txtDbName.Text = config.DbName;
+                txtDbUid.Text = config.DbUid;
+                txtDbPwd.Text = config.DbPwd;
+                txtDbProvider.Text = config.DbProvider;
+
+                lblConfigMessage.Text = "Configuration loaded successfully!";
+                lblConfigMessage.CssClass = "text-success";
+            }
+            catch (Exception ex)
+            {
+                lblConfigMessage.Text = "Error loading configuration: " + ex.Message;
+                lblConfigMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void btnDeleteConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string configName = ddlSavedConfigs.SelectedValue;
+                if (string.IsNullOrEmpty(configName))
+                {
+                    lblConfigMessage.Text = "Please select a configuration to delete.";
+                    lblConfigMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                UDIL.Common.ConfigurationManager.DeleteConfiguration(configName);
+
+                lblConfigMessage.Text = "Configuration deleted successfully!";
+                lblConfigMessage.CssClass = "text-success";
+                
+                // Clear form and refresh dropdown
+                txtConfigName.Text = "";
+                LoadConfigurations();
+            }
+            catch (Exception ex)
+            {
+                lblConfigMessage.Text = "Error deleting configuration: " + ex.Message;
+                lblConfigMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void btnApplyConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var config = new UDIL.Common.Configuration
+                {
+                    BaseUrl = txtBaseUrl.Text.Trim(),
+                    Timeout = Convert.ToInt32(txtTimeout.Text.Trim()),
+                    
+                    // Database configuration
+                    DbServer = txtDbServer.Text.Trim(),
+                    DbPort = txtDbPort.Text.Trim(),
+                    DbName = txtDbName.Text.Trim(),
+                    DbUid = txtDbUid.Text.Trim(),
+                    DbPwd = txtDbPwd.Text.Trim(),
+                    DbProvider = txtDbProvider.Text.Trim()
+                };
+
+                // Apply configuration using ConfigurationManager
+                UDIL.Common.ConfigurationManager.ApplyConfiguration(config);
+
+                lblConfigMessage.Text = "Configuration applied successfully!";
+                lblConfigMessage.CssClass = "text-success";
+            }
+            catch (Exception ex)
+            {
+                lblConfigMessage.Text = "Error applying configuration: " + ex.Message;
+                lblConfigMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void ddlSavedConfigs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(ddlSavedConfigs.SelectedValue))
+            {
+                btnLoadConfig_Click(sender, e);
+            }
+        }
+
+        private string GetBaseUrl()
+        {
+            return UDIL.Common.ConfigurationManager.GetBaseUrl();
+        }
+
+        private int GetTimeout()
+        {
+            return UDIL.Common.ConfigurationManager.GetTimeout();
+        }
+
+        private string GetConnectionString()
+        {
+            return UDIL.Common.ConfigurationManager.GetConnectionString();
+        }
+
+        #endregion
+
     }
 }
