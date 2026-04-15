@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using UDIL.Common;
+using UDIL.Shared;
 using UDIL.DAL;
 
 namespace UDIL.Pages
@@ -575,17 +575,17 @@ namespace UDIL.Pages
         }
         private string GetBaseUrl()
         {
-            return UDIL.Common.ConfigurationManager.GetBaseUrl();
+            return UDIL.Shared.ConfigurationManager.GetBaseUrl();
         }
 
         private int GetTimeout()
         {
-            return UDIL.Common.ConfigurationManager.GetTimeout();
+            return UDIL.Shared.ConfigurationManager.GetTimeout();
         }
 
         private string GetConnectionString()
         {
-            return UDIL.Common.ConfigurationManager.GetConnectionString();
+            return UDIL.Shared.ConfigurationManager.GetConnectionString();
         }
 
         public class AuthResponse

@@ -10,7 +10,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using UDIL.DAL;
-using UDIL.Common;
+using UDIL.Shared;
 
 namespace UDIL
 {
@@ -207,7 +207,7 @@ namespace UDIL
         {
             try
             {
-                var configs = UDIL.Common.ConfigurationManager.GetAllConfigurations();
+                var configs = UDIL.Shared.ConfigurationManager.GetAllConfigurations();
                 
                 ddlSavedConfigs.Items.Clear();
                 ddlSavedConfigs.Items.Add(new ListItem("-- Select Configuration --", ""));
@@ -227,7 +227,7 @@ namespace UDIL
         private void LoadCurrentConfiguration()
         {
             // Load current configuration from ConfigurationManager
-            var config = UDIL.Common.ConfigurationManager.Current;
+            var config = UDIL.Shared.ConfigurationManager.Current;
             
             txtBaseUrl.Text = config.BaseUrl;
             txtTimeout.Text = config.Timeout.ToString();
@@ -253,7 +253,7 @@ namespace UDIL
                     return;
                 }
 
-                var config = new UDIL.Common.Configuration
+                var config = new UDIL.Shared.Configuration
                 {
                     BaseUrl = txtBaseUrl.Text.Trim(),
                     Timeout = Convert.ToInt32(txtTimeout.Text.Trim()),
@@ -267,7 +267,7 @@ namespace UDIL
                     DbProvider = txtDbProvider.Text.Trim()
                 };
 
-                UDIL.Common.ConfigurationManager.SaveConfiguration(configName, config);
+                UDIL.Shared.ConfigurationManager.SaveConfiguration(configName, config);
 
                 lblConfigMessage.Text = "Configuration saved successfully!";
                 lblConfigMessage.CssClass = "text-success";
@@ -295,7 +295,7 @@ namespace UDIL
                     return;
                 }
 
-                var config = UDIL.Common.ConfigurationManager.LoadConfiguration(configName);
+                var config = UDIL.Shared.ConfigurationManager.LoadConfiguration(configName);
                 
                 txtBaseUrl.Text = config.BaseUrl;
                 txtTimeout.Text = config.Timeout.ToString();
@@ -331,7 +331,7 @@ namespace UDIL
                     return;
                 }
 
-                UDIL.Common.ConfigurationManager.DeleteConfiguration(configName);
+                UDIL.Shared.ConfigurationManager.DeleteConfiguration(configName);
 
                 lblConfigMessage.Text = "Configuration deleted successfully!";
                 lblConfigMessage.CssClass = "text-success";
@@ -351,7 +351,7 @@ namespace UDIL
         {
             try
             {
-                var config = new UDIL.Common.Configuration
+                var config = new UDIL.Shared.Configuration
                 {
                     BaseUrl = txtBaseUrl.Text.Trim(),
                     Timeout = Convert.ToInt32(txtTimeout.Text.Trim()),
@@ -366,7 +366,7 @@ namespace UDIL
                 };
 
                 // Apply configuration using ConfigurationManager
-                UDIL.Common.ConfigurationManager.ApplyConfiguration(config);
+                UDIL.Shared.ConfigurationManager.ApplyConfiguration(config);
 
                 lblConfigMessage.Text = "Configuration applied successfully!";
                 lblConfigMessage.CssClass = "text-success";
@@ -388,17 +388,17 @@ namespace UDIL
 
         private string GetBaseUrl()
         {
-            return UDIL.Common.ConfigurationManager.GetBaseUrl();
+            return UDIL.Shared.ConfigurationManager.GetBaseUrl();
         }
 
         private int GetTimeout()
         {
-            return UDIL.Common.ConfigurationManager.GetTimeout();
+            return UDIL.Shared.ConfigurationManager.GetTimeout();
         }
 
         private string GetConnectionString()
         {
-            return UDIL.Common.ConfigurationManager.GetConnectionString();
+            return UDIL.Shared.ConfigurationManager.GetConnectionString();
         }
 
         #endregion
