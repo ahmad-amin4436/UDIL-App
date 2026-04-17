@@ -78,7 +78,7 @@ namespace UDIL
                 ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
                 if (Session["PrivateKey"] != null)
                 {
-                    dcPrivateKey.Text = Session["PrivateKey"].ToString();
+                    //dcPrivateKey.Text = Session["PrivateKey"].ToString();
                 }
 
                 // Generate unique transaction ID

@@ -307,6 +307,55 @@ namespace UDIL.DAL
             }
         }
 
+        public bool ValidateEventsTable(string globalDeviceId)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    
+                    // Check if events table exists and has records for the device
+                    string query = @"
+                        SELECT COUNT(*) 
+                        FROM information_schema.tables 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'events'";
+                    
+                    using (MySqlCommand tableCheckCommand = new MySqlCommand(query, connection))
+                    {
+                        int tableExists = Convert.ToInt32(tableCheckCommand.ExecuteScalar());
+                        
+                        if (tableExists == 0)
+                        {
+                            return false; // Events table doesn't exist
+                        }
+                    }
+                    
+                    // Check if there are events for the specific device
+                    string eventsQuery = @"
+                        SELECT COUNT(*) 
+                        FROM events 
+                        WHERE global_device_id = @global_device_id 
+                        LIMIT 1";
+                    
+                    using (MySqlCommand eventsCommand = new MySqlCommand(eventsQuery, connection))
+                    {
+                        eventsCommand.Parameters.AddWithValue("@global_device_id", globalDeviceId);
+                        
+                        int eventCount = Convert.ToInt32(eventsCommand.ExecuteScalar());
+                        
+                        return eventCount > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error validating events table: {ex.Message}");
+                return false;
+            }
+        }
+
         private DateTime ExtractDateTimeFromMessageLog(string messageLog)
         {
             try
@@ -321,7 +370,7 @@ namespace UDIL.DAL
                     return DateTime.MinValue;
                 }
 
-                // Try to find the datetime pattern at the beginning
+                // Try to find datetime pattern at beginning
                 string[] parts = messageLog.Split(new[] { ' ' }, 4);
                 if (parts.Length < 3)
                 {

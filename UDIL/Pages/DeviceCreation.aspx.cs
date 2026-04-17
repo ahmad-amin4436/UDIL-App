@@ -230,6 +230,39 @@ namespace UDIL.Pages
                 }
             }
 
+            // Get current stage from session or initialize
+            int currentStage = Session["CurrentStage"] != null ? (int)Session["CurrentStage"] : 0;
+            DateTime stageStartTime = Session["StageStartTime"] != null ? (DateTime)Session["StageStartTime"] : DateTime.Now;
+            
+            // Check if stage has changed
+            if (maxLevel != currentStage)
+            {
+                // Stage has changed, update session variables
+                Session["CurrentStage"] = maxLevel;
+                Session["StageStartTime"] = DateTime.Now;
+            }
+            else
+            {
+                // Check for timeout (5 minutes = 300 seconds)
+                TimeSpan timeInStage = DateTime.Now - stageStartTime;
+                if (timeInStage.TotalMinutes >= 5)
+                {
+                    // Stage timeout reached, mark as failed and move to next stage
+                    int nextStage = currentStage + 1;
+                    if (nextStage <= 8)
+                    {
+                        Session["CurrentStage"] = nextStage;
+                        Session["StageStartTime"] = DateTime.Now;
+                        maxLevel = nextStage;
+                        
+                        // Update UI to show failed stage
+                        UpdateTrackerUIWithTimeout(currentStage, nextStage);
+                        lblStageDescription.Text = $"Stage {currentStage} failed due to timeout (5 minutes). Moving to stage {nextStage}.";
+                        lblStageDescription.CssClass = "text-warning";
+                    }
+                }
+            }
+
             // Check if we need to validate device communication history (step 6)
             if (maxLevel >= 5 && maxLevel < 6)
             {
@@ -285,23 +318,47 @@ namespace UDIL.Pages
                 }
             }
 
+            // Check if we need to validate events table (step 8)
+            if (maxLevel >= 7 && maxLevel < 8)
+            {
+                // Get global_device_id from the separate text box
+                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
+
+                if (!string.IsNullOrEmpty(globalDeviceId))
+                {
+                    // Validate events table using DAL
+                    string connectionString = GetConnectionString();
+                    MeterVisualDAL meterVisualDAL = new MeterVisualDAL(connectionString);
+                    bool isValid = meterVisualDAL.ValidateEventsTable(globalDeviceId);
+
+                    if (isValid)
+                    {
+                        maxLevel = 8; // Set to step 8 if validation passes
+                    }
+                }
+            }
+
             UpdateTrackerUI(maxLevel);
 
             // Save current state to ViewState
 
-            if (maxLevel >= 7)
+            if (maxLevel >= 8)
             {
                 timerTracker.Enabled = false;
                 lblStage.Text = "Completed";
                 lblStage.CssClass = "badge bg-success px-3 py-2";
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetDeviceCreationLoading", "resetDeviceCreationLoading();", true);
 
-                // Hide tracker only when level 7 is reached
+                // Hide tracker only when level 8 is reached
                 //pnlTracker.Visible = false;
 
                 // Clear ViewState when completed
                 ViewState["TrackerLevel"] = null;
                 ViewState["TrackerTransactionId"] = null;
+                
+                // Clear session variables
+                Session["CurrentStage"] = null;
+                Session["StageStartTime"] = null;
             }
         }
         private TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
@@ -359,7 +416,7 @@ namespace UDIL.Pages
                     // If this is the last attempt, throw the exception
                     if (attempt == maxRetries)
                     {
-                        throw new WebException($"Transaction status request failed after {maxRetries} attempts. Last error: {ex.Message}. Response body: {body}", ex);
+                        //throw new WebException($"Transaction status request failed after {maxRetries} attempts. Last error: {ex.Message}. Response body: {body}", ex);
                     }
 
                     // Log the retry attempt (you can replace this with proper logging)
@@ -414,7 +471,7 @@ namespace UDIL.Pages
             if (level == -1)
             {
                 // For cancelled stage, mark all steps as incomplete and show cancellation
-                for (int i = 0; i <= 7; i++)
+                for (int i = 0; i <= 8; i++)
                 {
                     var step = pnlTracker.FindControl("step" + i) as Label;
                     if (step != null)
@@ -429,7 +486,7 @@ namespace UDIL.Pages
                 return;
             }
 
-            for (int i = 0; i <= 7; i++)
+            for (int i = 0; i <= 8; i++)
             {
                 var step = pnlTracker.FindControl("step" + i) as Label;
 
@@ -448,17 +505,46 @@ namespace UDIL.Pages
             lblStageDescription.Text = AppCommon.GetStageDescription(level);
             lblStageDescription.CssClass = "text-muted";
 
-            int percent = (level * 100) / 7;
+            int percent = (level * 100) / 8;
             progressBar.Style["width"] = percent + "%";
         }
         private void ResetSteps()
         {
-            for (int i = 0; i <= 7; i++)
+            for (int i = 0; i <= 8; i++)
             {
                 var step = pnlTracker.FindControl("step" + i) as Label;
                 if (step != null)
                     step.CssClass = "tracker-step";
             }
+        }
+
+        private void UpdateTrackerUIWithTimeout(int failedStage, int currentStage)
+        {
+            ResetSteps();
+
+            // Mark completed stages
+            for (int i = 0; i < failedStage; i++)
+            {
+                var step = pnlTracker.FindControl("step" + i) as Label;
+                if (step != null)
+                    step.CssClass = "tracker-step completed";
+            }
+            
+            // Mark failed stage
+            var failedStep = pnlTracker.FindControl("step" + failedStage) as Label;
+            if (failedStep != null)
+                failedStep.CssClass = "tracker-step failed";
+            
+            // Mark current active stage
+            var activeStep = pnlTracker.FindControl("step" + currentStage) as Label;
+            if (activeStep != null)
+                activeStep.CssClass = "tracker-step active";
+
+            lblStage.Text = $"Stage {currentStage}";
+            lblStage.CssClass = "badge bg-warning px-3 py-2";
+            
+            int percent = (currentStage * 100) / 8;
+            progressBar.Style["width"] = percent + "%";
         }
 
         private string ExtractGlobalDeviceId(string deviceIdentityJson)

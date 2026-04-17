@@ -485,104 +485,104 @@
         <asp:UpdatePanel ID="upMain" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">UDIL Testing Portal</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-person-circle"></i>Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-gear"></i>Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i>Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">UDIL Testing Portal</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#"><i class="bi bi-person-circle"></i>Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#"><i class="bi bi-gear"></i>Settings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i>Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
                 <div class="sidebar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#dashboard"><i class="bi bi-house-door"></i>Dashboard</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("default.aspx") && Request.QueryString["page"] == null ? "active" : "" %>" href="<%= ResolveUrl("~/Default.aspx") %>"><i class="bi bi-house-door"></i>Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#authorization"><i class="bi bi-shield-lock"></i>Authorization</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("default.aspx") && Request.QueryString["page"] == "auth" ? "active" : "" %>" href="<%= ResolveUrl("~/Default.aspx?page=auth") %>"><i class="bi bi-shield-lock"></i>Authorization</a>
                         </li>
                         <li>
                             <h6 class="sidebar-heading">Write Requests</h6>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" runat="server" href="~/Pages/DeviceCreation.aspx"><i class="bi bi-plus-circle"></i>Device Creation</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("devicecreation.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/DeviceCreation.aspx") %>"><i class="bi bi-plus-circle"></i>Device Creation</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#aux-relay-operations"><i class="bi bi-toggle-on"></i>Aux Relay Operations</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("auxrelay.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/AuxRelay.aspx") %>"><i class="bi bi-toggle-on"></i>Aux Relay Operations</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#time-synchronization"><i class="bi bi-clock"></i>Time Synchronization</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("timesynchronization.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TimeSynchronization.aspx") %>"><i class="bi bi-clock"></i>Time Synchronization</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#load-control"><i class="bi bi-lightning"></i>Load Control</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadcontrol.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadControl.aspx") %>"><i class="bi bi-lightning"></i>Load Control</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#load-shedding-scheduling"><i class="bi bi-calendar-x"></i>Load Shedding Scheduling</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadsheddingscheduling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadSheddingScheduling.aspx") %>"><i class="bi bi-calendar-x"></i>Load Shedding Scheduling</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#update-tou"><i class="bi bi-clock-history"></i>Update TOU</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("updatetou.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/UpdateTOU.aspx") %>"><i class="bi bi-clock-history"></i>Update TOU</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#update-ip-port"><i class="bi bi-gear"></i>Update IP/Port</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("updateipport.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/UpdateIPPort.aspx") %>"><i class="bi bi-gear"></i>Update IP/Port</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#meter-sampling"><i class="bi bi-sampling"></i>Meter Sampling</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("metersampling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MeterSampling.aspx") %>"><i class="bi bi-sampling"></i>Meter Sampling</a>
                         </li>
                         <li>
                             <h6 class="sidebar-heading">Read Requests</h6>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#instantaneous-data"><i class="bi bi-graph-up"></i>Instantaneous Data</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("instantaneousdata.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/InstantaneousData.aspx") %>"><i class="bi bi-graph-up"></i>Instantaneous Data</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#billing-data"><i class="bi bi-receipt"></i>Billing Data</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("billingdata.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/BillingData.aspx") %>"><i class="bi bi-receipt"></i>Billing Data</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#monthly-billing"><i class="bi bi-calendar"></i>Monthly Billing</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("monthlybilling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MonthlyBilling.aspx") %>"><i class="bi bi-calendar"></i>Monthly Billing</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#load-profile"><i class="bi bi-bar-chart"></i>Load Profile</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadprofile.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadProfile.aspx") %>"><i class="bi bi-bar-chart"></i>Load Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#events"><i class="bi bi-exclamation-triangle"></i>Events</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("events.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/Events.aspx") %>"><i class="bi bi-exclamation-triangle"></i>Events</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#meter-visuals"><i class="bi bi-eye"></i>Meter Visuals</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("metervisuals.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MeterVisuals.aspx") %>"><i class="bi bi-eye"></i>Meter Visuals</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#device-communication-history"><i class="bi bi-chat-dots"></i>Device Communication History</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("devicecommunicationhistory.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/DeviceCommunicationHistory.aspx") %>"><i class="bi bi-chat-dots"></i>Device Communication History</a>
                         </li>
 
                         <li>
                             <h6 class="sidebar-heading">On-Demand APIs</h6>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#data-read"><i class="bi bi-cloud-download"></i>Data Read</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("dataread.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/DataRead.aspx") %>"><i class="bi bi-cloud-download"></i>Data Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#parameter-read"><i class="bi bi-file-earmark-text"></i>Parameter Read</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("parameterread.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/ParameterRead.aspx") %>"><i class="bi bi-file-earmark-text"></i>Parameter Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#transaction-status"><i class="bi bi-check-circle"></i>Transaction Status</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("transactionstatus.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TransactionStatus.aspx") %>"><i class="bi bi-check-circle"></i>Transaction Status</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#transaction-cancel"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("transactioncancel.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TransactionCancel.aspx") %>"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#test-results-logs"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("testresultslogs.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TestResultsLogs.aspx") %>"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
                         </li>
                     </ul>
                 </div>
@@ -605,40 +605,95 @@
             <div id="toast-rack" aria-live="polite"></div>
         </div>
     </form>
+    
     <script>
-        // Handle navigation active state
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        // Set active navigation link based on current page
+        function pageLoad() {
+            setActiveNavLink();
+        }
+
+        // For initial page load (before ASP.NET AJAX)
+        if (typeof Sys === 'undefined') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setActiveNavLink();
+            });
+        }
+
+        function setActiveNavLink() {
+            // Get current page path
+            var currentPath = window.location.pathname.toLowerCase();
             
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    // Remove active class from all nav links
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                    
-                    // Prevent default if it's an anchor with #
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        
-                        // Smooth scroll to section if it exists
-                        const targetId = this.getAttribute('href').substring(1);
-                        const targetElement = document.getElementById(targetId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    }
-                });
+            // Remove active class from all nav links
+            var navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach(function(link) {
+                link.classList.remove('active');
             });
             
-            // Set Dashboard as active by default
-            const dashboardLink = document.querySelector('a[href="#dashboard"]');
-            if (dashboardLink) {
-                dashboardLink.classList.add('active');
+            // Set active class based on current page
+            if (currentPath.includes('default.aspx')) {
+                activateLink('~/Default.aspx', 'default.aspx');
+            } else if (currentPath.includes('devicecreation.aspx')) {
+                activateLink('~/Pages/DeviceCreation.aspx', 'devicecreation.aspx');
+            } else if (currentPath.includes('about.aspx')) {
+                activateLink('~/About.aspx', 'about.aspx');
+            }
+            // Add more conditions for other pages as needed
+        }
+
+        function activateLink(serverPath, clientPath) {
+            var navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach(function(link) {
+                var href = link.getAttribute('href');
+                if (href && (href.includes(serverPath) || href.includes(clientPath))) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Handle click events for navigation links
+        document.addEventListener('click', function(e) {
+            var target = e.target.closest('.sidebar .nav-link');
+            if (target) {
+                var href = target.getAttribute('href');
+                
+                // Only handle internal navigation links
+                if (href && href.includes('.aspx')) {
+                    // Store the active link in sessionStorage
+                    sessionStorage.setItem('activeNavLink', href);
+                    
+                    // Remove active class from all links
+                    var navLinks = document.querySelectorAll('.sidebar .nav-link');
+                    navLinks.forEach(function(link) {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked link immediately
+                    target.classList.add('active');
+                    
+                    // Allow the navigation to proceed normally
+                    // The active state will be restored after page load
+                }
             }
         });
+
+        // Restore active state from sessionStorage on page load
+        function restoreActiveState() {
+            var activeLink = sessionStorage.getItem('activeNavLink');
+            if (activeLink) {
+                var navLinks = document.querySelectorAll('.sidebar .nav-link');
+                navLinks.forEach(function(link) {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === activeLink) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        // Call restore function after setting active state
+        setTimeout(restoreActiveState, 100);
     </script>
+  
 </body>
 </html>
 
