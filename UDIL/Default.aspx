@@ -3,10 +3,10 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
    
-    <div class="main-content">
+    <div class="main-content  mt-5">
         <div class="container-fluid">
             <section id="dashboard">
-                <h2 class="section-header">Dashboard</h2>
+                <h2 class="section-header"><i class="bi bi-house-door"></i> Dashboard</h2>
                 <div class="row">
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card">
@@ -39,11 +39,9 @@
             </section>
 
             <section id="configuration">
-                <h2 class="section-header">Configuration</h2>
+                <h2 class="section-header"><i class="bi bi-gear"></i>  Configuration</h2>
                 <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-gear"></i> API Configuration
-                    </div>
+                    
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -116,11 +114,9 @@
             </section>
 
             <section id="authorization">
-                <h2 class="section-header">Authorization</h2>
+                <h2 class="section-header"><i class="bi bi-shield-lock"></i>  Authorization</h2>
                 <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-shield-lock"></i> API Authorization
-                    </div>
+                    
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 mb-3">

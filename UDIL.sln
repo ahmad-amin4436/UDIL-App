@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDIL", "UDIL\UDIL.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDIL.Shared", "UDIL.Shared\UDIL.Shared.csproj", "{B5CCA8C3-E5FD-4FF8-9F3D-8F21860E45BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDIL.DAL", "UDIL.DAL\UDIL.DAL.csproj", "{84DD2F0D-940A-48B1-A13D-26BF1EFD9285}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B5CCA8C3-E5FD-4FF8-9F3D-8F21860E45BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5CCA8C3-E5FD-4FF8-9F3D-8F21860E45BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5CCA8C3-E5FD-4FF8-9F3D-8F21860E45BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84DD2F0D-940A-48B1-A13D-26BF1EFD9285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84DD2F0D-940A-48B1-A13D-26BF1EFD9285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84DD2F0D-940A-48B1-A13D-26BF1EFD9285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84DD2F0D-940A-48B1-A13D-26BF1EFD9285}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,7 +4,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
    
     <div class="main-content">
-        <div class="container-fluid">
+        <div class="container-fluid mt-5">
             <section id="device-creation">
                 <h2 class="section-header">Device Creation</h2>
                 <div class="card">
@@ -130,11 +130,11 @@
                                 <span class="spinner-border spinner-border-sm"></span>
                             </span>
                         </div>
-                        <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        <a href="DeviceCreation.aspx" class="btn btn-secondary ms-2">Reset</a>
                         <asp:Label ID="lblDeviceCreationMessage" runat="server" CssClass="mt-3 d-block"></asp:Label>
                     </div>
-                </div>
-                
+                 </div>
+
                   <asp:UpdatePanel ID="updTracker" runat="server">
                       <ContentTemplate>
 

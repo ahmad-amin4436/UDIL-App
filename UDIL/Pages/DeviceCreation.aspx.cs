@@ -44,7 +44,6 @@ namespace UDIL.Pages
             // Store device creation request time for DMDT validation
             Session["DeviceCreationRequestTime"] = DateTime.Now;
             // Generate new transaction ID for this request
-            AppCommon.GenerateTransactionId();
             string transactionId = dcTransactionId.Text.Trim();
             string dsn = dcDsn.Text.Trim();
             string globalDeviceId = dcGlobalDeviceId.Text.Trim();

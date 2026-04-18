@@ -7,6 +7,8 @@ using System.Net;
 using System.IO;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
+using System.Web;
+using System.Threading;
 
 namespace UDIL.Shared
 {
@@ -118,8 +120,160 @@ namespace UDIL.Shared
         {
             return UDIL.Shared.ConfigurationManager.GetConnectionString();
         }
-    }
+        public static TransactionStatusResponse PollTransactionStatus(string transactionId, string privateKey)
+        {
+            TransactionStatusResponse lastResponse = null;
+            int maxAttempts = 10;
+            int attempt = 0;
 
+            while (attempt < maxAttempts)
+            {
+                lastResponse = GetTransactionStatus(transactionId, privateKey);
+                if (lastResponse?.data != null)
+                {
+                    // Check if command was cancelled by meter
+                    bool commandCancelled = lastResponse.data.Any(item => item.indv_status == "2" && item.status_level == "4");
+                    if (commandCancelled)
+                    {
+                        break; // Exit polling if command was cancelled
+                    }
+
+                    bool reachedFinal = lastResponse.data.All(item => int.TryParse(item.status_level, out int statusLevel) && statusLevel >= 5);
+                    if (reachedFinal)
+                    {
+                        break;
+                    }
+                }
+
+                attempt++;
+                Thread.Sleep(2000);
+            }
+
+            return lastResponse;
+        }
+        public static TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
+        {
+            int maxRetries = 3;
+            int timeoutMs = GetTimeout() * 1000; // Convert seconds to milliseconds
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
+            {
+                try
+                {
+                    string baseUrl = GetBaseUrl();
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/transaction_status");
+                    request.Method = "POST";
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    request.Accept = "*/*";
+                    request.Headers.Add("transactionid", transactionId);
+                    request.Headers.Add("privatekey", privateKey);
+                    request.ContentLength = 0;
+                    request.UserAgent = "UDILTester/1.0";
+
+                    // Set timeout values (in milliseconds)
+                    request.Timeout = timeoutMs;
+                    request.ReadWriteTimeout = timeoutMs;
+
+                    // Enable keep-alive
+                    request.KeepAlive = true;
+                    request.ServicePoint.Expect100Continue = false;
+                    request.ServicePoint.UseNagleAlgorithm = false;
+
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        string responseContent = reader.ReadToEnd();
+                        JavaScriptSerializer serializer = new JavaScriptSerializer();
+                        return serializer.Deserialize<TransactionStatusResponse>(responseContent);
+                    }
+                }
+                catch (WebException ex)
+                {
+                    string body = ReadWebExceptionResponse(ex);
+
+                    // Check if it's a 401 Unauthorized with private key timeout
+                    if (ex.Response is HttpWebResponse httpResponse && httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        // Try to re-authorize with fixed credentials
+                        if (ReauthorizeWithFixedCredentials())
+                        {
+                            // Re-authorization successful, get the new private key and retry immediately
+                            privateKey = HttpContext.Current.Session["PrivateKey"] as string;
+                            continue; // Skip the sleep and retry immediately
+                        }//
+                    }
+
+                    // If this is the last attempt, throw the exception
+                    if (attempt == maxRetries)
+                    {
+                        //throw new WebException($"Transaction status request failed after {maxRetries} attempts. Last error: {ex.Message}. Response body: {body}", ex);
+                    }
+
+                    // Log the retry attempt (you can replace this with proper logging)
+                    System.Threading.Thread.Sleep(2000 * attempt); // Wait before retry: 2s, 4s, 6s
+                }
+            }
+
+            throw new WebException("Transaction status request failed: Maximum retry attempts exceeded.");
+        }
+        public static string ReadWebExceptionResponse(WebException ex)
+        {
+            if (ex.Response == null)
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                using (var responseStream = ex.Response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+        public static bool ReauthorizeWithFixedCredentials()
+        {
+            try
+            {
+                string baseUrl = GetBaseUrl();
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/authorization_service");
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.Headers.Add("username", "Hello@123");
+                request.Headers.Add("password", "123");
+                request.Headers.Add("code", "235");
+                request.Timeout = 30000;
+                request.ReadWriteTimeout = 30000;
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    string responseContent = reader.ReadToEnd();
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+                    AuthResponse authResponse = serializer.Deserialize<AuthResponse>(responseContent);
+
+                    if (authResponse.status == "1")
+                    {
+                        HttpContext.Current.Session["PrivateKey"] = authResponse.privatekey;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log re-authorization failure if needed
+                System.Diagnostics.Debug.WriteLine($"Re-authorization failed: {ex.Message}");
+            }
+
+            return false;
+        }
+    }
+  
     public class TransactionStatusResponse
     {
         public string status { get; set; }
@@ -127,7 +281,12 @@ namespace UDIL.Shared
         public string message { get; set; }
         public List<TransactionStatusData> data { get; set; }
     }
-
+    public class AuthResponse
+    {
+        public string status { get; set; }
+        public string privatekey { get; set; }
+        public string message { get; set; }
+    }
     public class TransactionStatusData
     {
         public string global_device_id { get; set; }

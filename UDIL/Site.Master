@@ -523,7 +523,7 @@
                             <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("auxrelay.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/AuxRelay.aspx") %>"><i class="bi bi-toggle-on"></i>Aux Relay Operations</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("timesynchronization.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TimeSynchronization.aspx") %>"><i class="bi bi-clock"></i>Time Synchronization</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("timesync.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TimeSync.aspx") %>"><i class="bi bi-clock"></i>Time Synchronization</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadcontrol.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadControl.aspx") %>"><i class="bi bi-lightning"></i>Load Control</a>
