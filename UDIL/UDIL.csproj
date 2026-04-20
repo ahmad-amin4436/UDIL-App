@@ -216,6 +216,7 @@
     <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
     <Content Include="Pages\AuxRelay.aspx" />
     <Content Include="Pages\DeviceCreation.aspx" />
+    <Content Include="Pages\LoadControl.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
     <Content Include="Pages\UpdateTOU.aspx" />
     <Content Include="Pages\Update_IP_Port.aspx" />
@@ -293,6 +294,13 @@
     </Compile>
     <Compile Include="Pages\DeviceCreation.aspx.designer.cs">
       <DependentUpon>DeviceCreation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LoadControl.aspx.cs">
+      <DependentUpon>LoadControl.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\LoadControl.aspx.designer.cs">
+      <DependentUpon>LoadControl.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\TimeSync.aspx.cs">
       <DependentUpon>TimeSync.aspx</DependentUpon>

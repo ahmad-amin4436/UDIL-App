@@ -10,331 +10,169 @@
 namespace UDIL.Pages {
     
     
-    public partial class DeviceCreation {
+    public partial class LoadControl {
         
         /// <summary>
-        /// lblDcTransactionId control.
+        /// lblTsTransactionId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcTransactionId;
+        protected global::System.Web.UI.WebControls.Label lblTsTransactionId;
         
         /// <summary>
-        /// dcTransactionId control.
+        /// tsTransactionId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcTransactionId;
+        protected global::System.Web.UI.WebControls.TextBox tsTransactionId;
         
         /// <summary>
-        /// lblDcPrivateKey control.
+        /// lblTsPrivateKey control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcPrivateKey;
+        protected global::System.Web.UI.WebControls.Label lblTsPrivateKey;
         
         /// <summary>
-        /// dcPrivateKey control.
+        /// tsPrivateKey control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcPrivateKey;
+        protected global::System.Web.UI.WebControls.TextBox tsPrivateKey;
         
         /// <summary>
-        /// lblDcDsn control.
+        /// lblTsGlobalDeviceId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcDsn;
+        protected global::System.Web.UI.WebControls.Label lblTsGlobalDeviceId;
         
         /// <summary>
-        /// dcDsn control.
+        /// tsGlobalDeviceId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcDsn;
+        protected global::System.Web.UI.WebControls.TextBox tsGlobalDeviceId;
         
         /// <summary>
-        /// lblDcGlobalDeviceId control.
+        /// lblTsRequestDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcGlobalDeviceId;
+        protected global::System.Web.UI.WebControls.Label lblTsRequestDateTime;
         
         /// <summary>
-        /// dcGlobalDeviceId control.
+        /// tsRequestDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcGlobalDeviceId;
+        protected global::System.Web.UI.WebControls.TextBox tsRequestDateTime;
         
         /// <summary>
-        /// lblDcRequestDateTime control.
+        /// lblPrimaryIpAddress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcRequestDateTime;
+        protected global::System.Web.UI.WebControls.Label lblPrimaryIpAddress;
         
         /// <summary>
-        /// dcRequestDateTime control.
+        /// primaryIpAddress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcRequestDateTime;
+        protected global::System.Web.UI.WebControls.TextBox primaryIpAddress;
         
         /// <summary>
-        /// lblDcDeviceType control.
+        /// lblSecondaryIpAddress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcDeviceType;
+        protected global::System.Web.UI.WebControls.Label lblSecondaryIpAddress;
         
         /// <summary>
-        /// dcDeviceType control.
+        /// secondaryIpAddress control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dcDeviceType;
+        protected global::System.Web.UI.WebControls.TextBox secondaryIpAddress;
         
         /// <summary>
-        /// lblDcMdiResetDate control.
+        /// lblPrimaryPort control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcMdiResetDate;
+        protected global::System.Web.UI.WebControls.Label lblPrimaryPort;
         
         /// <summary>
-        /// dcMdiResetDate control.
+        /// primaryPort control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcMdiResetDate;
+        protected global::System.Web.UI.WebControls.TextBox primaryPort;
         
         /// <summary>
-        /// lblDcMdiResetTime control.
+        /// lblSecondaryPort control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcMdiResetTime;
+        protected global::System.Web.UI.WebControls.Label lblSecondaryPort;
         
         /// <summary>
-        /// dcMdiResetTime control.
+        /// secondaryPort control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcMdiResetTime;
+        protected global::System.Web.UI.WebControls.TextBox secondaryPort;
         
         /// <summary>
-        /// lblDcBidirectionalDevice control.
+        /// btnIPPortUpdate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcBidirectionalDevice;
+        protected global::System.Web.UI.WebControls.Button btnIPPortUpdate;
         
         /// <summary>
-        /// dcBidirectionalDevice control.
+        /// lblIPPortUpdateMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dcBidirectionalDevice;
-        
-        /// <summary>
-        /// lblDcSimNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcSimNumber;
-        
-        /// <summary>
-        /// dcSimNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcSimNumber;
-        
-        /// <summary>
-        /// lblDcSimId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcSimId;
-        
-        /// <summary>
-        /// dcSimId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcSimId;
-        
-        /// <summary>
-        /// lblDcPhase control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcPhase;
-        
-        /// <summary>
-        /// dcPhase control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dcPhase;
-        
-        /// <summary>
-        /// lblDcMeterType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcMeterType;
-        
-        /// <summary>
-        /// dcMeterType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dcMeterType;
-        
-        /// <summary>
-        /// lblDcCommunicationMode control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcCommunicationMode;
-        
-        /// <summary>
-        /// dcCommunicationMode control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dcCommunicationMode;
-        
-        /// <summary>
-        /// lblDcCommunicationType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcCommunicationType;
-        
-        /// <summary>
-        /// dcCommunicationType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList dcCommunicationType;
-        
-        /// <summary>
-        /// lblDcCommunicationInterval control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcCommunicationInterval;
-        
-        /// <summary>
-        /// dcCommunicationInterval control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcCommunicationInterval;
-        
-        /// <summary>
-        /// lblDcInitialCommunicationTime control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDcInitialCommunicationTime;
-        
-        /// <summary>
-        /// dcInitialCommunicationTime control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox dcInitialCommunicationTime;
-        
-        /// <summary>
-        /// btnDeviceCreation control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDeviceCreation;
-        
-        /// <summary>
-        /// lblDeviceCreationMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDeviceCreationMessage;
+        protected global::System.Web.UI.WebControls.Label lblIPPortUpdateMessage;
         
         /// <summary>
         /// updTracker control.
@@ -452,6 +290,15 @@ namespace UDIL.Pages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label step7;
+        
+        /// <summary>
+        /// step8 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label step8;
         
         /// <summary>
         /// lblStageDescription control.

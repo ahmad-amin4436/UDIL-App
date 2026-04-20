@@ -61,7 +61,7 @@ namespace UDIL.DAL
                                 WHEN dmdt_phase IS NOT NULL AND dmdt_phase != @phase THEN 0
                                 WHEN mdi_reset_date IS NOT NULL AND mdi_reset_date != @mdi_reset_date THEN 0
                                 WHEN mdi_reset_time IS NOT NULL AND mdi_reset_time != @mdi_reset_time THEN 0
-                                WHEN msim_id IS NOT NULL AND msim_id != @sim_number THEN 0
+                                WHEN msim_id IS NOT NULL AND msim_id != @simId THEN 0
                                 ELSE 1
                             END AS validation_result
                         FROM meter_visuals 
@@ -80,7 +80,7 @@ namespace UDIL.DAL
                         validationCommand.Parameters.AddWithValue("@phase", phase);
                         validationCommand.Parameters.AddWithValue("@mdi_reset_date", mdiResetDate);
                         validationCommand.Parameters.AddWithValue("@mdi_reset_time", mdiResetTime);
-                        validationCommand.Parameters.AddWithValue("@sim_number", simNumber);
+                        validationCommand.Parameters.AddWithValue("@simId", simId);
 
                         // First validate device communication history
                         if (!ValidateDeviceCommunicationHistory(globalDeviceId))

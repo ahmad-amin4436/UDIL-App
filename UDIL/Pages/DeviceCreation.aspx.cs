@@ -341,7 +341,7 @@ namespace UDIL.Pages
 
             // Save current state to ViewState
 
-            if (maxLevel >= 8)
+            if (maxLevel >= 7)
             {
                 timerTracker.Enabled = false;
                 lblStage.Text = "Completed";
@@ -504,7 +504,7 @@ namespace UDIL.Pages
             lblStageDescription.Text = AppCommon.GetStageDescription(level);
             lblStageDescription.CssClass = "text-muted";
 
-            int percent = (level * 100) / 8;
+            int percent = (level * 100) / 7;
             progressBar.Style["width"] = percent + "%";
         }
         private void ResetSteps()
