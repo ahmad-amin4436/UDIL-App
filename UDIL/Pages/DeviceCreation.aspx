@@ -6,11 +6,9 @@
     <div class="main-content">
         <div class="container-fluid mt-5">
             <section id="device-creation">
-                <h2 class="section-header">Device Creation</h2>
+                <h2 class="section-header"><i class="bi bi-plus-circle"></i> Device Creation</h2>
                 <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-plus-circle"></i> Device Creation
-                    </div>
+                   
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">

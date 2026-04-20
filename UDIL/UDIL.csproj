@@ -214,8 +214,10 @@
     <Content Include="bin\roslyn\csi.rsp" />
     <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
     <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
+    <Content Include="Pages\AuxRelay.aspx" />
     <Content Include="Pages\DeviceCreation.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
+    <Content Include="Pages\UpdateTOU.aspx" />
     <Content Include="Pages\Update_IP_Port.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -278,6 +280,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AuxRelay.aspx.cs">
+      <DependentUpon>AuxRelay.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\AuxRelay.aspx.designer.cs">
+      <DependentUpon>AuxRelay.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\DeviceCreation.aspx.cs">
       <DependentUpon>DeviceCreation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -291,6 +300,13 @@
     </Compile>
     <Compile Include="Pages\TimeSync.aspx.designer.cs">
       <DependentUpon>TimeSync.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UpdateTOU.aspx.cs">
+      <DependentUpon>UpdateTOU.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\UpdateTOU.aspx.designer.cs">
+      <DependentUpon>UpdateTOU.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Update_IP_Port.aspx.cs">
       <DependentUpon>Update_IP_Port.aspx</DependentUpon>
@@ -311,6 +327,7 @@
   <ItemGroup>
     <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
+    <Folder Include="System\Web\Script\Serialization\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

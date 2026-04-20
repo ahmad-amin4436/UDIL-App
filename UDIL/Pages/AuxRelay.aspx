@@ -1,12 +1,12 @@
-﻿<%@ Page Title="UDIL Tester - Time Sync" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
-   CodeBehind="TimeSync.aspx.cs" Inherits="UDIL.Pages.TimeSync" %>
+﻿<%@ Page Title="UDIL Tester - Aux Relay" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
+   CodeBehind="AuxRelay.aspx.cs" Inherits="UDIL.Pages.AuxRelay" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
    
     <div class="main-content">
         <div class="container-fluid mt-5">
-            <section id="time-sync">
-                <h2 class="section-header"><i class="bi bi-clock"></i> Time Synchronization</h2>
+            <section id="aux-relay-operations">
+                <h2 class="section-header"> <i class="bi bi-toggle-on"></i> Aux Relay Operations</h2>
                 <div class="card">
                    
                     <div class="card-body">
@@ -27,26 +27,35 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsRequestDateTime" runat="server" AssociatedControlID="tsRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-27 15:37:00" CssClass="form-control" placeholder="2025-12-27 15:37:00" />
+                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-04 12:15:00" CssClass="form-control" placeholder="2025-12-04 12:15:00" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblRelayOperate" runat="server" AssociatedControlID="relayOperate" CssClass="form-label" Text="Relay Operate"></asp:Label>
+                                <asp:DropDownList ID="relayOperate" runat="server" CssClass="form-control">
+                                    <asp:ListItem Text="Turn ON" Value="1" Selected="True" />
+                                    <asp:ListItem Text="Turn OFF" Value="0" />
+                                </asp:DropDownList>
                             </div>
                         </div>
                         <div class="position-relative d-inline-block">
                             <asp:Button
-                                ID="btnTimeSync"
+                                ID="btnAuxRelayOperations"
                                 runat="server"
                                 CssClass="btn btn-primary"
-                                Text="Send Time Sync"
-                                OnClick="btnTimeSync_Click"
-                                OnClientClick="showTimeSyncLoading(this); return true;" />
+                                Text="Send Aux Relay Operations"
+                                OnClick="btnAuxRelayOperations_Click"
+                                OnClientClick="showAuxRelayOperationsLoading(this); return true;" />
 
-                            <span id="timeSyncSpinner"
+                            <span id="auxRelayOperationsSpinner"
                                 class="position-absolute top-50 start-50 translate-middle"
                                 style="display: none;">
                                 <span class="spinner-border spinner-border-sm"></span>
                             </span>
                         </div>
-                        <a href="TimeSync.aspx" class="btn btn-secondary ms-2">Reset</a>
-                        <asp:Label ID="lblTimeSyncMessage" runat="server" CssClass="mt-3 d-block"></asp:Label>
+                        <a href="AuxRelay.aspx" class="btn btn-secondary ms-2">Reset</a>
+                        <asp:Label ID="lblAuxRelayOperationsMessage" runat="server" CssClass="mt-3 d-block"></asp:Label>
                     </div>
                  </div>
 
@@ -58,7 +67,7 @@
                               <div class="card-header border-0">
                                   <div class="d-flex justify-content-between align-items-center">
                                       <div>
-                                          <h5 class="mb-0">Time Sync Tracker</h5>
+                                          <h5 class="mb-0">Aux Relay Operations Tracker</h5>
                                           <small class="text-muted">Transaction:
                                               <asp:Label ID="lblTrackerTransactionId" runat="server" />
                                           </small>
@@ -105,7 +114,7 @@
 
                       </ContentTemplate>
                     <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="btnTimeSync" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnAuxRelayOperations" EventName="Click" />
                     </Triggers>
                 </asp:UpdatePanel>
             </section>
@@ -119,10 +128,10 @@
 
 <asp:Content ID="ScriptsContent" ContentPlaceHolderID="ScriptsContent" runat="server">
     <script>
-        function showTimeSyncLoading(button) {
+        function showAuxRelayOperationsLoading(button) {
             if (!button) return;
 
-            const spinner = document.getElementById('timeSyncSpinner');
+            const spinner = document.getElementById('auxRelayOperationsSpinner');
 
             // Show spinner and change text immediately
             if (spinner) {
@@ -142,9 +151,9 @@
         }
 
         // Function to disable button after successful processing
-        function disableTimeSyncButton() {
-            const button = document.getElementById('<%= btnTimeSync.ClientID %>');
-            const spinner = document.getElementById('timeSyncSpinner');
+        function disableAuxRelayOperationsButton() {
+            const button = document.getElementById('<%= btnAuxRelayOperations.ClientID %>');
+            const spinner = document.getElementById('auxRelayOperationsSpinner');
 
 
             if (button) {
@@ -162,16 +171,16 @@
         }
 
         // Optional reset function
-        function resetTimeSyncLoading() {
-            const button = document.getElementById('<%= btnTimeSync.ClientID %>');
-            const spinner = document.getElementById('timeSyncSpinner');
+        function resetAuxRelayOperationsLoading() {
+            const button = document.getElementById('<%= btnAuxRelayOperations.ClientID %>');
+            const spinner = document.getElementById('auxRelayOperationsSpinner');
 
             if (button) {
                 button.disabled = false;
                 button.style.opacity = '1';
                 button.style.cursor = 'pointer';
 
-                const originalText = 'Send Time Sync';
+                const originalText = 'Send Aux Relay Operations';
                 if (originalText) {
                     button.value = originalText;
                 }
@@ -183,4 +192,6 @@
         }
     </script>
 </asp:Content>
+
+
 
