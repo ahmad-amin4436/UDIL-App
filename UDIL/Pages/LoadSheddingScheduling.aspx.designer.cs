@@ -10,7 +10,7 @@
 namespace UDIL.Pages {
     
     
-    public partial class LoadControl {
+    public partial class LoadSheddingScheduling {
         
         /// <summary>
         /// lblTsTransactionId control.
@@ -85,112 +85,202 @@ namespace UDIL.Pages {
         protected global::System.Web.UI.WebControls.TextBox tsRequestDateTime;
         
         /// <summary>
-        /// lblTsLoadLimit control.
+        /// lblTsStartDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsLoadLimit;
+        protected global::System.Web.UI.WebControls.Label lblTsStartDateTime;
         
         /// <summary>
-        /// tsLoadLimit control.
+        /// tsStartDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tsLoadLimit;
+        protected global::System.Web.UI.WebControls.TextBox tsStartDateTime;
         
         /// <summary>
-        /// lblTsMaximumRetries control.
+        /// lblTsEndDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsMaximumRetries;
+        protected global::System.Web.UI.WebControls.Label lblTsEndDateTime;
         
         /// <summary>
-        /// tsMaximumRetries control.
+        /// tsEndDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tsMaximumRetries;
+        protected global::System.Web.UI.WebControls.TextBox tsEndDateTime;
         
         /// <summary>
-        /// lblTsRetryInterval control.
+        /// lblSlab1Time control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsRetryInterval;
+        protected global::System.Web.UI.WebControls.Label lblSlab1Time;
         
         /// <summary>
-        /// tsRetryInterval control.
+        /// tsSlab1Time control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tsRetryInterval;
+        protected global::System.Web.UI.WebControls.TextBox tsSlab1Time;
         
         /// <summary>
-        /// lblTsThresholdDuration control.
+        /// lblSlab1Relay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsThresholdDuration;
+        protected global::System.Web.UI.WebControls.Label lblSlab1Relay;
         
         /// <summary>
-        /// tsThresholdDuration control.
+        /// ddlSlab1Relay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tsThresholdDuration;
+        protected global::System.Web.UI.WebControls.DropDownList ddlSlab1Relay;
         
         /// <summary>
-        /// lblTsRetryClearInterval control.
+        /// lblSlab2Time control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsRetryClearInterval;
+        protected global::System.Web.UI.WebControls.Label lblSlab2Time;
         
         /// <summary>
-        /// tsRetryClearInterval control.
+        /// tsSlab2Time control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tsRetryClearInterval;
+        protected global::System.Web.UI.WebControls.TextBox tsSlab2Time;
         
         /// <summary>
-        /// btnSancLoadControl control.
+        /// lblSlab2Relay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSancLoadControl;
+        protected global::System.Web.UI.WebControls.Label lblSlab2Relay;
         
         /// <summary>
-        /// lblSancLoadControlMessage control.
+        /// ddlSlab2Relay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSancLoadControlMessage;
+        protected global::System.Web.UI.WebControls.DropDownList ddlSlab2Relay;
+        
+        /// <summary>
+        /// lblSlab3Time control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSlab3Time;
+        
+        /// <summary>
+        /// tsSlab3Time control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tsSlab3Time;
+        
+        /// <summary>
+        /// lblSlab3Relay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSlab3Relay;
+        
+        /// <summary>
+        /// ddlSlab3Relay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSlab3Relay;
+        
+        /// <summary>
+        /// lblSlab4Time control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSlab4Time;
+        
+        /// <summary>
+        /// tsSlab4Time control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tsSlab4Time;
+        
+        /// <summary>
+        /// lblSlab4Relay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSlab4Relay;
+        
+        /// <summary>
+        /// ddlSlab4Relay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSlab4Relay;
+        
+        /// <summary>
+        /// btnLoadSheddingSchedule control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLoadSheddingSchedule;
+        
+        /// <summary>
+        /// lblLoadSheddingScheduleMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLoadSheddingScheduleMessage;
         
         /// <summary>
         /// updTracker control.

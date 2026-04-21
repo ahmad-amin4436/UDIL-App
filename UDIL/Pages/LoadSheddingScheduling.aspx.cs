@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,7 @@ using UDIL.DAL;
 
 namespace UDIL.Pages
 {
-    public partial class LoadControl : System.Web.UI.Page
+    public partial class LoadSheddingScheduling : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -37,63 +37,70 @@ namespace UDIL.Pages
             }
         }
 
-        protected void btnSancLoadControl_Click(object sender, EventArgs e)
+        protected void btnLoadSheddingSchedule_Click(object sender, EventArgs e)
         {
-            lblSancLoadControlMessage.Text = string.Empty;
-            // Store Sanc Load Control request time
-            Session["SancLoadControlRequestTime"] = DateTime.Now;
+            lblLoadSheddingScheduleMessage.Text = string.Empty;
+            // Store Load Shedding Schedule request time
+            Session["LoadSheddingScheduleRequestTime"] = DateTime.Now;
             // Generate new transaction ID for this request
             string transactionId = tsTransactionId.Text.Trim();
             string globalDeviceId = tsGlobalDeviceId.Text.Trim();
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
             string requestDateTime = tsRequestDateTime.Text.Trim();
-            string loadLimit = tsLoadLimit.Text.Trim();
-            string maximumRetries = tsMaximumRetries.Text.Trim();
-            string retryInterval = tsRetryInterval.Text.Trim();
-            string thresholdDuration = tsThresholdDuration.Text.Trim();
-            string retryClearInterval = tsRetryClearInterval.Text.Trim();
+            string startDateTime = tsStartDateTime.Text.Trim();
+            string endDateTime = tsEndDateTime.Text.Trim();
+            // Build load shedding slabs JSON from individual input fields
+            string loadSheddingSlabs = BuildLoadSheddingSlabsJson();
 
             string privateKey = Session["PrivateKey"] as string;
 
             if (string.IsNullOrEmpty(privateKey))
             {
-                lblSancLoadControlMessage.Text = "Please authorize first to obtain a private key.";
-                lblSancLoadControlMessage.CssClass = "text-danger";
+                lblLoadSheddingScheduleMessage.Text = "Please authorize first to obtain a private key.";
+                lblLoadSheddingScheduleMessage.CssClass = "text-danger";
                 return;
             }
 
             tsPrivateKey.Text = privateKey;
 
             if (string.IsNullOrEmpty(transactionId) || string.IsNullOrEmpty(globalDeviceId) || string.IsNullOrEmpty(requestDateTime) ||
-                string.IsNullOrEmpty(loadLimit) || string.IsNullOrEmpty(maximumRetries) || string.IsNullOrEmpty(retryInterval) ||
-                string.IsNullOrEmpty(thresholdDuration) || string.IsNullOrEmpty(retryClearInterval))
+                string.IsNullOrEmpty(startDateTime) || string.IsNullOrEmpty(endDateTime))
             {
-                lblSancLoadControlMessage.Text = "All fields are required: Transaction ID, Global Device ID, Request DateTime, Load Limit, Maximum Retries, Retry Interval, Threshold Duration, and Retry Clear Interval.";
-                lblSancLoadControlMessage.CssClass = "text-danger";
+                lblLoadSheddingScheduleMessage.Text = "All fields are required: Transaction ID, Global Device ID, Request DateTime, Start DateTime, and End DateTime. At least one load shedding slab must be provided.";
+                lblLoadSheddingScheduleMessage.CssClass = "text-danger";
                 return;
             }
 
-            string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&load_limit={HttpUtility.UrlEncode(loadLimit)}&maximum_retries={HttpUtility.UrlEncode(maximumRetries)}&retry_interval={HttpUtility.UrlEncode(retryInterval)}&threshold_duration={HttpUtility.UrlEncode(thresholdDuration)}&retry_clear_interval={HttpUtility.UrlEncode(retryClearInterval)}";
+            // Validate that at least one slab is provided
+            if (string.IsNullOrEmpty(tsSlab1Time.Text.Trim()) && string.IsNullOrEmpty(tsSlab2Time.Text.Trim()) && 
+                string.IsNullOrEmpty(tsSlab3Time.Text.Trim()) && string.IsNullOrEmpty(tsSlab4Time.Text.Trim()))
+            {
+                lblLoadSheddingScheduleMessage.Text = "At least one load shedding slab must be provided.";
+                lblLoadSheddingScheduleMessage.CssClass = "text-danger";
+                return;
+            }
+
+            string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&start_datetime={HttpUtility.UrlEncode(startDateTime)}&end_datetime={HttpUtility.UrlEncode(endDateTime)}&load_shedding_slabs={HttpUtility.UrlEncode(loadSheddingSlabs)}";
 
             try
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting Sanc Load Control for transaction: {transactionId}");
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting Load Shedding Schedule for transaction: {transactionId}");
 
-                SancLoadControlResponse sancLoadResponse = PostSancLoadControl(transactionId, privateKey, postData);
+                LoadSheddingScheduleResponse loadSheddingResponse = PostLoadSheddingSchedule(transactionId, privateKey, postData);
 
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] PostSancLoadControl returned: {(sancLoadResponse == null ? "NULL" : $"status={sancLoadResponse.status}, message={sancLoadResponse.message}")}");
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] PostLoadSheddingSchedule returned: {(loadSheddingResponse == null ? "NULL" : $"status={loadSheddingResponse.status}, message={loadSheddingResponse.message}")}");
 
-                if (sancLoadResponse == null)
+                if (loadSheddingResponse == null)
                 {
-                    lblSancLoadControlMessage.Text = "Failed to get a response from the sanctioned load control endpoint.";
-                    lblSancLoadControlMessage.CssClass = "text-danger";
+                    lblLoadSheddingScheduleMessage.Text = "Failed to get a response from the load shedding schedule endpoint.";
+                    lblLoadSheddingScheduleMessage.CssClass = "text-danger";
                     return;
                 }
 
-                if (sancLoadResponse.status != "1")
+                if (loadSheddingResponse.status != "1")
                 {
-                    lblSancLoadControlMessage.Text = $"Sanctioned load control failed: {sancLoadResponse.message}";
-                    lblSancLoadControlMessage.CssClass = "text-danger";
+                    lblLoadSheddingScheduleMessage.Text = $"Load shedding schedule failed: {loadSheddingResponse.message}";
+                    lblLoadSheddingScheduleMessage.CssClass = "text-danger";
                     return;
                 }
 
@@ -101,8 +108,8 @@ namespace UDIL.Pages
 
                 if (statusResponse == null)
                 {
-                    lblSancLoadControlMessage.Text = "Sanctioned load control accepted, but transaction status could not be retrieved.";
-                    lblSancLoadControlMessage.CssClass = "text-warning";
+                    lblLoadSheddingScheduleMessage.Text = "Load shedding schedule accepted, but transaction status could not be retrieved.";
+                    lblLoadSheddingScheduleMessage.CssClass = "text-warning";
                     return;
                 }
 
@@ -130,8 +137,8 @@ namespace UDIL.Pages
                 {
                     // Handle command cancellation
                     string stageText = AppCommon.GetStageDescription(-1); // Use cancelled stage
-                    lblSancLoadControlMessage.Text = $"Sanctioned load control failed. Command was cancelled by the meter (indv_status: 2, status_level: 4). Status: {stageText}.";
-                    lblSancLoadControlMessage.CssClass = "text-danger";
+                    lblLoadSheddingScheduleMessage.Text = $"Load shedding schedule failed. Command was cancelled by the meter (indv_status: 2, status_level: 4). Status: {stageText}.";
+                    lblLoadSheddingScheduleMessage.CssClass = "text-danger";
 
                     // Show cancelled tracker briefly
                     pnlTracker.Visible = true;
@@ -140,13 +147,13 @@ namespace UDIL.Pages
                     lblStageDescription.Text = "Command was cancelled by the meter (indv_status: 2, status_level: 4).";
                     lblStageDescription.CssClass = "text-danger";
 
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableSancLoadControlBtn", "disableSancLoadControlButton();", true);
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableLoadSheddingScheduleBtn", "disableLoadSheddingScheduleButton();", true);
                 }
                 else
                 {
                     string stageText = AppCommon.GetStageDescription(maxStatusLevel);
-                    lblSancLoadControlMessage.Text = $"Sanctioned load control succeeded. Transaction status: {statusResponse.status}. Latest status level: {maxStatusLevel} ({stageText}).";
-                    lblSancLoadControlMessage.CssClass = "text-success";
+                    lblLoadSheddingScheduleMessage.Text = $"Load shedding schedule succeeded. Transaction status: {statusResponse.status}. Latest status level: {maxStatusLevel} ({stageText}).";
+                    lblLoadSheddingScheduleMessage.CssClass = "text-success";
 
                     // After success
                     Session["CurrentTransactionId"] = transactionId;
@@ -157,19 +164,51 @@ namespace UDIL.Pages
 
                     timerTracker.Enabled = true;
                     // Hide loader after work
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableSancLoadControlBtn", "disableSancLoadControlButton();", true);
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableLoadSheddingScheduleBtn", "disableLoadSheddingScheduleButton();", true);
                 }
             }
             catch (WebException ex)
             {
-                lblSancLoadControlMessage.Text = "HTTP Error: " + ex.Message;
-                lblSancLoadControlMessage.CssClass = "text-danger";
+                lblLoadSheddingScheduleMessage.Text = "HTTP Error: " + ex.Message;
+                lblLoadSheddingScheduleMessage.CssClass = "text-danger";
             }
             catch (Exception ex)
             {
-                lblSancLoadControlMessage.Text = "Error: " + ex.Message;
-                lblSancLoadControlMessage.CssClass = "text-danger";
+                lblLoadSheddingScheduleMessage.Text = "Error: " + ex.Message;
+                lblLoadSheddingScheduleMessage.CssClass = "text-danger";
             }
+        }
+
+        private string BuildLoadSheddingSlabsJson()
+        {
+            var slabs = new List<object>();
+            
+            // Slab 1
+            if (!string.IsNullOrEmpty(tsSlab1Time.Text.Trim()))
+            {
+                slabs.Add(new { action_time = tsSlab1Time.Text.Trim(), relay_operate = ddlSlab1Relay.SelectedValue });
+            }
+            
+            // Slab 2
+            if (!string.IsNullOrEmpty(tsSlab2Time.Text.Trim()))
+            {
+                slabs.Add(new { action_time = tsSlab2Time.Text.Trim(), relay_operate = ddlSlab2Relay.SelectedValue });
+            }
+            
+            // Slab 3
+            if (!string.IsNullOrEmpty(tsSlab3Time.Text.Trim()))
+            {
+                slabs.Add(new { action_time = tsSlab3Time.Text.Trim(), relay_operate = ddlSlab3Relay.SelectedValue });
+            }
+            
+            // Slab 4
+            if (!string.IsNullOrEmpty(tsSlab4Time.Text.Trim()))
+            {
+                slabs.Add(new { action_time = tsSlab4Time.Text.Trim(), relay_operate = ddlSlab4Relay.SelectedValue });
+            }
+            
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            return serializer.Serialize(slabs);
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -215,7 +254,7 @@ namespace UDIL.Pages
                     UpdateTrackerUI(-1); // Use cancelled stage
                     lblStageDescription.Text = "Command was cancelled by the meter (indv_status: 2, status_level: 4).";
                     lblStageDescription.CssClass = "text-danger";
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetSancLoadControlLoading", "resetSancLoadControlLoading();", true);
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetLoadSheddingScheduleLoading", "resetLoadSheddingScheduleLoading();", true);
                     return; // Exit early since command was cancelled
                 }
             }
@@ -315,7 +354,7 @@ namespace UDIL.Pages
                 timerTracker.Enabled = false;
                 lblStage.Text = "Completed";
                 lblStage.CssClass = "badge bg-success px-3 py-2";
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetSancLoadControlLoading", "resetSancLoadControlLoading();", true);
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetLoadSheddingScheduleLoading", "resetLoadSheddingScheduleLoading();", true);
 
                 // Hide tracker only when level 8 is reached
                 //pnlTracker.Visible = false;
@@ -415,10 +454,10 @@ namespace UDIL.Pages
             }
         }
 
-        private SancLoadControlResponse PostSancLoadControl(string transactionId, string privateKey, string postData)
+        private LoadSheddingScheduleResponse PostLoadSheddingSchedule(string transactionId, string privateKey, string postData)
         {
             string baseUrl = GetBaseUrl();
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/UIP/sanctioned_load_control");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/load_shedding_scheduling");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.Accept = "*/*";
@@ -441,13 +480,13 @@ namespace UDIL.Pages
                 {
                     string responseContent = reader.ReadToEnd();
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    return serializer.Deserialize<SancLoadControlResponse>(responseContent);
+                    return serializer.Deserialize<LoadSheddingScheduleResponse>(responseContent);
                 }
             }
             catch (WebException ex)
             {
                 string body = AppCommon.ReadWebExceptionResponse(ex);
-                throw new WebException($"Sanctioned load control request failed: {ex.Message}. Response body: {body}", ex);
+                throw new WebException($"Load shedding schedule request failed: {ex.Message}. Response body: {body}", ex);
             }
         }
 
@@ -481,7 +520,7 @@ namespace UDIL.Pages
             public object data { get; set; }
         }
 
-        public class SancLoadControlResponse
+        public class LoadSheddingScheduleResponse
         {
             public string status { get; set; }
             public string transactionid { get; set; }

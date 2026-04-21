@@ -217,6 +217,7 @@
     <Content Include="Pages\AuxRelay.aspx" />
     <Content Include="Pages\DeviceCreation.aspx" />
     <Content Include="Pages\LoadControl.aspx" />
+    <Content Include="Pages\LoadSheddingScheduling.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
     <Content Include="Pages\UpdateTOU.aspx" />
     <Content Include="Pages\Update_IP_Port.aspx" />
@@ -301,6 +302,13 @@
     </Compile>
     <Compile Include="Pages\LoadControl.aspx.designer.cs">
       <DependentUpon>LoadControl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\LoadSheddingScheduling.aspx.cs">
+      <DependentUpon>LoadSheddingScheduling.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\LoadSheddingScheduling.aspx.designer.cs">
+      <DependentUpon>LoadSheddingScheduling.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\TimeSync.aspx.cs">
       <DependentUpon>TimeSync.aspx</DependentUpon>
