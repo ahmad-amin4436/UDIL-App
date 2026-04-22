@@ -214,6 +214,7 @@
     <Content Include="bin\roslyn\csi.rsp" />
     <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
     <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
+    <Content Include="Pages\ActivateOpticalPort.aspx" />
     <Content Include="Pages\AuxRelay.aspx" />
     <Content Include="Pages\MeterDataSampling.aspx" />
     <Content Include="Pages\DeviceCreation.aspx" />
@@ -282,6 +283,13 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ActivateOpticalPort.aspx.cs">
+      <DependentUpon>ActivateOpticalPort.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\ActivateOpticalPort.aspx.designer.cs">
+      <DependentUpon>ActivateOpticalPort.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\AuxRelay.aspx.cs">
       <DependentUpon>AuxRelay.aspx</DependentUpon>
