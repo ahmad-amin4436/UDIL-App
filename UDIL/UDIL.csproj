@@ -221,8 +221,10 @@
     <Content Include="Pages\LoadControl.aspx" />
     <Content Include="Pages\LoadSheddingScheduling.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
+    <Content Include="Pages\UpdateDeviceMetadata.aspx" />
     <Content Include="Pages\UpdateTOU.aspx" />
     <Content Include="Pages\Update_IP_Port.aspx" />
+    <Content Include="Pages\WakeUpSimNumber.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -333,6 +335,13 @@
     <Compile Include="Pages\TimeSync.aspx.designer.cs">
       <DependentUpon>TimeSync.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UpdateDeviceMetadata.aspx.cs">
+      <DependentUpon>UpdateDeviceMetadata.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\UpdateDeviceMetadata.aspx.designer.cs">
+      <DependentUpon>UpdateDeviceMetadata.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\UpdateTOU.aspx.cs">
       <DependentUpon>UpdateTOU.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -346,6 +355,13 @@
     </Compile>
     <Compile Include="Pages\Update_IP_Port.aspx.designer.cs">
       <DependentUpon>Update_IP_Port.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\WakeUpSimNumber.aspx.cs">
+      <DependentUpon>WakeUpSimNumber.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\WakeUpSimNumber.aspx.designer.cs">
+      <DependentUpon>WakeUpSimNumber.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
