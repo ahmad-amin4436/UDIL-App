@@ -539,8 +539,9 @@
                             <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("update_ip_port.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/Update_IP_Port.aspx") %>"><i class="bi bi-gear"></i>Update IP/Port</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("metersampling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MeterSampling.aspx") %>"><i class="bi bi-sampling"></i>Meter Sampling</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("meterdatasampling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MeterDataSampling.aspx") %>"><i class="bi bi-clipboard-data"></i> Meter Data Sampling</a>
                         </li>
+                       
                         <li>
                             <h6 class="sidebar-heading">Read Requests</h6>
                         </li>
