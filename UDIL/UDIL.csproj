@@ -216,12 +216,14 @@
     <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
     <Content Include="Pages\ActivateOpticalPort.aspx" />
     <Content Include="Pages\AuxRelay.aspx" />
+    <Content Include="Pages\MDIReset.aspx" />
     <Content Include="Pages\MeterDataSampling.aspx" />
     <Content Include="Pages\DeviceCreation.aspx" />
     <Content Include="Pages\LoadControl.aspx" />
     <Content Include="Pages\LoadSheddingScheduling.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
     <Content Include="Pages\UpdateDeviceMetadata.aspx" />
+    <Content Include="Pages\UpdateMeterStatus.aspx" />
     <Content Include="Pages\UpdateTOU.aspx" />
     <Content Include="Pages\Update_IP_Port.aspx" />
     <Content Include="Pages\WakeUpSimNumber.aspx" />
@@ -300,6 +302,13 @@
     <Compile Include="Pages\AuxRelay.aspx.designer.cs">
       <DependentUpon>AuxRelay.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\MDIReset.aspx.cs">
+      <DependentUpon>MDIReset.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\MDIReset.aspx.designer.cs">
+      <DependentUpon>MDIReset.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\MeterDataSampling.aspx.cs">
       <DependentUpon>MeterDataSampling.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -341,6 +350,13 @@
     </Compile>
     <Compile Include="Pages\UpdateDeviceMetadata.aspx.designer.cs">
       <DependentUpon>UpdateDeviceMetadata.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\UpdateMeterStatus.aspx.cs">
+      <DependentUpon>UpdateMeterStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\UpdateMeterStatus.aspx.designer.cs">
+      <DependentUpon>UpdateMeterStatus.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\UpdateTOU.aspx.cs">
       <DependentUpon>UpdateTOU.aspx</DependentUpon>

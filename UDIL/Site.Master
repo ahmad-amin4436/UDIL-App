@@ -508,35 +508,35 @@
                 <div class="sidebar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("default.aspx") && Request.QueryString["page"] == null ? "active" : "" %>" href="<%= ResolveUrl("~/Default.aspx") %>"><i class="bi bi-house-door"></i>Dashboard</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("default.aspx") && Request.QueryString["page"] == null ? "active" : "" %>" href="<%= ResolveUrl("~/Default.aspx") %>"><i class="bi bi-house-door"></i> Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("default.aspx") && Request.QueryString["page"] == "auth" ? "active" : "" %>" href="<%= ResolveUrl("~/Default.aspx?page=auth") %>"><i class="bi bi-shield-lock"></i>Authorization</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("default.aspx") && Request.QueryString["page"] == "auth" ? "active" : "" %>" href="<%= ResolveUrl("~/Default.aspx?page=auth") %>"><i class="bi bi-shield-lock"></i> Authorization</a>
                         </li>
                         <li>
                             <h6 class="sidebar-heading">Write Requests</h6>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("devicecreation.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/DeviceCreation.aspx") %>"><i class="bi bi-plus-circle"></i>Device Creation</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("devicecreation.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/DeviceCreation.aspx") %>"><i class="bi bi-plus-circle"></i> Device Creation</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("auxrelay.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/AuxRelay.aspx") %>"><i class="bi bi-toggle-on"></i>Aux Relay Operations</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("auxrelay.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/AuxRelay.aspx") %>"><i class="bi bi-toggle-on"></i> Aux Relay Operations</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("timesync.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TimeSync.aspx") %>"><i class="bi bi-clock"></i>Time Synchronization</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("timesync.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/TimeSync.aspx") %>"><i class="bi bi-clock"></i> Time Synchronization</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadcontrol.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadControl.aspx") %>"><i class="bi bi-lightning"></i>Load Control</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadcontrol.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadControl.aspx") %>"><i class="bi bi-lightning"></i> Load Control</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadsheddingscheduling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadSheddingScheduling.aspx") %>"><i class="bi bi-calendar-x"></i>Load Shedding Scheduling</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("loadsheddingscheduling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/LoadSheddingScheduling.aspx") %>"><i class="bi bi-calendar-x"></i> Load Shedding Sch.</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("updatetou.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/UpdateTOU.aspx") %>"><i class="bi bi-clock-history"></i>Update TOU</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("updatetou.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/UpdateTOU.aspx") %>"><i class="bi bi-clock-history"></i> Update TOU</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("update_ip_port.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/Update_IP_Port.aspx") %>"><i class="bi bi-gear"></i>Update IP/Port</a>
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("update_ip_port.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/Update_IP_Port.aspx") %>"><i class="bi bi-gear"></i> Update IP/Port</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("meterdatasampling.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MeterDataSampling.aspx") %>"><i class="bi bi-clipboard-data"></i> Meter Data Sampling</a>
@@ -549,6 +549,12 @@
                         </li>
                        <li class="nav-item">
                             <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("wakeupsimnumber.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/WakeUpSimNumber.aspx") %>"><i class="bi bi-reception-4"></i> WakeUp Sim Numbers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("mdireset.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/MDIReset.aspx") %>"><i class="bi bi-arrow-clockwise"></i> Update MDI Reset</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= Request.AppRelativeCurrentExecutionFilePath.ToLower().Contains("updatemeterstatus.aspx") ? "active" : "" %>" href="<%= ResolveUrl("~/Pages/UpdateMeterStatus.aspx") %>"><i class="bi bi-arrow-repeat"></i> Update Meter Status</a>
                         </li>
                        
                         <li>
