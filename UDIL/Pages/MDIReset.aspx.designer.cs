@@ -238,33 +238,6 @@ namespace UDIL.Pages {
         protected global::System.Web.UI.WebControls.Label step5;
         
         /// <summary>
-        /// step6 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label step6;
-        
-        /// <summary>
-        /// step7 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label step7;
-        
-        /// <summary>
-        /// step8 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label step8;
-        
-        /// <summary>
         /// lblStageDescription control.
         /// </summary>
         /// <remarks>

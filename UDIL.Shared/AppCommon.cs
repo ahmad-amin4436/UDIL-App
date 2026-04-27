@@ -153,7 +153,7 @@ namespace UDIL.Shared
         }
         public static TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
         {
-            int maxRetries = 3;
+            int maxRetries = 5;
             int timeoutMs = GetTimeout() * 1000; // Convert seconds to milliseconds
 
             for (int attempt = 1; attempt <= maxRetries; attempt++)
@@ -216,7 +216,8 @@ namespace UDIL.Shared
 
             throw new WebException("Transaction status request failed: Maximum retry attempts exceeded.");
         }
-        public static string ReadWebExceptionResponse(WebException ex)
+        
+       public static string ReadWebExceptionResponse(WebException ex)
         {
             if (ex.Response == null)
             {

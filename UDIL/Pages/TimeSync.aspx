@@ -86,9 +86,7 @@
                                       <asp:Label ID="step3" runat="server" CssClass="tracker-step">Connected</asp:Label>
                                       <asp:Label ID="step4" runat="server" CssClass="tracker-step">Command Sent</asp:Label>
                                       <asp:Label ID="step5" runat="server" CssClass="tracker-step">Completed</asp:Label>
-                                      <asp:Label ID="step6" runat="server" CssClass="tracker-step">Device Communication History Log</asp:Label>
-                                      <asp:Label ID="step7" runat="server" CssClass="tracker-step">Meter Visual Data Validated</asp:Label>
-                                      <asp:Label ID="step8" runat="server" CssClass="tracker-step">Events Table</asp:Label>
+                                    
 
                                   </div>
 

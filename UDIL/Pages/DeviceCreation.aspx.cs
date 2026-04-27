@@ -9,7 +9,6 @@ using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using UDIL.Shared;
-using UDIL.DAL;
 
 namespace UDIL.Pages
 {
@@ -261,87 +260,10 @@ namespace UDIL.Pages
                     }
                 }
             }
-
-            // Check if we need to validate device communication history (step 6)
-            if (maxLevel >= 5 && maxLevel < 6)
-            {
-                // Get global_device_id from the separate text box
-                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
-
-                if (!string.IsNullOrEmpty(globalDeviceId))
-                {
-                    // Validate device communication history using DAL
-                    string connectionString = GetConnectionString();
-                    MeterVisualDAL meterVisualDAL = new MeterVisualDAL(connectionString);
-                    bool isValid = meterVisualDAL.ValidateDeviceCommunicationHistory(globalDeviceId);
-
-                    if (isValid)
-                    {
-                        maxLevel = 6; // Set to step 6 if validation passes
-                    }
-                }
-            }
-
-            // Check if we need to validate meter visual data (step 7)
-            if (maxLevel >= 6 && maxLevel < 7)
-            {
-                // Get device creation parameters from form
-                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
-                string deviceType = dcDeviceType.SelectedValue;
-                string mdiResetDate = dcMdiResetDate.Text.Trim();
-                string mdiResetTime = NormalizeTimeWithSeconds(dcMdiResetTime.Text.Trim());
-                string bidirectionalDevice = dcBidirectionalDevice.SelectedValue;
-                string simNumber = dcSimNumber.Text.Trim();
-                string simId = dcSimId.Text.Trim();
-                string phase = dcPhase.SelectedValue;
-                string meterType = dcMeterType.SelectedValue;
-                string communicationMode = dcCommunicationMode.SelectedValue;
-                string communicationType = dcCommunicationType.SelectedValue;
-                string communicationInterval = dcCommunicationInterval.Text.Trim();
-                string initialCommunicationTime = NormalizeTimeWithSeconds(dcInitialCommunicationTime.Text.Trim());
-
-                if (!string.IsNullOrEmpty(globalDeviceId))
-                {
-                    // Validate meter visual data using DAL
-                    string connectionString = GetConnectionString();
-                    MeterVisualDAL meterVisualDAL = new MeterVisualDAL(connectionString);
-                    bool isValid = meterVisualDAL.ValidateMeterVisuals(globalDeviceId, deviceType, mdiResetDate, mdiResetTime,
-                                                                        bidirectionalDevice, simNumber, simId, phase,
-                                                                        meterType, communicationMode, communicationType,
-                                                                        communicationInterval, initialCommunicationTime);
-
-                    if (isValid)
-                    {
-                        maxLevel = 7; // Set to step 7 if validation passes
-                    }
-                }
-            }
-
-            // Check if we need to validate events table (step 8)
-            if (maxLevel >= 7 && maxLevel < 8)
-            {
-                // Get global_device_id from the separate text box
-                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
-
-                if (!string.IsNullOrEmpty(globalDeviceId))
-                {
-                    // Validate events table using DAL
-                    string connectionString = GetConnectionString();
-                    MeterVisualDAL meterVisualDAL = new MeterVisualDAL(connectionString);
-                    bool isValid = meterVisualDAL.ValidateEventsTable(globalDeviceId);
-
-                    if (isValid)
-                    {
-                        maxLevel = 8; // Set to step 8 if validation passes
-                    }
-                }
-            }
-
             UpdateTrackerUI(maxLevel);
 
-            // Save current state to ViewState
-
-            if (maxLevel >= 7)
+            // Check if we need to validate device communication history (step 6)
+            if (maxLevel >= 5)
             {
                 timerTracker.Enabled = false;
                 lblStage.Text = "Completed";
@@ -354,11 +276,13 @@ namespace UDIL.Pages
                 // Clear ViewState when completed
                 ViewState["TrackerLevel"] = null;
                 ViewState["TrackerTransactionId"] = null;
-                
+
                 // Clear session variables
                 Session["CurrentStage"] = null;
                 Session["StageStartTime"] = null;
             }
+            
+            
         }
         private TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
         {
@@ -542,7 +466,7 @@ namespace UDIL.Pages
             lblStage.Text = $"Stage {currentStage}";
             lblStage.CssClass = "badge bg-warning px-3 py-2";
             
-            int percent = (currentStage * 100) / 8;
+            int percent = (currentStage * 100) / 5;
             progressBar.Style["width"] = percent + "%";
         }
 
