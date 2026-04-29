@@ -38,6 +38,89 @@
                 </div>
             </section>
 
+            <section id="session">
+                <h2 class="section-header"><i class="bi bi-clock-history"></i> Session Management</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="txtSessionName" class="form-label">Session Name</label>
+                                <asp:TextBox ID="txtSessionName" runat="server" CssClass="form-control" placeholder="Enter session name"></asp:TextBox>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="txtSessionDescription" class="form-label">Description</label>
+                                <asp:TextBox ID="txtSessionDescription" runat="server" CssClass="form-control" placeholder="Enter session description"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="ddlSavedSessions" class="form-label">Saved Sessions</label>
+                                <asp:DropDownList ID="ddlSavedSessions" runat="server" CssClass="form-control" AutoPostBack="true" OnSelectedIndexChanged="ddlSavedSessions_SelectedIndexChanged">
+                                    <asp:ListItem Text="-- Select Session --" Value=""></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="txtSessionDate" class="form-label">Session Date</label>
+                                <asp:TextBox ID="txtSessionDate" runat="server" CssClass="form-control" placeholder="Auto-generated on create"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <h6 class="text-primary">Session Information</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="txtTestEnvironment" class="form-label">Test Environment</label>
+                                <asp:TextBox ID="txtTestEnvironment" runat="server" Text="Production" CssClass="form-control" placeholder="Test environment"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="txtDeviceCount" class="form-label">Device Count</label>
+                                <asp:TextBox ID="txtDeviceCount" runat="server" Text="0" CssClass="form-control" placeholder="Number of devices"></asp:TextBox>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="txtTestType" class="form-label">Test Type</label>
+                                <asp:TextBox ID="txtTestType" runat="server" Text="Compliance" CssClass="form-control" placeholder="Type of testing"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <asp:Button ID="btnCreateSession" runat="server" Text="Create Session" CssClass="btn btn-success me-2" OnClick="btnCreateSession_Click" />
+                                <asp:Button ID="btnLoadSession" runat="server" Text="Load Session" CssClass="btn btn-info me-2" OnClick="btnLoadSession_Click" />
+                                <asp:Button ID="btnDeleteSession" runat="server" Text="Delete Session" CssClass="btn btn-danger me-2" OnClick="btnDeleteSession_Click" />
+                                <asp:Button ID="btnExportSession" runat="server" Text="Export Session" CssClass="btn btn-warning me-2" OnClick="btnExportSession_Click" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="bi bi-info-circle"></i> Current Session Details
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Session ID:</strong> <asp:Label ID="lblSessionId" runat="server" Text="N/A"></asp:Label></p>
+                                                <p><strong>Status:</strong> <asp:Label ID="lblSessionStatus" runat="server" CssClass="badge bg-secondary" Text="Not Started"></asp:Label></p>
+                                                <p><strong>Created:</strong> <asp:Label ID="lblSessionCreated" runat="server" Text="N/A"></asp:Label></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Last Modified:</strong> <asp:Label ID="lblSessionModified" runat="server" Text="N/A"></asp:Label></p>
+                                                <p><strong>Tests Completed:</strong> <asp:Label ID="lblTestsCompleted" runat="server" Text="0"></asp:Label></p>
+                                                <p><strong>Total Tests:</strong> <asp:Label ID="lblTotalTests" runat="server" Text="0"></asp:Label></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <asp:Label ID="lblSessionMessage" runat="server" CssClass="text-info"></asp:Label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="configuration">
                 <h2 class="section-header"><i class="bi bi-gear"></i>  Configuration</h2>
                 <div class="card">

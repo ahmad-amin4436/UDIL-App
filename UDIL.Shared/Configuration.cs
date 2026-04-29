@@ -44,4 +44,44 @@ namespace UDIL.Shared
             return $"{BaseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
         }
     }
+
+    public class TestSession
+    {
+        public string SessionId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string Status { get; set; }
+        public string TestEnvironment { get; set; }
+        public int DeviceCount { get; set; }
+        public string TestType { get; set; }
+        public int TestsCompleted { get; set; }
+        public int TotalTests { get; set; }
+
+        public TestSession()
+        {
+            // Default values
+            SessionId = Guid.NewGuid().ToString("N");
+            CreatedDate = DateTime.Now;
+            ModifiedDate = DateTime.Now;
+            Status = "Not Started";
+            TestEnvironment = "Production";
+            DeviceCount = 0;
+            TestType = "Compliance";
+            TestsCompleted = 0;
+            TotalTests = 0;
+        }
+
+        public double GetProgressPercentage()
+        {
+            if (TotalTests == 0) return 0;
+            return (double)TestsCompleted / TotalTests * 100;
+        }
+
+        public TimeSpan GetDuration()
+        {
+            return ModifiedDate - CreatedDate;
+        }
+    }
 }

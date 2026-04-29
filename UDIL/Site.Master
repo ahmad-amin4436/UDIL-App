@@ -500,7 +500,7 @@
                                         <img runat="server" src="assets/logo-rm-bg.png" alt="UDIL Logo" class="img-fluid" style="max-height: 40px;" />
 
                         </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"  aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
@@ -732,6 +732,28 @@
 
         // Call restore function after setting active state
         setTimeout(restoreActiveState, 100);
+    </script>
+    
+    <!-- Bootstrap JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Initialize Bootstrap dropdowns after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all dropdowns
+            var dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+            dropdowns.forEach(function(dropdown) {
+                new bootstrap.Dropdown(dropdown);
+            });
+        });
+        
+        // Re-initialize dropdowns after ASP.NET AJAX postbacks
+        function pageLoad() {
+            var dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+            dropdowns.forEach(function(dropdown) {
+                new bootstrap.Dropdown(dropdown);
+            });
+        }
     </script>
   
 </body>

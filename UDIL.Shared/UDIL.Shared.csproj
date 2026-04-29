@@ -48,5 +48,11 @@
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UDIL.DAL\UDIL.DAL.csproj">
+      <Project>{84dd2f0d-940a-48b1-a13d-26bf1efd9285}</Project>
+      <Name>UDIL.DAL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

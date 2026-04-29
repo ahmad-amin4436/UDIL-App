@@ -67,6 +67,15 @@ namespace UDIL {
         protected global::System.Web.UI.WebControls.TextBox txtPassword;
         
         /// <summary>
+        /// btnLogin control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLogin;
+        
+        /// <summary>
         /// chkRememberMe control.
         /// </summary>
         /// <remarks>
@@ -83,14 +92,5 @@ namespace UDIL {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRememberMe;
-        
-        /// <summary>
-        /// btnLogin control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLogin;
     }
 }

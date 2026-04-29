@@ -40,6 +40,26 @@ namespace UDIL
         protected TextBox txtDbPwd;
         protected TextBox txtDbProvider;
 
+        // Session Management controls
+        protected TextBox txtSessionName;
+        protected TextBox txtSessionDescription;
+        protected DropDownList ddlSavedSessions;
+        protected TextBox txtSessionDate;
+        protected TextBox txtTestEnvironment;
+        protected TextBox txtDeviceCount;
+        protected TextBox txtTestType;
+        protected Button btnCreateSession;
+        protected Button btnLoadSession;
+        protected Button btnDeleteSession;
+        protected Button btnExportSession;
+        protected Label lblSessionId;
+        protected Label lblSessionStatus;
+        protected Label lblSessionCreated;
+        protected Label lblSessionModified;
+        protected Label lblTestsCompleted;
+        protected Label lblTotalTests;
+        protected Label lblSessionMessage;
+
         protected TextBox dcTransactionId;
         protected TextBox dcPrivateKey;
         protected TextBox dcDsn;
@@ -70,6 +90,8 @@ namespace UDIL
             {
                 LoadConfigurations();
                 LoadCurrentConfiguration();
+                LoadSessions();
+                LoadCurrentSession();
             }
 
             if (!IsPostBack)
@@ -398,6 +420,247 @@ namespace UDIL
         private string GetConnectionString()
         {
             return UDIL.Shared.ConfigurationManager.GetConnectionString();
+        }
+
+        #endregion
+
+        #region Session Management
+
+        private void LoadSessions()
+        {
+            try
+            {
+                var sessions = UDIL.Shared.ConfigurationManager.GetAllSessions();
+                
+                ddlSavedSessions.Items.Clear();
+                ddlSavedSessions.Items.Add(new ListItem("-- Select Session --", ""));
+                
+                foreach (var session in sessions)
+                {
+                    ddlSavedSessions.Items.Add(new ListItem(session.Key, session.Key));
+                }
+            }
+            catch (Exception ex)
+            {
+                lblSessionMessage.Text = "Error loading sessions: " + ex.Message;
+                lblSessionMessage.CssClass = "text-danger";
+            }
+        }
+
+        private void LoadCurrentSession()
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                
+                if (currentSession != null)
+                {
+                    lblSessionId.Text = currentSession.SessionId;
+                    lblSessionStatus.Text = currentSession.Status;
+                    lblSessionStatus.CssClass = GetSessionStatusBadgeClass(currentSession.Status);
+                    lblSessionCreated.Text = currentSession.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss");
+                    lblSessionModified.Text = currentSession.ModifiedDate.ToString("yyyy-MM-dd HH:mm:ss");
+                    lblTestsCompleted.Text = currentSession.TestsCompleted.ToString();
+                    lblTotalTests.Text = currentSession.TotalTests.ToString();
+                    
+                    txtSessionName.Text = currentSession.Name;
+                    txtSessionDescription.Text = currentSession.Description;
+                    txtSessionDate.Text = currentSession.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss");
+                    txtTestEnvironment.Text = currentSession.TestEnvironment;
+                    txtDeviceCount.Text = currentSession.DeviceCount.ToString();
+                    txtTestType.Text = currentSession.TestType;
+                }
+                else
+                {
+                    ResetSessionDisplay();
+                }
+            }
+            catch (Exception ex)
+            {
+                lblSessionMessage.Text = "Error loading current session: " + ex.Message;
+                lblSessionMessage.CssClass = "text-danger";
+            }
+        }
+
+        private void ResetSessionDisplay()
+        {
+            lblSessionId.Text = "N/A";
+            lblSessionStatus.Text = "Not Started";
+            lblSessionStatus.CssClass = "badge bg-secondary";
+            lblSessionCreated.Text = "N/A";
+            lblSessionModified.Text = "N/A";
+            lblTestsCompleted.Text = "0";
+            lblTotalTests.Text = "0";
+        }
+
+        private string GetSessionStatusBadgeClass(string status)
+        {
+            switch (status.ToLower())
+            {
+                case "active":
+                case "in progress":
+                    return "badge bg-warning";
+                case "completed":
+                    return "badge bg-success";
+                case "failed":
+                case "error":
+                    return "badge bg-danger";
+                case "paused":
+                    return "badge bg-info";
+                default:
+                    return "badge bg-secondary";
+            }
+        }
+
+        protected void btnCreateSession_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string sessionName = txtSessionName.Text.Trim();
+                if (string.IsNullOrEmpty(sessionName))
+                {
+                    lblSessionMessage.Text = "Please enter a session name.";
+                    lblSessionMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                var session = new UDIL.Shared.TestSession
+                {
+                    Name = sessionName,
+                    Description = txtSessionDescription.Text.Trim(),
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                    Status = "Active",
+                    TestEnvironment = txtTestEnvironment.Text.Trim(),
+                    DeviceCount = Convert.ToInt32(txtDeviceCount.Text.Trim() == "" ? "0" : txtDeviceCount.Text.Trim()),
+                    TestType = txtTestType.Text.Trim(),
+                    TestsCompleted = 0,
+                    TotalTests = 0
+                };
+
+                UDIL.Shared.ConfigurationManager.SaveSession(session);
+
+                lblSessionMessage.Text = "Session created successfully!";
+                lblSessionMessage.CssClass = "text-success";
+                
+                // Refresh displays
+                LoadSessions();
+                LoadCurrentSession();
+            }
+            catch (Exception ex)
+            {
+                lblSessionMessage.Text = "Error creating session: " + ex.Message;
+                lblSessionMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void btnLoadSession_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string sessionName = ddlSavedSessions.SelectedValue;
+                if (string.IsNullOrEmpty(sessionName))
+                {
+                    lblSessionMessage.Text = "Please select a session to load.";
+                    lblSessionMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                var session = UDIL.Shared.ConfigurationManager.LoadSession(sessionName);
+                UDIL.Shared.ConfigurationManager.SetCurrentSession(session);
+
+                lblSessionMessage.Text = "Session loaded successfully!";
+                lblSessionMessage.CssClass = "text-success";
+                
+                // Refresh displays
+                LoadCurrentSession();
+            }
+            catch (Exception ex)
+            {
+                lblSessionMessage.Text = "Error loading session: " + ex.Message;
+                lblSessionMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void btnDeleteSession_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string sessionName = ddlSavedSessions.SelectedValue;
+                if (string.IsNullOrEmpty(sessionName))
+                {
+                    lblSessionMessage.Text = "Please select a session to delete.";
+                    lblSessionMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                UDIL.Shared.ConfigurationManager.DeleteSession(sessionName);
+
+                lblSessionMessage.Text = "Session deleted successfully!";
+                lblSessionMessage.CssClass = "text-success";
+                
+                // Clear form and refresh displays
+                txtSessionName.Text = "";
+                txtSessionDescription.Text = "";
+                LoadSessions();
+                
+                // Reset current session display if it was the deleted session
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession != null && currentSession.Name == sessionName)
+                {
+                    UDIL.Shared.ConfigurationManager.ClearCurrentSession();
+                    ResetSessionDisplay();
+                }
+            }
+            catch (Exception ex)
+            {
+                lblSessionMessage.Text = "Error deleting session: " + ex.Message;
+                lblSessionMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void btnExportSession_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession == null)
+                {
+                    lblSessionMessage.Text = "No active session to export.";
+                    lblSessionMessage.CssClass = "text-danger";
+                    return;
+                }
+
+                // Generate export data (JSON format)
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                string exportData = serializer.Serialize(currentSession);
+                
+                // Generate file name with timestamp
+                string fileName = $"Session_{currentSession.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.json";
+                
+                // Set up response for file download
+                Response.Clear();
+                Response.ContentType = "application/json";
+                Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
+                Response.Write(exportData);
+                Response.End();
+
+                lblSessionMessage.Text = "Session exported successfully!";
+                lblSessionMessage.CssClass = "text-success";
+            }
+            catch (Exception ex)
+            {
+                lblSessionMessage.Text = "Error exporting session: " + ex.Message;
+                lblSessionMessage.CssClass = "text-danger";
+            }
+        }
+
+        protected void ddlSavedSessions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(ddlSavedSessions.SelectedValue))
+            {
+                btnLoadSession_Click(sender, e);
+            }
         }
 
         #endregion

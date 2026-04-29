@@ -13,7 +13,7 @@
                                 <div class="bg-dark-danger text-white p-5 text-center h-100 d-flex flex-column justify-content-center">
                                   
                                     <h1 class="display-4 fw-bold mb-3">UDIL</h1>
-                                    <h2 class="mb-3">Test Suite</h2>
+                                    <h2 class="mb-3">Meter Test Suite</h2>
                                     <p class="lead">Universal Data Integration Layer</p>
                                     <div class="mt-auto">
                                         <small>&copy; 2026 UDIL System v1.0</small>
@@ -51,10 +51,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-3 form-check">
-                                        <asp:CheckBox ID="chkRememberMe" runat="server" CssClass="form-check-input" />
-                                        <asp:Label ID="lblRememberMe" runat="server" AssociatedControlID="chkRememberMe" CssClass="form-check-label">Remember me</asp:Label>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <asp:CheckBox ID="chkRememberMe" runat="server" CssClass="form-check-input" />
+                                            <asp:Label ID="lblRememberMe" runat="server" AssociatedControlID="chkRememberMe" CssClass="form-check-label">Remember me</asp:Label>
+                                        </div>
                                     </div>
+
+                               
 
                                     <div class="d-grid">
                                         <asp:Button ID="btnLogin" runat="server" Text="Sign In" CssClass="btn btn-dark-primary btn-lg" OnClick="btnLogin_Click" />

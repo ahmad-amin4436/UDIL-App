@@ -90,6 +90,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UDIL.Shared\UDIL.Shared.csproj">
+      <Project>{B5CCA8C3-E5FD-4FF8-9F3D-8F21860E45BD}</Project>
+      <Name>UDIL.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="DatabaseLayer.cs" />
     <Compile Include="DeviceCreationDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
