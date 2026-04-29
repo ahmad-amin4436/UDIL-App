@@ -274,6 +274,9 @@ namespace UDIL.Pages
                 lblStage.CssClass = "badge bg-success px-3 py-2";
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetDeviceCreationLoading", "resetDeviceCreationLoading();", true);
 
+                // Auto-pass API test on tracker completion
+                SaveApiTestResult(transactionId, "Pass", "API test completed successfully via tracker");
+
                 // Show data tables after tracker completion
                 ShowDataTables();
                 timerTables.Enabled = true;
@@ -864,9 +867,19 @@ namespace UDIL.Pages
 
                 if (!string.IsNullOrEmpty(remarks))
                 {
-                    HandleTableAction(tableName, "Fail", remarks);
+                    HandleTableAction(tableName + "Table - Device Creation", "Fail", remarks);
                     System.Diagnostics.Debug.WriteLine($"Remarks saved for {tableName}: {remarks}");
-                    
+
+                    // Hide remarks section
+                    HideRemarksSection(tableName);
+
+                    // Mark table as failed
+                    MakeTableCardFailed(tableName);
+
+                    // Show alert message
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "showFailAlert",
+                        $"alert('{tableName} marked as Fail with remarks: {remarks.Replace("'", "\\'")}');", true);
+
                     // Resume table refresh timer after saving remarks
                     timerTables.Enabled = true;
                 }
@@ -874,6 +887,61 @@ namespace UDIL.Pages
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error saving remarks: {ex.Message}");
+            }
+        }
+
+        private void HideRemarksSection(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "none");
+                        txtMeterVisualsRemarks.Text = "";
+                        break;
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "none");
+                        txtCommHistoryRemarks.Text = "";
+                        break;
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "none");
+                        txtEventsRemarks.Text = "";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error hiding remarks section: {ex.Message}");
+            }
+        }
+
+        private void MakeTableCardFailed(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        btnMeterVisualsPass.Visible = false;
+                        btnMeterVisualsFail.CssClass = "btn btn-danger btn-sm disabled";
+                        btnMeterVisualsFail.Enabled = false;
+                        break;
+                    case "CommunicationHistory":
+                        btnCommunicationHistoryPass.Visible = false;
+                        btnCommunicationHistoryFail.CssClass = "btn btn-danger btn-sm disabled";
+                        btnCommunicationHistoryFail.Enabled = false;
+                        break;
+                    case "Events":
+                        btnEventsPass.Visible = false;
+                        btnEventsFail.CssClass = "btn btn-danger btn-sm disabled";
+                        btnEventsFail.Enabled = false;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error making table card failed: {ex.Message}");
             }
         }
 
@@ -916,22 +984,90 @@ namespace UDIL.Pages
         {
             try
             {
-                // Here you can implement the logic to handle pass/fail actions
-                // For example, you could save to database, log the action, etc.
-                
-                string message = action == "Pass" 
-                    ? $"{tableName} marked as Pass" 
+                string transactionId = Session["CurrentTransactionId"] as string;
+                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
+
+                // Save test result to database
+                SaveTestResult(tableName + "Table - Device Creation", action, reason, transactionId, globalDeviceId);
+
+                string message = action == "Pass"
+                    ? $"{tableName} marked as Pass"
                     : $"{tableName} marked as Fail. Reason: {reason}";
 
                 System.Diagnostics.Debug.WriteLine($"Table Action: {message}");
-                
-                // You could also show a message to the user
-                // lblDeviceCreationMessage.Text = message;
-                // lblDeviceCreationMessage.CssClass = action == "Pass" ? "text-success" : "text-warning";
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error handling table action: {ex.Message}");
+            }
+        }
+
+        private void SaveApiTestResult(string transactionId, string status, string remarks)
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No current session found, skipping API test result save");
+                    return;
+                }
+
+                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
+                UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
+                {
+                    SessionId = currentSession.SessionId,
+                    TestName = "DeviceCreationAPI",
+                    TestType = "API",
+                    Status = status,
+                    Remarks = remarks,
+                    TestDate = DateTime.Now,
+                    TransactionId = transactionId,
+                    GlobalDeviceId = globalDeviceId
+                };
+
+                UDIL.DAL.DatabaseLayer dbLayer = new UDIL.DAL.DatabaseLayer(System.Configuration.ConfigurationManager.ConnectionStrings["TestSuitConnenction"]?.ConnectionString);
+                dbLayer.SaveTestResult(testResult);
+
+                System.Diagnostics.Debug.WriteLine($"API test result saved: {status}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving API test result: {ex.Message}");
+            }
+        }
+
+        private void SaveTestResult(string testName, string status, string remarks, string transactionId, string globalDeviceId)
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No current session found, skipping test result save");
+                    return;
+                }
+
+                UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
+                {
+                    SessionId = currentSession.SessionId,
+                    TestName = testName,
+                    TestType = "Database",
+                    Status = status,
+                    Remarks = remarks,
+                    TestDate = DateTime.Now,
+                    TransactionId = transactionId,
+                    GlobalDeviceId = globalDeviceId
+                };
+
+                UDIL.DAL.DatabaseLayer dbLayer = new UDIL.DAL.DatabaseLayer(System.Configuration.ConfigurationManager.ConnectionStrings["TestSuitConnenction"]?.ConnectionString);
+                dbLayer.SaveTestResult(testResult);
+
+                System.Diagnostics.Debug.WriteLine($"Test result saved for {testName}: {status}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving test result: {ex.Message}");
             }
         }
 

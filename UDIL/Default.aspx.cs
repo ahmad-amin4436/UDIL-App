@@ -10,6 +10,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using UDIL.Shared;
+using UDIL.DAL;
 
 namespace UDIL
 {
@@ -228,14 +229,18 @@ namespace UDIL
         {
             try
             {
-                var configs = UDIL.Shared.ConfigurationManager.GetAllConfigurations();
+                var dbLayer = new DatabaseLayer();
+                var configDs = dbLayer.GetAllConfigurations();
                 
                 ddlSavedConfigs.Items.Clear();
                 ddlSavedConfigs.Items.Add(new ListItem("-- Select Configuration --", ""));
                 
-                foreach (var config in configs)
+                if (configDs.Tables.Count > 0)
                 {
-                    ddlSavedConfigs.Items.Add(new ListItem(config.Key, config.Key));
+                    foreach (System.Data.DataRow row in configDs.Tables[0].Rows)
+                    {
+                        ddlSavedConfigs.Items.Add(new ListItem(row["name"].ToString(), row["name"].ToString()));
+                    }
                 }
             }
             catch (Exception ex)
@@ -288,7 +293,8 @@ namespace UDIL
                     DbProvider = txtDbProvider.Text.Trim()
                 };
 
-                UDIL.Shared.ConfigurationManager.SaveConfiguration(configName, config);
+                var dbLayer = new DatabaseLayer();
+                dbLayer.SaveConfiguration(config);
 
                 lblConfigMessage.Text = "Configuration saved successfully!";
                 lblConfigMessage.CssClass = "text-success";
@@ -316,7 +322,28 @@ namespace UDIL
                     return;
                 }
 
-                var config = UDIL.Shared.ConfigurationManager.LoadConfiguration(configName);
+                var dbLayer = new DatabaseLayer();
+                var configDs = dbLayer.GetConfiguration(configName);
+                
+                if (configDs.Tables.Count == 0 || configDs.Tables[0].Rows.Count == 0)
+                {
+                    throw new Exception($"Configuration '{configName}' not found");
+                }
+                
+                System.Data.DataRow row = configDs.Tables[0].Rows[0];
+                var config = new UDIL.Shared.Configuration
+                {
+                    Name = row["name"].ToString(),
+                    BaseUrl = row["base_url"].ToString(),
+                    Timeout = Convert.ToInt32(row["timeout"]),
+                    DbServer = row["db_server"].ToString(),
+                    DbPort = row["db_port"].ToString(),
+                    DbName = row["db_name"].ToString(),
+                    DbUid = row["db_uid"].ToString(),
+                    DbPwd = row["db_pwd"].ToString(),
+                    DbProvider = row["db_provider"].ToString(),
+                    CreatedDate = Convert.ToDateTime(row["created_date"])
+                };
                 
                 txtBaseUrl.Text = config.BaseUrl;
                 txtTimeout.Text = config.Timeout.ToString();
@@ -352,7 +379,8 @@ namespace UDIL
                     return;
                 }
 
-                UDIL.Shared.ConfigurationManager.DeleteConfiguration(configName);
+                var dbLayer = new DatabaseLayer();
+                dbLayer.DeleteConfiguration(configName);
 
                 lblConfigMessage.Text = "Configuration deleted successfully!";
                 lblConfigMessage.CssClass = "text-success";
@@ -430,14 +458,18 @@ namespace UDIL
         {
             try
             {
-                var sessions = UDIL.Shared.ConfigurationManager.GetAllSessions();
+                var dbLayer = new DatabaseLayer();
+                var sessionDs = dbLayer.GetAllSessions();
                 
                 ddlSavedSessions.Items.Clear();
                 ddlSavedSessions.Items.Add(new ListItem("-- Select Session --", ""));
                 
-                foreach (var session in sessions)
+                if (sessionDs.Tables.Count > 0)
                 {
-                    ddlSavedSessions.Items.Add(new ListItem(session.Key, session.Key));
+                    foreach (System.Data.DataRow row in sessionDs.Tables[0].Rows)
+                    {
+                        ddlSavedSessions.Items.Add(new ListItem(row["name"].ToString(), row["name"].ToString()));
+                    }
                 }
             }
             catch (Exception ex)
@@ -538,7 +570,8 @@ namespace UDIL
                     TotalTests = 0
                 };
 
-                UDIL.Shared.ConfigurationManager.SaveSession(session);
+                var dbLayer = new DatabaseLayer();
+                dbLayer.SaveSession(session);
 
                 lblSessionMessage.Text = "Session created successfully!";
                 lblSessionMessage.CssClass = "text-success";
@@ -566,7 +599,29 @@ namespace UDIL
                     return;
                 }
 
-                var session = UDIL.Shared.ConfigurationManager.LoadSession(sessionName);
+                var dbLayer = new DatabaseLayer();
+                var sessionDs = dbLayer.GetSession(sessionName);
+                
+                if (sessionDs.Tables.Count == 0 || sessionDs.Tables[0].Rows.Count == 0)
+                {
+                    throw new Exception($"Session '{sessionName}' not found");
+                }
+                
+                System.Data.DataRow row = sessionDs.Tables[0].Rows[0];
+                var session = new UDIL.Shared.TestSession
+                {
+                    SessionId = row["session_id"].ToString(),
+                    Name = row["name"].ToString(),
+                    Description = row["description"] != System.DBNull.Value ? row["description"].ToString() : null,
+                    CreatedDate = Convert.ToDateTime(row["created_date"]),
+                    ModifiedDate = Convert.ToDateTime(row["modified_date"]),
+                    Status = row["status"].ToString(),
+                    TestEnvironment = row["test_environment"].ToString(),
+                    DeviceCount = Convert.ToInt32(row["device_count"]),
+                    TestType = row["test_type"].ToString(),
+                    TestsCompleted = Convert.ToInt32(row["tests_completed"]),
+                    TotalTests = Convert.ToInt32(row["total_tests"])
+                };
                 UDIL.Shared.ConfigurationManager.SetCurrentSession(session);
 
                 lblSessionMessage.Text = "Session loaded successfully!";
@@ -594,7 +649,8 @@ namespace UDIL
                     return;
                 }
 
-                UDIL.Shared.ConfigurationManager.DeleteSession(sessionName);
+                var dbLayer = new DatabaseLayer();
+                dbLayer.DeleteSession(sessionName);
 
                 lblSessionMessage.Text = "Session deleted successfully!";
                 lblSessionMessage.CssClass = "text-success";

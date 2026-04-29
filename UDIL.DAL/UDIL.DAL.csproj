@@ -96,6 +96,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuxRelayDAL.cs" />
     <Compile Include="DatabaseLayer.cs" />
     <Compile Include="DeviceCreationDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

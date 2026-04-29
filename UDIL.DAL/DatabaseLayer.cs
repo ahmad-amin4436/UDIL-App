@@ -9,6 +9,25 @@ using System.Threading.Tasks;
 
 namespace UDIL.DAL
 {
+    public class TestResult
+    {
+        public int Id { get; set; }
+        public string SessionId { get; set; }
+        public string TestName { get; set; }
+        public string TestType { get; set; }
+        public string Status { get; set; }
+        public string Remarks { get; set; }
+        public DateTime TestDate { get; set; }
+        public string TransactionId { get; set; }
+        public string GlobalDeviceId { get; set; }
+
+        public TestResult()
+        {
+            // Default values
+            TestDate = DateTime.Now;
+            Status = "Pending";
+        }
+    }
     public class DatabaseLayer
     {
         private string connectionString;
@@ -390,12 +409,12 @@ namespace UDIL.DAL
                     connection.Open();
 
                     string query = @"UPDATE test_sessions SET tests_completed = @tests_completed, total_tests = @total_tests, modified_date = @modified_date";
-                    
+
                     if (!string.IsNullOrEmpty(status))
                     {
                         query += ", status = @status";
                     }
-                    
+
                     query += " WHERE name = @session_name";
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -404,7 +423,7 @@ namespace UDIL.DAL
                         command.Parameters.AddWithValue("@total_tests", totalTests);
                         command.Parameters.AddWithValue("@modified_date", DateTime.Now);
                         command.Parameters.AddWithValue("@session_name", sessionName);
-                        
+
                         if (!string.IsNullOrEmpty(status))
                         {
                             command.Parameters.AddWithValue("@status", status);
@@ -419,6 +438,118 @@ namespace UDIL.DAL
             {
                 throw new Exception("Error updating session progress: " + ex.Message);
             }
+        }
+
+        #endregion
+
+        #region Test Results Management
+
+        public bool SaveTestResult(TestResult testResult)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"INSERT INTO test_results (session_id, test_name, test_type, status, remarks, test_date, transaction_id, global_device_id)
+                                   VALUES (@session_id, @test_name, @test_type, @status, @remarks, @test_date, @transaction_id, @global_device_id)
+                                   ON DUPLICATE KEY UPDATE
+                                   status = @status, remarks = @remarks, test_date = @test_date";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@session_id", testResult.SessionId);
+                        command.Parameters.AddWithValue("@test_name", testResult.TestName);
+                        command.Parameters.AddWithValue("@test_type", testResult.TestType);
+                        command.Parameters.AddWithValue("@status", testResult.Status);
+                        command.Parameters.AddWithValue("@remarks", testResult.Remarks ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@test_date", testResult.TestDate);
+                        command.Parameters.AddWithValue("@transaction_id", testResult.TransactionId ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@global_device_id", testResult.GlobalDeviceId ?? (object)DBNull.Value);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error saving test result: " + ex.Message);
+            }
+        }
+
+        public DataSet GetTestResultsBySession(string sessionId)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT * FROM test_results WHERE session_id = @session_id ORDER BY test_date DESC";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@session_id", sessionId);
+
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                        {
+                            DataSet ds = new DataSet();
+                            adapter.Fill(ds);
+                            return ds;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting test results: " + ex.Message);
+            }
+        }
+
+        public TestResult GetTestResult(string sessionId, string testName)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "SELECT * FROM test_results WHERE session_id = @session_id AND test_name = @test_name";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@session_id", sessionId);
+                        command.Parameters.AddWithValue("@test_name", testName);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new TestResult
+                                {
+                                    Id = Convert.ToInt32(reader["id"]),
+                                    SessionId = reader["session_id"].ToString(),
+                                    TestName = reader["test_name"].ToString(),
+                                    TestType = reader["test_type"].ToString(),
+                                    Status = reader["status"].ToString(),
+                                    Remarks = reader["remarks"] != DBNull.Value ? reader["remarks"].ToString() : null,
+                                    TestDate = Convert.ToDateTime(reader["test_date"]),
+                                    TransactionId = reader["transaction_id"] != DBNull.Value ? reader["transaction_id"].ToString() : null,
+                                    GlobalDeviceId = reader["global_device_id"] != DBNull.Value ? reader["global_device_id"].ToString() : null
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting test result: " + ex.Message);
+            }
+
+            return null;
         }
 
         #endregion
