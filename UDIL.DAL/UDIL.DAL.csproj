@@ -100,6 +100,7 @@
     <Compile Include="DatabaseLayer.cs" />
     <Compile Include="DeviceCreationDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeSyncDAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
