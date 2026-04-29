@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,11 +10,12 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using UDIL.DAL;
 using UDIL.Shared;
 
 namespace UDIL.Pages
 {
-    public partial class UpdateTOU : System.Web.UI.Page
+    public partial class UpdateTOU : UDIL.AuthenticatedPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -335,8 +338,12 @@ namespace UDIL.Pages
                 lblStage.CssClass = "badge bg-success px-3 py-2";
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetUpdateTOULoading", "resetUpdateTOULoading();", true);
 
-                // Hide tracker only when level 8 is reached
-                //pnlTracker.Visible = false;
+                // Auto-pass API test on tracker completion
+                SaveApiTestResult(transactionId, "Pass", "API test completed successfully via tracker");
+
+                // Show data tables after tracker completion
+                ShowDataTables();
+                timerTables.Enabled = true;
 
                 // Clear ViewState when completed
                 ViewState["TrackerLevel"] = null;
@@ -615,6 +622,414 @@ namespace UDIL.Pages
             public string status_level { get; set; }
             public string request_cancelled { get; set; }
             public string status_3_datetime { get; set; }
+        }
+
+        private void ShowDataTables()
+        {
+            try
+            {
+                string globalDeviceId = tsGlobalDeviceId.Text.Trim();
+                if (!string.IsNullOrEmpty(globalDeviceId))
+                {
+                    LoadTableData(globalDeviceId);
+                    pnlDataTables.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing data tables: {ex.Message}");
+            }
+        }
+
+        private void LoadTableData(string globalDeviceId)
+        {
+            try
+            {
+                Tables dal = new Tables(GetConnectionString());
+                DataSet ds = dal.GetUDILTables(globalDeviceId);
+
+                // Bind Meter Visuals table
+                if (ds.Tables.Contains("MeterVisuals") && ds.Tables["MeterVisuals"].Rows.Count > 0)
+                {
+                    gvMeterVisuals.DataSource = ds.Tables["MeterVisuals"];
+                    gvMeterVisuals.DataBind();
+                }
+                else
+                {
+                    gvMeterVisuals.DataSource = null;
+                    gvMeterVisuals.DataBind();
+                }
+
+                // Bind Communication History table
+                if (ds.Tables.Contains("CommunicationHistory") && ds.Tables["CommunicationHistory"].Rows.Count > 0)
+                {
+                    gvCommunicationHistory.DataSource = ds.Tables["CommunicationHistory"];
+                    gvCommunicationHistory.DataBind();
+                }
+                else
+                {
+                    gvCommunicationHistory.DataSource = null;
+                    gvCommunicationHistory.DataBind();
+                }
+
+                // Bind Events table
+                if (ds.Tables.Contains("Events") && ds.Tables["Events"].Rows.Count > 0)
+                {
+                    gvEvents.DataSource = ds.Tables["Events"];
+                    gvEvents.DataBind();
+                }
+                else
+                {
+                    gvEvents.DataSource = null;
+                    gvEvents.DataBind();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading table data: {ex.Message}");
+            }
+        }
+
+        protected void timerTables_Tick(object sender, EventArgs e)
+        {
+            // Refresh table data every 2 seconds
+            ShowDataTables();
+        }
+
+        protected void TableButton_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+            string action = e.CommandName;
+
+            if (action == "Fail")
+            {
+                // Pause table refresh timer when fail button is clicked
+                timerTables.Enabled = false;
+
+                // Show remarks section for fail reason
+                ShowFailRemarksSection(tableName);
+            }
+            else if (action == "Pass")
+            {
+                // Handle pass action
+                HandleTableAction(tableName, "Pass", null);
+
+                // Make table card green and hide fail button
+                MakeTableCardGreen(tableName);
+            }
+        }
+
+        private void MakeTableCardGreen(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        btnMeterVisualsFail.Visible = false;
+                        btnMeterVisualsPass.CssClass = "btn btn-success btn-sm disabled";
+                        btnMeterVisualsPass.Enabled = false;
+                        break;
+
+                    case "CommunicationHistory":
+                        btnCommunicationHistoryFail.Visible = false;
+                        btnCommunicationHistoryPass.CssClass = "btn btn-success btn-sm disabled";
+                        btnCommunicationHistoryPass.Enabled = false;
+                        break;
+
+                    case "Events":
+                        btnEventsFail.Visible = false;
+                        btnEventsPass.CssClass = "btn btn-success btn-sm disabled";
+                        btnEventsPass.Enabled = false;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error making table card green: {ex.Message}");
+            }
+        }
+
+        private void MakeTableCardFailed(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        btnMeterVisualsPass.Visible = false;
+                        btnMeterVisualsFail.CssClass = "btn btn-danger btn-sm disabled";
+                        btnMeterVisualsFail.Enabled = false;
+                        break;
+                    case "CommunicationHistory":
+                        btnCommunicationHistoryPass.Visible = false;
+                        btnCommunicationHistoryFail.CssClass = "btn btn-danger btn-sm disabled";
+                        btnCommunicationHistoryFail.Enabled = false;
+                        break;
+                    case "Events":
+                        btnEventsPass.Visible = false;
+                        btnEventsFail.CssClass = "btn btn-danger btn-sm disabled";
+                        btnEventsFail.Enabled = false;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error making table card failed: {ex.Message}");
+            }
+        }
+
+        private void ShowFailRemarksSection(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "block");
+                        txtMeterVisualsRemarks.Text = "";
+                        break;
+
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "block");
+                        txtCommHistoryRemarks.Text = "";
+                        break;
+
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "block");
+                        txtEventsRemarks.Text = "";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing fail remarks section: {ex.Message}");
+            }
+        }
+
+        private void ShowRemarksSection(string tableName, string reason)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "block");
+                        txtMeterVisualsRemarks.Text = reason;
+                        break;
+
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "block");
+                        txtCommHistoryRemarks.Text = reason;
+                        break;
+
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "block");
+                        txtEventsRemarks.Text = reason;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing remarks section: {ex.Message}");
+            }
+        }
+
+        protected void SaveRemarks_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+            string remarks = "";
+
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        remarks = txtMeterVisualsRemarks.Text.Trim();
+                        break;
+                    case "CommunicationHistory":
+                        remarks = txtCommHistoryRemarks.Text.Trim();
+                        break;
+                    case "Events":
+                        remarks = txtEventsRemarks.Text.Trim();
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(remarks))
+                {
+                    HandleTableAction(tableName + "Table - Update TOU", "Fail", remarks);
+                    System.Diagnostics.Debug.WriteLine($"Remarks saved for {tableName}: {remarks}");
+
+                    // Hide remarks section
+                    HideRemarksSection(tableName);
+
+                    // Mark table as failed
+                    MakeTableCardFailed(tableName);
+
+                    // Show alert message
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "showFailAlert",
+                        $"alert('{tableName} marked as Fail with remarks: {remarks.Replace("'", "\\'")}');", true);
+
+                    // Resume table refresh timer after saving remarks
+                    timerTables.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving remarks: {ex.Message}");
+            }
+        }
+
+        private void HideRemarksSection(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "none");
+                        txtMeterVisualsRemarks.Text = "";
+                        break;
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "none");
+                        txtCommHistoryRemarks.Text = "";
+                        break;
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "none");
+                        txtEventsRemarks.Text = "";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error hiding remarks section: {ex.Message}");
+            }
+        }
+
+        protected void CancelRemarks_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "none");
+                        txtMeterVisualsRemarks.Text = "";
+                        break;
+
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "none");
+                        txtCommHistoryRemarks.Text = "";
+                        break;
+
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "none");
+                        txtEventsRemarks.Text = "";
+                        break;
+                }
+
+                // Resume table refresh timer after canceling remarks
+                timerTables.Enabled = true;
+
+                System.Diagnostics.Debug.WriteLine($"Remarks section hidden for {tableName}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error canceling remarks: {ex.Message}");
+            }
+        }
+
+        private void HandleTableAction(string tableName, string action, string reason)
+        {
+            try
+            {
+                string transactionId = Session["CurrentTransactionId"] as string;
+                string globalDeviceId = tsGlobalDeviceId.Text.Trim();
+
+                // Save test result to database
+                SaveTestResult(tableName, action, reason, transactionId, globalDeviceId);
+
+                string message = action == "Pass"
+                    ? $"{tableName} marked as Pass"
+                    : $"{tableName} marked as Fail. Reason: {reason}";
+
+                System.Diagnostics.Debug.WriteLine($"Table Action: {message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error handling table action: {ex.Message}");
+            }
+        }
+
+        private void SaveApiTestResult(string transactionId, string status, string remarks)
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No current session found, skipping API test result save");
+                    return;
+                }
+
+                string globalDeviceId = tsGlobalDeviceId.Text.Trim();
+                UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
+                {
+                    SessionId = currentSession.SessionId,
+                    TestName = "UpdateTOUAPI",
+                    TestType = "API",
+                    Status = status,
+                    Remarks = remarks,
+                    TestDate = DateTime.Now,
+                    TransactionId = transactionId,
+                    GlobalDeviceId = globalDeviceId
+                };
+
+                UDIL.DAL.DatabaseLayer dbLayer = new UDIL.DAL.DatabaseLayer(System.Configuration.ConfigurationManager.ConnectionStrings["TestSuitConnenction"]?.ConnectionString);
+                dbLayer.SaveTestResult(testResult);
+
+                System.Diagnostics.Debug.WriteLine($"API test result saved: {status}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving API test result: {ex.Message}");
+            }
+        }
+
+        private void SaveTestResult(string testName, string status, string remarks, string transactionId, string globalDeviceId)
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No current session found, skipping test result save");
+                    return;
+                }
+
+                UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
+                {
+                    SessionId = currentSession.SessionId,
+                    TestName = testName,
+                    TestType = "Database",
+                    Status = status,
+                    Remarks = remarks,
+                    TestDate = DateTime.Now,
+                    TransactionId = transactionId,
+                    GlobalDeviceId = globalDeviceId
+                };
+
+                UDIL.DAL.DatabaseLayer dbLayer = new UDIL.DAL.DatabaseLayer(System.Configuration.ConfigurationManager.ConnectionStrings["TestSuitConnenction"]?.ConnectionString);
+                dbLayer.SaveTestResult(testResult);
+
+                System.Diagnostics.Debug.WriteLine($"Test result saved for {testName}: {status}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving test result: {ex.Message}");
+            }
         }
     }
 }
