@@ -54,7 +54,7 @@
                             <asp:Button
                                 ID="btnIPPortUpdate"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Send IP Port Update"
                                 OnClick="btnIPPortUpdate_Click"
                                 OnClientClick="showIPPortUpdateLoading(this); return true;" />

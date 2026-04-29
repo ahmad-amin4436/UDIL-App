@@ -44,7 +44,7 @@
                             <asp:Button
                                 ID="btnMdiReset"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Update MDI reset"
                                 OnClick="btnMdiReset_Click"
                                 OnClientClick="showMdiResetLoading(this); return true;" />

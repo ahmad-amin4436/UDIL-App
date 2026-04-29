@@ -1,29 +1,14 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace UDIL
 {
-    public partial class SiteMaster : MasterPage
+    public partial class AccessDenied : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-        }
-
-        protected string GetActiveClass(string pageName, string queryString = null)
-        {
-            string currentPath = Request.AppRelativeCurrentExecutionFilePath.ToLower();
-            string currentQuery = Request.QueryString["page"];
-            
-            if (!string.IsNullOrEmpty(queryString))
-            {
-                return currentPath.Contains(pageName) && currentQuery == queryString ? "active" : "";
-            }
-            else
-            {
-                return currentPath.Contains(pageName) && currentQuery == null ? "active" : "";
-            }
+            // No authentication check needed for this page
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)

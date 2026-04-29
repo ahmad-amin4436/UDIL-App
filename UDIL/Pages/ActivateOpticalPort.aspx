@@ -44,7 +44,7 @@
                             <asp:Button
                                 ID="btnActivateOpticalPort"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Activate Optical Port"
                                 OnClick="btnActivateOpticalPort_Click"
                                 OnClientClick="showActivateOpticalPortLoading(this); return true;" />

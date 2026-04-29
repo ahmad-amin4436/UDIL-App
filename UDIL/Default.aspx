@@ -103,7 +103,7 @@
                                 <asp:Button ID="btnSaveConfig" runat="server" Text="Save Configuration" CssClass="btn btn-success me-2" OnClick="btnSaveConfig_Click" />
                                 <asp:Button ID="btnLoadConfig" runat="server" Text="Load Configuration" CssClass="btn btn-info me-2" OnClick="btnLoadConfig_Click" />
                                 <asp:Button ID="btnDeleteConfig" runat="server" Text="Delete Configuration" CssClass="btn btn-danger me-2" OnClick="btnDeleteConfig_Click" />
-                                <asp:Button ID="btnApplyConfig" runat="server" Text="Apply Configuration" CssClass="btn btn-primary" OnClick="btnApplyConfig_Click" />
+                                <asp:Button ID="btnApplyConfig" runat="server" Text="Apply Configuration" CssClass="btn btn-dark-primary" OnClick="btnApplyConfig_Click" />
                             </div>
                         </div>
                         <div class="mt-3">
@@ -132,7 +132,7 @@
                                 <asp:TextBox ID="txtCode" runat="server" Text="235" CssClass="form-control" placeholder="Enter code"></asp:TextBox>
                             </div>
                         </div>
-                        <asp:Button ID="btnAuthorize" runat="server" Text="Authorize" CssClass="btn btn-primary" OnClick="btnAuthorize_Click" />
+                        <asp:Button ID="btnAuthorize" runat="server" Text="Authorize" CssClass="btn btn-dark-primary" OnClick="btnAuthorize_Click" />
                         <button type="reset" class="btn btn-secondary ms-2">Reset</button>
                         <div id="auth-detail" class="mt-3">
                             <asp:Label ID="lblAuthMessage" runat="server" CssClass="text-info"></asp:Label>
@@ -193,7 +193,7 @@
                                     <input type="datetime-local" class="form-control" id="timestamp">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit Data</button>
+                            <button type="submit" class="btn btn-dark-primary">Submit Data</button>
                             <button type="reset" class="btn btn-secondary ms-2">Reset</button>
                         </form>
                         <hr>
@@ -284,7 +284,7 @@
                                     <input type="number" step="0.01" class="form-control" id="absoluteEnergy" placeholder="1151.50">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit Billing Data</button>
+                            <button type="submit" class="btn btn-dark-primary">Submit Billing Data</button>
                             <button type="reset" class="btn btn-secondary ms-2">Reset</button>
                         </form>
                         <hr>
@@ -357,7 +357,7 @@
                                     <input type="text" class="form-control" id="relayId" placeholder="Enter relay identifier">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Execute Command</button>
+                            <button type="submit" class="btn btn-dark-primary">Execute Command</button>
                             <button type="reset" class="btn btn-secondary ms-2">Reset</button>
                         </form>
                     </div>
@@ -376,7 +376,7 @@
                                 <label for="transactionId" class="form-label">Transaction ID</label>
                                 <input type="text" class="form-control" id="transactionId" placeholder="Enter transaction ID">
                             </div>
-                            <button type="submit" class="btn btn-primary">Check Status</button>
+                            <button type="submit" class="btn btn-dark-primary">Check Status</button>
                             <button type="reset" class="btn btn-secondary ms-2">Reset</button>
                         </form>
                         <hr>
@@ -403,7 +403,7 @@
                                     <tr>
                                         <td>TXN002</td>
                                         <td>Relay Operation</td>
-                                        <td><span class="badge bg-danger">Failed</span></td>
+                                        <td><span class="badge bg-dark-danger">Failed</span></td>
                                         <td>2026-04-07 09:05:00</td>
                                         <td>Timeout</td>
                                     </tr>
@@ -460,7 +460,7 @@
                                     <tr>
                                         <td>2026-04-07 08:10:00</td>
                                         <td>Billing Data Query</td>
-                                        <td><span class="badge bg-danger">Fail</span></td>
+                                        <td><span class="badge bg-dark-danger">Fail</span></td>
                                         <td>5000</td>
                                         <td>Connection timeout</td>
                                     </tr>

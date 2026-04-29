@@ -348,7 +348,7 @@ namespace UDIL.Pages
                 }
 
                 lblStage.Text = "Cancelled";
-                lblStage.CssClass = "badge bg-danger px-3 py-2";
+                lblStage.CssClass = "badge bg-dark-danger px-3 py-2";
                 lblStageDescription.Text = AppCommon.GetStageDescription(level);
                 lblStageDescription.CssClass = "text-danger";
                 progressBar.Style["width"] = "0%";
@@ -374,7 +374,7 @@ namespace UDIL.Pages
             lblStageDescription.Text = AppCommon.GetStageDescription(level);
             lblStageDescription.CssClass = "text-muted";
 
-            int percent = (level * 100) / 8;
+            int percent = (level * 100) / 5;
             progressBar.Style["width"] = percent + "%";
         }
         private void ResetSteps()

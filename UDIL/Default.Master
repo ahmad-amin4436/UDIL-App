@@ -1,4 +1,4 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="UDIL.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Default.master.cs" Inherits="UDIL.Default" %>
 
 <!DOCTYPE html>
 
@@ -17,15 +17,15 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <style>
         
-.bg-dark-danger {
-    background-color: #d21a24 !important; 
+ .bg-dark-danger {
+    background-color: #d21a24 !important;
     color: white;
 
 }
-.btn-dark-primary {
-    background-color: #d21a24 !important; 
-    color: white;
-}
+        .btn-dark-primary {
+            background-color: #d21a24 !important; 
+            color: white;
+        }
 .tracker-step {
     flex: 1;
     position: relative;
@@ -355,7 +355,7 @@
         }
         .sidebar .nav-link.active {
             color: #ffffff;
-            background-color: #d21a24;
+            background-color: #dc3545;
             box-shadow: 0 0 16px rgba(220,53,69,0.2);
         }
         .sidebar .sidebar-heading {
@@ -494,138 +494,7 @@
         </asp:ScriptManager>
         <asp:UpdatePanel ID="upMain" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
-                <nav class="navbar navbar-expand-lg fixed-top">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#">   
-                                        <img runat="server" src="assets/logo-rm-bg.png" alt="UDIL Logo" class="img-fluid" style="max-height: 40px;" />
-
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-auto">
-                                <% if (Session["UserId"] != null && !string.IsNullOrEmpty(Session["UserId"].ToString())) { %>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-person-circle"></i> <%= Session["FullName"] ?? Session["Username"] %>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><h6 class="dropdown-header"><%= Session["Role"] %></h6></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('<%= btnLogout.ClientID %>').click();"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                                    </ul>
-                                </li>
-                                <% } else { %>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="Login.aspx"><i class="bi bi-box-arrow-in-right"></i> Login</a>
-                                </li>
-                                <% } %>
-                            </ul>
-                            <asp:Button ID="btnLogout" runat="server" CssClass="d-none" OnClick="btnLogout_Click" />
-                        </div>
-                    </div>
-                </nav>
-                <div class="sidebar">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("default.aspx") %>" href="<%= ResolveUrl("~/Default.aspx") %>"><i class="bi bi-house-door"></i> Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("default.aspx", "auth") %>" href="<%= ResolveUrl("~/Default.aspx?page=auth") %>"><i class="bi bi-shield-lock"></i> Authorization</a>
-                        </li>
-                        <li>
-                            <h6 class="sidebar-heading">Write Requests</h6>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("devicecreation.aspx") %>" href="<%= ResolveUrl("~/Pages/DeviceCreation.aspx") %>"><i class="bi bi-plus-circle"></i> Device Creation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("auxrelay.aspx") %>" href="<%= ResolveUrl("~/Pages/AuxRelay.aspx") %>"><i class="bi bi-toggle-on"></i> Aux Relay Operations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("timesync.aspx") %>" href="<%= ResolveUrl("~/Pages/TimeSync.aspx") %>"><i class="bi bi-clock"></i> Time Synchronization</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("loadcontrol.aspx") %>" href="<%= ResolveUrl("~/Pages/LoadControl.aspx") %>"><i class="bi bi-lightning"></i> Load Control</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("loadsheddingscheduling.aspx") %>" href="<%= ResolveUrl("~/Pages/LoadSheddingScheduling.aspx") %>"><i class="bi bi-calendar-x"></i> Load Shedding Sch.</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatetou.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateTOU.aspx") %>"><i class="bi bi-clock-history"></i> Update TOU</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("update_ip_port.aspx") %>" href="<%= ResolveUrl("~/Pages/Update_IP_Port.aspx") %>"><i class="bi bi-gear"></i> Update IP/Port</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("meterdatasampling.aspx") %>" href="<%= ResolveUrl("~/Pages/MeterDataSampling.aspx") %>"><i class="bi bi-clipboard-data"></i> Meter Data Sampling</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("activateopticalport.aspx") %>" href="<%= ResolveUrl("~/Pages/ActivateOpticalPort.aspx") %>"><i class="bi bi-plug"></i> Activate Optical Port</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatedevicemetadata.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateDeviceMetadata.aspx") %>"><i class="bi bi-pencil-square"></i> Update Device Metadata</a>
-                        </li>
-                       <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("wakeupsimnumber.aspx") %>" href="<%= ResolveUrl("~/Pages/WakeUpSimNumber.aspx") %>"><i class="bi bi-reception-4"></i> WakeUp Sim Numbers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("mdireset.aspx") %>" href="<%= ResolveUrl("~/Pages/MDIReset.aspx") %>"><i class="bi bi-arrow-clockwise"></i> Update MDI Reset</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatemeterstatus.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateMeterStatus.aspx") %>"><i class="bi bi-arrow-repeat"></i> Update Meter Status</a>
-                        </li>
-                       
-                        <li>
-                            <h6 class="sidebar-heading">Read Requests</h6>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("instantaneousdata.aspx") %>" href="<%= ResolveUrl("~/Pages/InstantaneousData.aspx") %>"><i class="bi bi-graph-up"></i>Instantaneous Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("billingdata.aspx") %>" href="<%= ResolveUrl("~/Pages/BillingData.aspx") %>"><i class="bi bi-receipt"></i>Billing Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("monthlybilling.aspx") %>" href="<%= ResolveUrl("~/Pages/MonthlyBilling.aspx") %>"><i class="bi bi-calendar"></i>Monthly Billing</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("loadprofile.aspx") %>" href="<%= ResolveUrl("~/Pages/LoadProfile.aspx") %>"><i class="bi bi-bar-chart"></i>Load Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("events.aspx") %>" href="<%= ResolveUrl("~/Pages/Events.aspx") %>"><i class="bi bi-exclamation-triangle"></i>Events</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("metervisuals.aspx") %>" href="<%= ResolveUrl("~/Pages/MeterVisuals.aspx") %>"><i class="bi bi-eye"></i>Meter Visuals</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("devicecommunicationhistory.aspx") %>" href="<%= ResolveUrl("~/Pages/DeviceCommunicationHistory.aspx") %>"><i class="bi bi-chat-dots"></i>Device Communication History</a>
-                        </li>
-
-                        <li>
-                            <h6 class="sidebar-heading">On-Demand APIs</h6>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("dataread.aspx") %>" href="<%= ResolveUrl("~/Pages/DataRead.aspx") %>"><i class="bi bi-cloud-download"></i>Data Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("parameterread.aspx") %>" href="<%= ResolveUrl("~/Pages/ParameterRead.aspx") %>"><i class="bi bi-file-earmark-text"></i>Parameter Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("transactionstatus.aspx") %>" href="<%= ResolveUrl("~/Pages/TransactionStatus.aspx") %>"><i class="bi bi-check-circle"></i>Transaction Status</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("transactioncancel.aspx") %>" href="<%= ResolveUrl("~/Pages/TransactionCancel.aspx") %>"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("testresultslogs.aspx") %>" href="<%= ResolveUrl("~/Pages/TestResultsLogs.aspx") %>"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
-                        </li>
-                    </ul>
-                </div>
+               
                 <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
                 <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
             </ContentTemplate>
@@ -736,4 +605,5 @@
   
 </body>
 </html>
+
 

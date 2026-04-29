@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using UDIL.DAL;
 using UDIL.Shared;
 
 namespace UDIL.Pages
 {
-    public partial class DeviceCreation : System.Web.UI.Page
+    public partial class DeviceCreation : UDIL.AuthenticatedPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -270,8 +274,9 @@ namespace UDIL.Pages
                 lblStage.CssClass = "badge bg-success px-3 py-2";
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetDeviceCreationLoading", "resetDeviceCreationLoading();", true);
 
-                // Hide tracker only when level 8 is reached
-                //pnlTracker.Visible = false;
+                // Show data tables after tracker completion
+                ShowDataTables();
+                timerTables.Enabled = true;
 
                 // Clear ViewState when completed
                 ViewState["TrackerLevel"] = null;
@@ -428,7 +433,7 @@ namespace UDIL.Pages
             lblStageDescription.Text = AppCommon.GetStageDescription(level);
             lblStageDescription.CssClass = "text-muted";
 
-            int percent = (level * 100) / 7;
+            int percent = (level * 100) / 5;
             progressBar.Style["width"] = percent + "%";
         }
         private void ResetSteps()
@@ -595,6 +600,339 @@ namespace UDIL.Pages
         private string GetConnectionString()
         {
             return UDIL.Shared.ConfigurationManager.GetConnectionString();
+        }
+
+        private void ShowDataTables()
+        {
+            try
+            {
+                string globalDeviceId = dcGlobalDeviceId.Text.Trim();
+                if (string.IsNullOrEmpty(globalDeviceId))
+                {
+                    // Try to get from session or transaction status
+                    globalDeviceId = ExtractGlobalDeviceId($"[{{\"dsn\":\"{dcDsn.Text.Trim()}\",\"global_device_id\":\"{dcGlobalDeviceId.Text.Trim()}\"}}]");
+                }
+
+                if (!string.IsNullOrEmpty(globalDeviceId))
+                {
+                    LoadTableData(globalDeviceId);
+                    pnlDataTables.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing data tables: {ex.Message}");
+            }
+        }
+
+        private void LoadTableData(string globalDeviceId)
+        {
+            try
+            {
+                DeviceCreationDAL dal = new DeviceCreationDAL(GetConnectionString());
+                DataSet ds = dal.GetUDILTables(globalDeviceId);
+
+                // Bind Meter Visuals table
+                if (ds.Tables.Contains("MeterVisuals") && ds.Tables["MeterVisuals"].Rows.Count > 0)
+                {
+                    gvMeterVisuals.DataSource = ds.Tables["MeterVisuals"];
+                    gvMeterVisuals.DataBind();
+                }
+                else
+                {
+                    gvMeterVisuals.DataSource = null;
+                    gvMeterVisuals.DataBind();
+                }
+
+                // Bind Communication History table
+                if (ds.Tables.Contains("CommunicationHistory") && ds.Tables["CommunicationHistory"].Rows.Count > 0)
+                {
+                    gvCommunicationHistory.DataSource = ds.Tables["CommunicationHistory"];
+                    gvCommunicationHistory.DataBind();
+                }
+                else
+                {
+                    gvCommunicationHistory.DataSource = null;
+                    gvCommunicationHistory.DataBind();
+                }
+
+                // Bind Events table
+                if (ds.Tables.Contains("Events") && ds.Tables["Events"].Rows.Count > 0)
+                {
+                    gvEvents.DataSource = ds.Tables["Events"];
+                    gvEvents.DataBind();
+                }
+                else
+                {
+                    gvEvents.DataSource = null;
+                    gvEvents.DataBind();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading table data: {ex.Message}");
+            }
+        }
+
+        protected void timerTables_Tick(object sender, EventArgs e)
+        {
+            // Refresh table data every 2 seconds
+            ShowDataTables();
+        }
+
+        protected void TableButton_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+            string action = e.CommandName;
+
+            if (action == "Fail")
+            {
+                // Pause table refresh timer when fail button is clicked
+                timerTables.Enabled = false;
+                
+                // Show remarks section for fail reason
+                ShowFailRemarksSection(tableName);
+            }
+            else if (action == "Pass")
+            {
+                // Handle pass action
+                HandleTableAction(tableName, "Pass", null);
+                
+                // Make table card green and hide fail button
+                MakeTableCardGreen(tableName);
+            }
+        }
+
+        private void MakeTableCardGreen(string tableName)
+        {
+            try
+            {
+                // Find the parent card and make it green
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        // Find parent card of Meter Visuals table
+                        var meterVisualsCard = FindParentControl(gvMeterVisuals.Parent, "card");
+                        if (meterVisualsCard is System.Web.UI.HtmlControls.HtmlGenericControl)
+                        {
+                          // meterVisualsCard.Attributes.Add("class", "card mb-4 border-success");
+                        }
+                        // Hide fail button, show pass button as disabled
+                        btnMeterVisualsFail.Visible = false;
+                        btnMeterVisualsPass.CssClass = "btn btn-success btn-sm disabled";
+                        btnMeterVisualsPass.Enabled = false;
+                        break;
+                        
+                    case "CommunicationHistory":
+                        var commHistoryCard = FindParentControl(gvCommunicationHistory.Parent, "card");
+                        if (commHistoryCard is System.Web.UI.HtmlControls.HtmlGenericControl)
+                        {
+                            //commHistoryCard.Attributes.Add("class", "card mb-4 border-success");
+                        }
+                        btnCommunicationHistoryFail.Visible = false;
+                        btnCommunicationHistoryPass.CssClass = "btn btn-success btn-sm disabled";
+                        btnCommunicationHistoryPass.Enabled = false;
+                        break;
+                        
+                    case "Events":
+                        var eventsCard = FindParentControl(gvEvents.Parent, "card");
+                        if (eventsCard is System.Web.UI.HtmlControls.HtmlGenericControl)
+                        {
+                           // eventsCard.Attributes.Add("class", "card mb-4 border-success");
+                        }
+                        btnEventsFail.Visible = false;
+                        btnEventsPass.CssClass = "btn btn-success btn-sm disabled";
+                        btnEventsPass.Enabled = false;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error making table card green: {ex.Message}");
+            }
+        }
+
+        private System.Web.UI.Control FindParentControl(System.Web.UI.Control control, string cssClass)
+        {
+            var parent = control.Parent;
+            while (parent != null)
+            {
+                if (parent is System.Web.UI.WebControls.WebControl webControl && 
+                    webControl.CssClass != null && 
+                    webControl.CssClass.Contains(cssClass))
+                {
+                    return webControl;
+                }
+                parent = parent.Parent;
+            }
+            return null;
+        }
+
+        protected void btnSubmitFailReason_Click(object sender, EventArgs e)
+        {
+            string tableName = hfFailTableName.Value;
+            string reason = txtFailReason.Text.Trim();
+
+            if (!string.IsNullOrEmpty(tableName))
+            {
+                HandleTableAction(tableName, "Fail", reason);
+                
+                // Show remarks section and populate with reason
+                ShowRemarksSection(tableName, reason);
+                
+                // Hide modal
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "hideFailModal", 
+                    "bootstrap.Modal.getInstance(document.getElementById('failReasonModal')).hide();", true);
+            }
+        }
+
+        private void ShowFailRemarksSection(string tableName)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "block");
+                        txtMeterVisualsRemarks.Text = "";
+                        break;
+                        
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "block");
+                        txtCommHistoryRemarks.Text = "";
+                        break;
+                        
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "block");
+                        txtEventsRemarks.Text = "";
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing fail remarks section: {ex.Message}");
+            }
+        }
+
+        private void ShowRemarksSection(string tableName, string reason)
+        {
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "block");
+                        txtMeterVisualsRemarks.Text = reason;
+                        break;
+                        
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "block");
+                        txtCommHistoryRemarks.Text = reason;
+                        break;
+                        
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "block");
+                        txtEventsRemarks.Text = reason;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing remarks section: {ex.Message}");
+            }
+        }
+
+        protected void SaveRemarks_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+            string remarks = "";
+
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        remarks = txtMeterVisualsRemarks.Text.Trim();
+                        break;
+                    case "CommunicationHistory":
+                        remarks = txtCommHistoryRemarks.Text.Trim();
+                        break;
+                    case "Events":
+                        remarks = txtEventsRemarks.Text.Trim();
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(remarks))
+                {
+                    HandleTableAction(tableName, "Fail", remarks);
+                    System.Diagnostics.Debug.WriteLine($"Remarks saved for {tableName}: {remarks}");
+                    
+                    // Resume table refresh timer after saving remarks
+                    timerTables.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving remarks: {ex.Message}");
+            }
+        }
+
+        protected void CancelRemarks_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+
+            try
+            {
+                switch (tableName)
+                {
+                    case "MeterVisuals":
+                        ((System.Web.UI.HtmlControls.HtmlControl)meterVisualsRemarks).Style.Add("display", "none");
+                        txtMeterVisualsRemarks.Text = "";
+                        break;
+                        
+                    case "CommunicationHistory":
+                        ((System.Web.UI.HtmlControls.HtmlControl)commHistoryRemarks).Style.Add("display", "none");
+                        txtCommHistoryRemarks.Text = "";
+                        break;
+                        
+                    case "Events":
+                        ((System.Web.UI.HtmlControls.HtmlControl)eventsRemarks).Style.Add("display", "none");
+                        txtEventsRemarks.Text = "";
+                        break;
+                }
+
+                // Resume table refresh timer after canceling remarks
+                timerTables.Enabled = true;
+                
+                System.Diagnostics.Debug.WriteLine($"Remarks section hidden for {tableName}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error canceling remarks: {ex.Message}");
+            }
+        }
+
+        private void HandleTableAction(string tableName, string action, string reason)
+        {
+            try
+            {
+                // Here you can implement the logic to handle pass/fail actions
+                // For example, you could save to database, log the action, etc.
+                
+                string message = action == "Pass" 
+                    ? $"{tableName} marked as Pass" 
+                    : $"{tableName} marked as Fail. Reason: {reason}";
+
+                System.Diagnostics.Debug.WriteLine($"Table Action: {message}");
+                
+                // You could also show a message to the user
+                // lblDeviceCreationMessage.Text = message;
+                // lblDeviceCreationMessage.CssClass = action == "Pass" ? "text-success" : "text-warning";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error handling table action: {ex.Message}");
+            }
         }
 
         public class AuthResponse

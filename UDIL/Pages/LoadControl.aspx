@@ -60,7 +60,7 @@
                             <asp:Button
                                 ID="btnSancLoadControl"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Send Sanc Load Control"
                                 OnClick="btnSancLoadControl_Click"
                                 OnClientClick="showSancLoadControlLoading(this); return true;" />

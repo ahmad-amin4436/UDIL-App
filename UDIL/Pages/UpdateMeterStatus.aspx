@@ -43,7 +43,7 @@
                             <asp:Button
                                 ID="btnMeterStatus"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Update Meter Status"
                                 OnClick="btnMeterStatus_Click"
                                 OnClientClick="showMeterStatusLoading(this); return true;" />

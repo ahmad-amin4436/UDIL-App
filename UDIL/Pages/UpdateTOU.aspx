@@ -237,7 +237,7 @@
                             <asp:Button
                                 ID="btnUpdateTOU"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Update Time of Use"
                                 OnClick="btnUpdateTOU_Click"
                                 OnClientClick="showUpdateTOULoading(this); return true;" />

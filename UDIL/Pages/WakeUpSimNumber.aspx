@@ -48,7 +48,7 @@
                             <asp:Button
                                 ID="btnWakeSimNumber"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Wake SIM Number"
                                 OnClick="btnWakeSimNumber_Click"
                                 OnClientClick="showWakeSimNumberLoading(this); return true;" />

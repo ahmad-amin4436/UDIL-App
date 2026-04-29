@@ -34,7 +34,7 @@
                             <asp:Button
                                 ID="btnTimeSync"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Send Time Sync"
                                 OnClick="btnTimeSync_Click"
                                 OnClientClick="showTimeSyncLoading(this); return true;" />

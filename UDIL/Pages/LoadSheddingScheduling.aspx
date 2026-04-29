@@ -111,7 +111,7 @@
                             <asp:Button
                                 ID="btnLoadSheddingSchedule"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Send Load Shedding Schedule"
                                 OnClick="btnLoadSheddingSchedule_Click"
                                 OnClientClick="showLoadSheddingScheduleLoading(this); return true;" />

@@ -43,7 +43,7 @@
                             <asp:Button
                                 ID="btnAuxRelayOperations"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Send Aux Relay Operations"
                                 OnClick="btnAuxRelayOperations_Click"
                                 OnClientClick="showAuxRelayOperationsLoading(this); return true;" />

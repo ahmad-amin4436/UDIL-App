@@ -90,7 +90,7 @@
                             <asp:Button
                                 ID="btnUpdateDeviceMetadata"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Update Device Metadata"
                                 OnClick="btnUpdateDeviceMetadata_Click"
                                 OnClientClick="showUpdateDeviceMetadataLoading(this); return true;" />

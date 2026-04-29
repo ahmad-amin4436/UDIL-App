@@ -58,7 +58,7 @@
                             <asp:Button
                                 ID="btnMeterDataSampling"
                                 runat="server"
-                                CssClass="btn btn-primary"
+                                CssClass="btn btn-dark-primary"
                                 Text="Send Meter Data Sampling Bill"
                                 OnClick="btnMeterDataSampling_Click"
                                 OnClientClick="showMeterDataSamplingLoading(this); return true;" />
