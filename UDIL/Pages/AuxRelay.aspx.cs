@@ -505,7 +505,7 @@ namespace UDIL.Pages
         {
             try
             {
-                AuxRelayDAL dal = new AuxRelayDAL(GetConnectionString());
+                Tables dal = new Tables(GetConnectionString());
                 DataSet ds = dal.GetUDILTables(globalDeviceId);
 
                 // Bind Meter Visuals table

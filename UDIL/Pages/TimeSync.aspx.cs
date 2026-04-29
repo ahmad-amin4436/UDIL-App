@@ -464,7 +464,7 @@ namespace UDIL.Pages
         {
             try
             {
-                TimeSyncDAL dal = new TimeSyncDAL(GetConnectionString());
+                Tables dal = new Tables(GetConnectionString());
                 DataSet ds = dal.GetUDILTables(globalDeviceId);
 
                 // Bind Meter Visuals table

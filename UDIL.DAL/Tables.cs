@@ -1,4 +1,4 @@
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace UDIL.DAL
 {
-    public class TimeSyncDAL
+    public class Tables
     {
         private string connectionString;
-        public TimeSyncDAL()
+        public Tables()
         {
             // Default constructor - use Web.config connection string
             connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"]?.ConnectionString;
         }
 
-        public TimeSyncDAL(string connectionString)
+        public Tables(string connectionString)
         {
             // Constructor with custom connection string
             this.connectionString = connectionString;
@@ -34,14 +34,11 @@ namespace UDIL.DAL
                     connection.Open();
 
                     string query = @"
-                        SELECT 
-                            msn, global_device_id, last_command, last_command_datetime, 
-                            last_command_resp, dvtm_datetime, dvtm_meter_clock
+                        SELECT *
                         FROM meter_visuals
                         WHERE global_device_id = @global_device_id;
 
-                        SELECT 
-                            message_log
+                        SELECT *
                         FROM device_communication_history
                         WHERE global_device_id = @global_device_id
                         ORDER BY meter_datetime DESC
