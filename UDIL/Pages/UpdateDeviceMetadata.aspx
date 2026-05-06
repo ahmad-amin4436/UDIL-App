@@ -343,6 +343,8 @@
             // Show spinner and change text immediately
             if (spinner) {
                 spinner.style.display = 'inline-block';
+                button.style.opacity = '0.7';
+                button.style.cursor = 'not-allowed';
             }
 
             // Change text

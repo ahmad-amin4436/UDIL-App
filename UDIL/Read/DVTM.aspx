@@ -1,121 +1,156 @@
-﻿<%@ Page Title="UDIL Tester - Time Sync" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
-   CodeBehind="TimeSync.aspx.cs" Inherits="UDIL.Pages.TimeSync" %>
+﻿<%@ Page Title="UDIL Tester - DVTM - ODR" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
+   CodeBehind="DVTM.aspx.cs" Inherits="UDIL.Read.DVTM" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-   
+
     <div class="main-content">
         <div class="container-fluid mt-5">
-            <section id="time-sync">
-                <h2 class="section-header"><i class="bi bi-clock"></i> Time Synchronization</h2>
+            <section id="auxr-read">
+                <h2 class="section-header"><i class="bi bi-search"></i> DVTM - On Demand Read</h2>
                 <div class="card">
-                   
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblTsTransactionId" runat="server" AssociatedControlID="tsTransactionId" CssClass="form-label" Text="Transaction ID"></asp:Label>
-                                <asp:TextBox ID="tsTransactionId" runat="server" CssClass="form-control" ReadOnly="true" />
+                                <asp:Label ID="lblDvtmTransactionId" runat="server" AssociatedControlID="dvtmTransactionId" CssClass="form-label" Text="Transaction ID"></asp:Label>
+                                <asp:TextBox ID="dvtmTransactionId" runat="server" CssClass="form-control" ReadOnly="true" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblTsPrivateKey" runat="server" AssociatedControlID="tsPrivateKey" CssClass="form-label" Text="Private Key"></asp:Label>
-                                <asp:TextBox ID="tsPrivateKey" runat="server" CssClass="form-control" placeholder="private key from session" Enabled="false" />
+                                <asp:Label ID="lblDvtmPrivateKey" runat="server" AssociatedControlID="dvtmPrivateKey" CssClass="form-label" Text="Private Key"></asp:Label>
+                                <asp:TextBox ID="dvtmPrivateKey" runat="server" CssClass="form-control" placeholder="private key from session" Enabled="false" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblTsGlobalDeviceId" runat="server" AssociatedControlID="tsGlobalDeviceId" CssClass="form-label" Text="Global Device ID"></asp:Label>
-                                <asp:TextBox ID="tsGlobalDeviceId" runat="server" CssClass="form-control" placeholder="Global Device ID" Text="m97999996" />
+                                <asp:Label ID="lblDvtmGlobalDeviceId" runat="server" AssociatedControlID="dvtmGlobalDeviceId" CssClass="form-label" Text="Global Device ID"></asp:Label>
+                                <asp:TextBox ID="dvtmGlobalDeviceId" runat="server" CssClass="form-control" placeholder="Global Device ID" Text="m97999989" />
                             </div>
                             <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblTsRequestDateTime" runat="server" AssociatedControlID="tsRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-27 15:37:00" CssClass="form-control" placeholder="2025-12-27 15:37:00" />
+                                <asp:Label ID="lblDvtmType" runat="server" AssociatedControlID="dvtmType" CssClass="form-label" Text="Type"></asp:Label>
+                                <asp:DropDownList ID="dvtmType" runat="server" CssClass="form-select">
+                                    <asp:ListItem Value="DVTM" Selected="True">DVTM</asp:ListItem>
+                                </asp:DropDownList>
                             </div>
                         </div>
                         <div class="position-relative d-inline-block">
                             <asp:Button
-                                ID="btnTimeSync"
+                                ID="btnDvtmRead"
                                 runat="server"
                                 CssClass="btn btn-dark-primary"
-                                Text="Send Time Sync"
-                                OnClick="btnTimeSync_Click"
-                                OnClientClick="showTimeSyncLoading(this); return true;" />
+                                Text="Read DVTM"
+                                OnClick="btnDvtmRead_Click"
+                                OnClientClick="showDvtmLoading(this); return true;" />
 
-                            <span id="timeSyncSpinner"
+                            <span id="dvtmSpinner"
                                 class="position-absolute top-50 start-50 translate-middle"
                                 style="display: none;">
                                 <span class="spinner-border spinner-border-sm"></span>
                             </span>
                         </div>
-                        <a href="TimeSync.aspx" class="btn btn-secondary ms-2">Reset</a>
-                        <asp:Label ID="lblTimeSyncMessage" runat="server" CssClass="mt-3 d-block"></asp:Label>
+                        <a href="DVTM.aspx" class="btn btn-secondary ms-2">Reset</a>
+                        <asp:Label ID="lblDvtmMessage" runat="server" CssClass="mt-3 d-block"></asp:Label>
                     </div>
-
-                    <!-- Hidden controls for fail reason functionality -->
-                    <asp:HiddenField ID="hfFailTableName" runat="server" />
-                    <asp:TextBox ID="txtFailReason" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" placeholder="Enter reason..." style="display: none;" />
                  </div>
 
-                  <asp:UpdatePanel ID="updTracker" runat="server">
-                      <ContentTemplate>
-
-                          <asp:Panel ID="pnlTracker" runat="server" Visible="false" CssClass="card shadow-sm border-0 mt-4">
-
-                              <div class="card-header border-0">
-                                  <div class="d-flex justify-content-between align-items-center">
-                                      <div>
-                                          <h5 class="mb-0">Time Sync Tracker</h5>
-                                          <small class="text-muted">Transaction:
-                                              <asp:Label ID="lblTrackerTransactionId" runat="server" />
-                                          </small>
-                                      </div>
-                                      <asp:Label ID="lblStage" runat="server" CssClass="badge bg-info px-3 py-2" />
-                                  </div>
-                              </div>
-
-                              <div class="card-body">
-
-                                  <!-- Progress Bar -->
-                                  <div class="progress mb-4" style="height: 6px;">
-                                      <asp:Panel ID="progressBar" runat="server"
-                                          CssClass="progress-bar bg-primary"
-                                          Style="width: 0%">
-                                      </asp:Panel>
-                                  </div>
-
-                                  <!-- Steps -->
-                                  <div class="d-flex justify-content-between text-center">
-
-                                      <asp:Label ID="step0" runat="server" CssClass="tracker-step">Waiting</asp:Label>
-                                      <asp:Label ID="step1" runat="server" CssClass="tracker-step">Start</asp:Label>
-                                      <asp:Label ID="step2" runat="server" CssClass="tracker-step">Request Sent</asp:Label>
-                                      <asp:Label ID="step3" runat="server" CssClass="tracker-step">Connected</asp:Label>
-                                      <asp:Label ID="step4" runat="server" CssClass="tracker-step">Command Sent</asp:Label>
-                                      <asp:Label ID="step5" runat="server" CssClass="tracker-step">Completed</asp:Label>
-                                    
-
-                                  </div>
-
-                                  <!-- Description -->
-                                  <div class="mt-4 text-center">
-                                      <asp:Label ID="lblStageDescription" runat="server" CssClass="text-muted" />
-                                  </div>
-
-                              </div>
-                          </asp:Panel>
-
-                          <asp:Timer ID="timerTracker" runat="server" Interval="2000"
-                              OnTick="timerTracker_Tick" Enabled="false" />
-
-                      </ContentTemplate>
+                <!-- Response Display Section -->
+                <asp:UpdatePanel ID="updResponse" runat="server">
+                    <ContentTemplate>
+                        <asp:Panel ID="pnlResponse" runat="server" Visible="false" CssClass="mt-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header border-0">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <h5 class="mb-0">DVTM Response</h5>
+                                            <asp:Label ID="lblResponseStatus" runat="server" CssClass="badge bg-success px-3 py-2" />
+                                        </div>
+                                        <div>
+                                            <asp:Button ID="btnDvtmResponsePass" runat="server" CssClass="btn btn-success btn-sm" Text="Pass" OnClick="btnDvtmResponsePass_Click" />
+                                            <asp:Button ID="btnDvtmResponseFail" runat="server" CssClass="btn btn-danger btn-sm ms-2" Text="Fail" OnClick="btnDvtmResponseFail_Click" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <strong>Transaction ID:</strong>
+                                            <asp:Label ID="lblResponseTransactionId" runat="server" CssClass="ms-2" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Message:</strong>
+                                            <asp:Label ID="lblResponseMessage" runat="server" CssClass="ms-2" />
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <h6 class="mb-3">DVTM Data</h6>
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <div class="card h-100 border-light">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block">Global Device ID</small>
+                                                    <asp:Label ID="lblRespGlobalDeviceId" runat="server" CssClass="fw-bold" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card h-100 border-light">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block">MSN</small>
+                                                    <asp:Label ID="lblRespMsn" runat="server" CssClass="fw-bold" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card h-100 border-light">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block">DVTM DateTime</small>
+                                                    <asp:Label ID="lblRespDvtmDateTime" runat="server" CssClass="fw-bold" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card h-100 border-light">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block">DVTM Meter Clock</small>
+                                                    <asp:Label ID="lblRespDvtmMeterClock" runat="server" CssClass="fw-bold" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Response Remarks Section -->
+                                    <div id="dvtmResponseRemarks" runat="server" class="mt-3" style="display: none;">
+                                        <div class="card border-warning">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Remarks</h6>
+                                                <asp:TextBox ID="txtDvtmResponseRemarks" runat="server" CssClass="form-control mb-2" TextMode="MultiLine" Rows="2" placeholder="Enter remarks..."></asp:TextBox>
+                                                <div class="mt-2">
+                                                    <asp:Button ID="btnSaveDvtmResponseRemarks" runat="server" CssClass="btn btn-dark-primary btn-sm me-1" Text="Save Remarks" OnClick="btnSaveDvtmResponseRemarks_Click" />
+                                                    <asp:Button ID="btnCancelDvtmResponseRemarks" runat="server" CssClass="btn btn-secondary btn-sm ms-2" Text="Cancel" OnClick="btnCancelDvtmResponseRemarks_Click" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:Panel>
+                    </ContentTemplate>
                     <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="btnTimeSync" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnDvtmRead" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnDvtmResponsePass" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnDvtmResponseFail" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnSaveDvtmResponseRemarks" EventName="Click" />
+                        <asp:AsyncPostBackTrigger ControlID="btnCancelDvtmResponseRemarks" EventName="Click" />
                     </Triggers>
                 </asp:UpdatePanel>
+
+                <!-- Hidden controls for fail reason functionality -->
+                <asp:HiddenField ID="hfFailTableName" runat="server" />
+                <asp:TextBox ID="txtFailReason" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" placeholder="Enter reason..." style="display: none;" />
 
                 <!-- Data Tables Section -->
                 <asp:UpdatePanel ID="updDataTables" runat="server">
                     <ContentTemplate>
                         <asp:Panel ID="pnlDataTables" runat="server" Visible="false" CssClass="mt-4">
-                            <h4 class="mb-4">Time Sync Data Tables</h4>
+                            <h4 class="mb-4">Device Data Tables</h4>
 
                             <!-- Meter Visuals Table -->
                             <div class="card mb-4">
@@ -135,8 +170,16 @@
                                                 <asp:BoundField DataField="last_command" HeaderText="Last Command" />
                                                 <asp:BoundField DataField="last_command_datetime" HeaderText="Last Command DateTime" />
                                                 <asp:BoundField DataField="last_command_resp" HeaderText="Last Command Response" />
-                                                <asp:BoundField DataField="dvtm_datetime" HeaderText="Time Sync Date Time" />
-                                                <asp:BoundField DataField="dvtm_meter_clock" HeaderText="Meter Clock" />
+                                                <asp:BoundField DataField="dmdt_meter_type" HeaderText="Meter Type" />
+                                                <asp:BoundField DataField="dmdt_bidirectional_device" HeaderText="Bidirectional Device" />
+                                                <asp:BoundField DataField="dmdt_communication_mode" HeaderText="Communication Mode" />
+                                                <asp:BoundField DataField="dmdt_communication_type" HeaderText="Communication Type" />
+                                                <asp:BoundField DataField="dmdt_communication_interval" HeaderText="Communication Interval" />
+                                                <asp:BoundField DataField="dmdt_initial_communication_time" HeaderText="Initial Communication Time" />
+                                                <asp:BoundField DataField="dmdt_phase" HeaderText="Phase" />
+                                                <asp:BoundField DataField="mdi_reset_date" HeaderText="MDI Reset Date" />
+                                                <asp:BoundField DataField="mdi_reset_time" HeaderText="MDI Reset Time" />
+                                                <asp:BoundField DataField="msim_id" HeaderText="SIM ID" />
                                             </Columns>
                                             <EmptyDataTemplate>
                                                 <div class="text-muted">No meter visual records found.</div>
@@ -221,6 +264,7 @@
                                                 <asp:BoundField DataField="event_datetime" HeaderText="Event DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                                 <asp:BoundField DataField="mdc_read_datetime" HeaderText="MDC Read DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                                 <asp:BoundField DataField="db_datetime" HeaderText="DB DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
+
                                             </Columns>
                                             <EmptyDataTemplate>
                                                 <div class="text-muted">No event records found.</div>
@@ -251,18 +295,19 @@
             </section>
 
 
-           
+
         </div>
     </div>
-    
+
 </asp:Content>
 
 <asp:Content ID="ScriptsContent" ContentPlaceHolderID="ScriptsContent" runat="server">
+
     <script>
-        function showTimeSyncLoading(button) {
+        function showDvtmLoading(button) {
             if (!button) return;
 
-            const spinner = document.getElementById('timeSyncSpinner');
+            const spinner = document.getElementById('dvtmSpinner');
 
             // Show spinner and change text immediately
             if (spinner) {
@@ -273,7 +318,7 @@
 
             // Change text
             const originalText = button.value;
-            button.value = 'Sending...';
+            button.value = 'Reading...';
 
             // store original text
             button.setAttribute('data-original-text', originalText);
@@ -284,9 +329,9 @@
         }
 
         // Function to disable button after successful processing
-        function disableTimeSyncButton() {
-            const button = document.getElementById('<%= btnTimeSync.ClientID %>');
-            const spinner = document.getElementById('timeSyncSpinner');
+        function disableDvtmButton() {
+            const button = document.getElementById('<%= btnDvtmRead.ClientID %>');
+            const spinner = document.getElementById('dvtmSpinner');
 
 
             if (button) {
@@ -294,7 +339,7 @@
                 button.style.opacity = '0.7';
                 button.style.cursor = 'not-allowed';
 
-                // Keep "Sending..." text to show completion
+                // Keep "Reading..." text to show completion
                 button.value = 'Processing...';
             }
 
@@ -304,16 +349,16 @@
         }
 
         // Optional reset function
-        function resetTimeSyncLoading() {
-            const button = document.getElementById('<%= btnTimeSync.ClientID %>');
-            const spinner = document.getElementById('timeSyncSpinner');
+        function resetDvtmLoading() {
+            const button = document.getElementById('<%= btnDvtmRead.ClientID %>');
+            const spinner = document.getElementById('dvtmSpinner');
 
             if (button) {
                 button.disabled = false;
                 button.style.opacity = '1';
                 button.style.cursor = 'pointer';
 
-                const originalText = 'Send Time Sync';
+                const originalText = 'Read DVTM';
                 if (originalText) {
                     button.value = originalText;
                 }
@@ -325,4 +370,5 @@
         }
     </script>
 </asp:Content>
+
 

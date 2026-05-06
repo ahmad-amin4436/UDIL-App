@@ -585,13 +585,13 @@
                             <h6 class="sidebar-heading">Read Requests</h6>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("instantaneousdata.aspx") %>" href="<%= ResolveUrl("~/Pages/InstantaneousData.aspx") %>"><i class="bi bi-graph-up"></i>Instantaneous Data</a>
+                            <a class="nav-link <%= GetActiveClass("dmdt.aspx") %>" href="<%= ResolveUrl("~/Read/DMDT.aspx") %>"><i class="bi bi-search"></i> DMDT On Demand Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("billingdata.aspx") %>" href="<%= ResolveUrl("~/Pages/BillingData.aspx") %>"><i class="bi bi-receipt"></i>Billing Data</a>
+                            <a class="nav-link <%= GetActiveClass("auxr.aspx") %>" href="<%= ResolveUrl("~/Read/AUXR.aspx") %>"><i class="bi bi-search"></i> AUXR On Demand Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("monthlybilling.aspx") %>" href="<%= ResolveUrl("~/Pages/MonthlyBilling.aspx") %>"><i class="bi bi-calendar"></i>Monthly Billing</a>
+                            <a class="nav-link <%= GetActiveClass("dvtm.aspx") %>" href="<%= ResolveUrl("~/Read/DVTM.aspx") %>"><i class="bi bi-search"></i> DVTM On Demand Read</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <%= GetActiveClass("loadprofile.aspx") %>" href="<%= ResolveUrl("~/Pages/LoadProfile.aspx") %>"><i class="bi bi-bar-chart"></i>Load Profile</a>
