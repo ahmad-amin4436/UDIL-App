@@ -123,12 +123,24 @@ namespace UDIL
             }
 
             string baseUrl = GetBaseUrl();
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/authorization_service");
+            string fullUrl = baseUrl + "/authorization_service";
+            
+            // Debug logging to help troubleshoot connection issues
+            System.Diagnostics.Debug.WriteLine($"Attempting to connect to: {fullUrl}");
+            
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(fullUrl);
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.Headers.Add("username", username);
             request.Headers.Add("password", password);
             request.Headers.Add("code", code);
+            
+            // Add timeout settings
+            request.Timeout = 30000; // 30 seconds
+            request.ReadWriteTimeout = 30000;
+            
+            // Set user agent
+            request.UserAgent = "UDILTester/1.0";
 
             try
             {
@@ -157,11 +169,36 @@ namespace UDIL
             }
             catch (WebException ex)
             {
-                lblAuthMessage.Text = "HTTP Error: " + ex.Message;
+                string responseBody = AppCommon.ReadWebExceptionResponse(ex);
+                System.Diagnostics.Debug.WriteLine($"WebException: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Status: {ex.Status}");
+                System.Diagnostics.Debug.WriteLine($"Response: {responseBody}");
+                
+                if (ex.Status == WebExceptionStatus.NameResolutionFailure)
+                {
+                    lblAuthMessage.Text = "Cannot resolve server hostname. Check your internet connection and server address.";
+                }
+                else if (ex.Status == WebExceptionStatus.ConnectFailure)
+                {
+                    lblAuthMessage.Text = "Cannot connect to server. Server may be down or firewall blocking connection.";
+                }
+                else if (ex.Status == WebExceptionStatus.Timeout)
+                {
+                    lblAuthMessage.Text = "Connection timeout. Server is not responding within 30 seconds.";
+                }
+                else if (ex.Status == WebExceptionStatus.ProtocolError)
+                {
+                    lblAuthMessage.Text = "Protocol error. Server returned an error response.";
+                }
+                else
+                {
+                    lblAuthMessage.Text = "Network Error: " + ex.Message;
+                }
                 lblAuthMessage.CssClass = "text-danger";
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"General Exception: {ex.Message}");
                 lblAuthMessage.Text = "Error: " + ex.Message;
                 lblAuthMessage.CssClass = "text-danger";
             }

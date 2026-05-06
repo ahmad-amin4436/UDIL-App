@@ -60,6 +60,10 @@
                     </div>
                  </div>
 
+                <!-- Hidden controls for fail reason functionality -->
+                <asp:HiddenField ID="hfFailTableName" runat="server" />
+                <asp:TextBox ID="txtFailReason" runat="server" style="display:none;" />
+
                   <asp:UpdatePanel ID="updTracker" runat="server">
                       <ContentTemplate>
 
@@ -115,6 +119,156 @@
                     <Triggers>
                         <asp:AsyncPostBackTrigger ControlID="btnMdiReset" EventName="Click" />
                     </Triggers>
+                </asp:UpdatePanel>
+
+                <!-- Data Tables Section -->
+                <asp:UpdatePanel ID="updDataTables" runat="server">
+                    <ContentTemplate>
+                        <asp:Panel ID="pnlDataTables" runat="server" Visible="false" CssClass="mt-4">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Meter Visuals</h6>
+                                    <div>
+                                        <asp:Button ID="btnMeterVisualsPass" runat="server" CssClass="btn btn-success btn-sm"
+                                            Text="Pass" CommandArgument="MeterVisuals" CommandName="Pass" OnCommand="TableButton_Command" />
+                                        <asp:Button ID="btnMeterVisualsFail" runat="server" CssClass="btn btn-danger btn-sm ms-2"
+                                            Text="Fail" CommandArgument="MeterVisuals" CommandName="Fail" OnCommand="TableButton_Command" />
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <asp:GridView ID="gvMeterVisuals" runat="server" CssClass="table table-striped table-hover"
+                                            AutoGenerateColumns="false" GridLines="None">
+                                            <Columns>
+                                                <asp:BoundField DataField="msn" HeaderText="MSN" />
+                                                <asp:BoundField DataField="global_device_id" HeaderText="Global Device ID" />
+                                                <asp:BoundField DataField="last_command" HeaderText="Last Command" />
+                                                <asp:BoundField DataField="last_command_datetime" HeaderText="Last Command DateTime" />
+                                                <asp:BoundField DataField="last_command_resp" HeaderText="Last Command Response" />
+                                                <asp:BoundField DataField="mdi_reset_date" HeaderText="MDI Reset Date" />
+                                                <asp:BoundField DataField="mdi_reset_time" HeaderText="MDI Reset Time" />
+                                            </Columns>
+                                            <EmptyDataTemplate>
+                                                <div class="text-muted">No meter visual records found.</div>
+                                            </EmptyDataTemplate>
+                                        </asp:GridView>
+                                    </div>
+                                    <!-- Remarks Section for Meter Visuals -->
+                                    <div id="meterVisualsRemarks" runat="server" class="mt-3" style="display: none;">
+                                        <div class="card border-warning">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Remarks</h6>
+                                                <asp:TextBox ID="txtMeterVisualsRemarks" runat="server" CssClass="form-control mb-2"
+                                                    TextMode="MultiLine" Rows="2" placeholder="Enter remarks..." ReadOnly="false"></asp:TextBox>
+                                                <div class="mt-2">
+                                                    <asp:Button ID="btnSaveMeterVisualsRemarks" runat="server" CssClass="btn btn-dark-primary btn-sm me-1"
+                                                        Text="Save Remarks" CommandArgument="MeterVisuals" OnCommand="SaveRemarks_Command" />
+                                                    <asp:Button ID="btnCancelMeterVisualsRemarks" runat="server" CssClass="btn btn-secondary btn-sm ms-2"
+                                                        Text="Cancel" CommandArgument="MeterVisuals" OnCommand="CancelRemarks_Command" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Communication History Table -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Communication History</h6>
+                                    <div>
+                                        <asp:Button ID="btnCommunicationHistoryPass" runat="server" CssClass="btn btn-success btn-sm"
+                                            Text="Pass" CommandArgument="CommunicationHistory" CommandName="Pass" OnCommand="TableButton_Command" />
+                                        <asp:Button ID="btnCommunicationHistoryFail" runat="server" CssClass="btn btn-danger btn-sm ms-2"
+                                            Text="Fail" CommandArgument="CommunicationHistory" CommandName="Fail" OnCommand="TableButton_Command" />
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <asp:GridView ID="gvCommunicationHistory" runat="server" CssClass="table table-striped table-hover"
+                                            AutoGenerateColumns="false" GridLines="None">
+                                            <Columns>
+                                                <asp:TemplateField HeaderText="Message Log">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblMessageLog" runat="server" Text='<%# Eval("message_log") %>' CssClass="text-break" style="white-space: pre-wrap; font-family: monospace; font-size: 12px;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                            <EmptyDataTemplate>
+                                                <div class="text-muted">No communication history records found.</div>
+                                            </EmptyDataTemplate>
+                                        </asp:GridView>
+                                    </div>
+                                    <!-- Remarks Section for Communication History -->
+                                    <div id="commHistoryRemarks" runat="server" class="mt-3" style="display: none;">
+                                        <div class="card border-warning">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Remarks</h6>
+                                                <asp:TextBox ID="txtCommHistoryRemarks" runat="server" CssClass="form-control mb-2"
+                                                    TextMode="MultiLine" Rows="2" placeholder="Enter remarks..." ReadOnly="false"></asp:TextBox>
+                                                <div class="mt-2">
+                                                    <asp:Button ID="btnSaveCommHistoryRemarks" runat="server" CssClass="btn btn-dark-primary btn-sm me-1"
+                                                        Text="Save Remarks" CommandArgument="CommunicationHistory" OnCommand="SaveRemarks_Command" />
+                                                    <asp:Button ID="btnCancelCommHistoryRemarks" runat="server" CssClass="btn btn-secondary btn-sm ms-2"
+                                                        Text="Cancel" CommandArgument="CommunicationHistory" OnCommand="CancelRemarks_Command" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Events Table -->
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">Events</h6>
+                                    <div>
+                                        <asp:Button ID="btnEventsPass" runat="server" CssClass="btn btn-success btn-sm"
+                                            Text="Pass" CommandArgument="Events" CommandName="Pass" OnCommand="TableButton_Command" />
+                                        <asp:Button ID="btnEventsFail" runat="server" CssClass="btn btn-danger btn-sm ms-2"
+                                            Text="Fail" CommandArgument="Events" CommandName="Fail" OnCommand="TableButton_Command" />
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <asp:GridView ID="gvEvents" runat="server" CssClass="table table-striped table-hover"
+                                            AutoGenerateColumns="false" GridLines="None">
+                                            <Columns>
+                                                <asp:BoundField DataField="id" HeaderText="Event ID" />
+                                                <asp:BoundField DataField="event_code" HeaderText="Event Code" />
+                                                <asp:BoundField DataField="event_datetime" HeaderText="Event DateTime" />
+                                                <asp:BoundField DataField="event_description" HeaderText="Event Description" />
+                                                <asp:BoundField DataField="mdc_read_datetime" HeaderText="MDC Read Date Time" />
+                                                <asp:BoundField DataField="db_datetime" HeaderText="DB Date Time" />
+                                            </Columns>
+                                            <EmptyDataTemplate>
+                                                <div class="text-muted">No event records found.</div>
+                                            </EmptyDataTemplate>
+                                        </asp:GridView>
+                                    </div>
+                                    <!-- Remarks Section for Events -->
+                                    <div id="eventsRemarks" runat="server" class="mt-3" style="display: none;">
+                                        <div class="card border-warning">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Remarks</h6>
+                                                <asp:TextBox ID="txtEventsRemarks" runat="server" CssClass="form-control mb-2"
+                                                    TextMode="MultiLine" Rows="2" placeholder="Enter remarks..." ReadOnly="false"></asp:TextBox>
+                                                <div class="mt-2">
+                                                    <asp:Button ID="btnSaveEventsRemarks" runat="server" CssClass="btn btn-dark-primary btn-sm me-1"
+                                                        Text="Save Remarks" CommandArgument="Events" OnCommand="SaveRemarks_Command" />
+                                                    <asp:Button ID="btnCancelEventsRemarks" runat="server" CssClass="btn btn-secondary btn-sm ms-2"
+                                                        Text="Cancel" CommandArgument="Events" OnCommand="CancelRemarks_Command" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <asp:Timer ID="timerTables" runat="server" Interval="2000"
+                                OnTick="timerTables_Tick" Enabled="false" />
+                        </asp:Panel>
+                    </ContentTemplate>
                 </asp:UpdatePanel>
             </section>
 
