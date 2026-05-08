@@ -597,21 +597,21 @@
                             <a class="nav-link <%= GetActiveClass("sanc.aspx") %>" href="<%= ResolveUrl("~/Read/SANC.aspx") %>"><i class="bi bi-search"></i> SANC On Demand Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("lsch.aspx") %>" href="<%= ResolveUrl("~/Read/LSCH.aspx") %>"><i class="bi bi-exclamation-triangle"></i> LSCH On Demand Read</a>
+                            <a class="nav-link <%= GetActiveClass("lsch.aspx") %>" href="<%= ResolveUrl("~/Read/LSCH.aspx") %>"><i class="bi bi-search"></i> LSCH On Demand Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("metervisuals.aspx") %>" href="<%= ResolveUrl("~/Pages/MeterVisuals.aspx") %>"><i class="bi bi-eye"></i>Meter Visuals</a>
+                            <a class="nav-link <%= GetActiveClass("tiou.aspx") %>" href="<%= ResolveUrl("~/Read/TIOU.aspx") %>"><i class="bi bi-search"></i> TIOU On Demand Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("devicecommunicationhistory.aspx") %>" href="<%= ResolveUrl("~/Pages/DeviceCommunicationHistory.aspx") %>"><i class="bi bi-chat-dots"></i>Device Communication History</a>
+                            <a class="nav-link <%= GetActiveClass("ippo.aspx") %>" href="<%= ResolveUrl("~/Read/IPPO.aspx") %>"><i class="bi bi-search"></i> IPPO On Demand Read</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link <%= GetActiveClass("inst.aspx") %>" href="<%= ResolveUrl("~/Read/INST.aspx") %>"><i class="bi bi-search"></i> INST On Demand Read</a>
+                        </li>
                         <li>
                             <h6 class="sidebar-heading">On-Demand APIs</h6>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("dataread.aspx") %>" href="<%= ResolveUrl("~/Pages/DataRead.aspx") %>"><i class="bi bi-cloud-download"></i>Data Read</a>
-                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link <%= GetActiveClass("parameterread.aspx") %>" href="<%= ResolveUrl("~/Pages/ParameterRead.aspx") %>"><i class="bi bi-file-earmark-text"></i>Parameter Read</a>
                         </li>

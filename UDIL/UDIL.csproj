@@ -270,8 +270,11 @@
     <Content Include="Read\AUXR.aspx" />
     <Content Include="Read\DMDT.aspx" />
     <Content Include="Read\DVTM.aspx" />
+    <Content Include="Read\INST.aspx" />
+    <Content Include="Read\IPPO.aspx" />
     <Content Include="Read\LSCH.aspx" />
     <Content Include="Read\SANC.aspx" />
+    <Content Include="Read\TIOU.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -453,6 +456,20 @@
     <Compile Include="Read\DVTM.aspx.designer.cs">
       <DependentUpon>DVTM.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Read\INST.aspx.cs">
+      <DependentUpon>INST.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\INST.aspx.designer.cs">
+      <DependentUpon>INST.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\IPPO.aspx.cs">
+      <DependentUpon>IPPO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\IPPO.aspx.designer.cs">
+      <DependentUpon>IPPO.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Read\LSCH.aspx.cs">
       <DependentUpon>LSCH.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -466,6 +483,13 @@
     </Compile>
     <Compile Include="Read\SANC.aspx.designer.cs">
       <DependentUpon>SANC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\TIOU.aspx.cs">
+      <DependentUpon>TIOU.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\TIOU.aspx.designer.cs">
+      <DependentUpon>TIOU.aspx</DependentUpon>
     </Compile>
     <Compile Include="Shared\SessionManager.cs" />
     <Compile Include="Site.Master.cs">
