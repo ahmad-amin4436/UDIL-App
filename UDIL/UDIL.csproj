@@ -270,6 +270,7 @@
     <Content Include="Read\AUXR.aspx" />
     <Content Include="Read\DMDT.aspx" />
     <Content Include="Read\DVTM.aspx" />
+    <Content Include="Read\SANC.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -450,6 +451,13 @@
     </Compile>
     <Compile Include="Read\DVTM.aspx.designer.cs">
       <DependentUpon>DVTM.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\SANC.aspx.cs">
+      <DependentUpon>SANC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\SANC.aspx.designer.cs">
+      <DependentUpon>SANC.aspx</DependentUpon>
     </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>

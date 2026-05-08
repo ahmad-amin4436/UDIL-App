@@ -323,6 +323,7 @@ namespace UDIL
                     
                     // Database configuration
                     DbServer = txtDbServer.Text.Trim(),
+                    Name = configName,
                     DbPort = txtDbPort.Text.Trim(),
                     DbName = txtDbName.Text.Trim(),
                     DbUid = txtDbUid.Text.Trim(),
