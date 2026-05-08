@@ -21,7 +21,7 @@ namespace UDIL.Pages
         {
             if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
             {
-                string privateKey = Session["PrivateKey"] as string;
+                string privateKey = SessionManager.PrivateKey;
                 AppCommon.HandleTransactionStatusRequest(Request["transactionId"].ToString(), privateKey);
                 return;
             }
@@ -29,11 +29,17 @@ namespace UDIL.Pages
             if (!IsPostBack)
             {
                 ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
-                if (Session["PrivateKey"] != null)
+                if (SessionManager.HasPrivateKey)
                 {
-                    mrPrivateKey.Text = Session["PrivateKey"].ToString();
+                    mrPrivateKey.Text = SessionManager.PrivateKey;
                 }
 
+                // Populate GlobalDeviceId and MSN from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    mrGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
+                }
+               
                 // Generate unique transaction ID
                 mrTransactionId.Text = AppCommon.GenerateTransactionId();
             }
@@ -47,11 +53,19 @@ namespace UDIL.Pages
             // Generate new transaction ID for this request
             string transactionId = mrTransactionId.Text.Trim();
             string globalDeviceId = mrGlobalDeviceId.Text.Trim();
+            
+            // Store GlobalDeviceId in session (overwrites existing value)
+            if (!string.IsNullOrEmpty(globalDeviceId))
+            {
+                SessionManager.GlobalDeviceId = globalDeviceId;
+            }
+            
+           
             string requestDateTime = mrRequestDateTime.Text.Trim();
             string mdiResetDate = mrMdiResetDate.Text.Trim();
             string mdiResetTime = NormalizeTimeWithSeconds(mrMdiResetTime.Text.Trim());
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {

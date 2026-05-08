@@ -21,7 +21,7 @@ namespace UDIL.Pages
         {
             if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
             {
-                string privateKey = Session["PrivateKey"] as string;
+                string privateKey = SessionManager.PrivateKey;
                 AppCommon.HandleTransactionStatusRequest(Request["transactionId"].ToString(), privateKey);
                 return;
             }
@@ -29,10 +29,17 @@ namespace UDIL.Pages
             if (!IsPostBack)
             {
                 ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
-                if (Session["PrivateKey"] != null)
+                if (SessionManager.HasPrivateKey)
                 {
-                    dmPrivateKey.Text = Session["PrivateKey"].ToString();
+                    dmPrivateKey.Text = SessionManager.PrivateKey;
                 }
+
+                // Populate GlobalDeviceId and MSN from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    dmGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
+                }
+               
 
                 // Generate unique transaction ID
                 dmTransactionId.Text = AppCommon.GenerateTransactionId();
@@ -48,6 +55,14 @@ namespace UDIL.Pages
             // Generate new transaction ID for this request
             string transactionId = dmTransactionId.Text.Trim();
             string globalDeviceId = dmGlobalDeviceId.Text.Trim();
+            
+            // Store GlobalDeviceId in session (overwrites existing value)
+            if (!string.IsNullOrEmpty(globalDeviceId))
+            {
+                SessionManager.GlobalDeviceId = globalDeviceId;
+            }
+            
+           
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
             string requestDateTime = dmRequestDateTime.Text.Trim();
             string communicationMode = dmCommunicationMode.SelectedValue;
@@ -58,7 +73,7 @@ namespace UDIL.Pages
             string meterType = dmMeterType.SelectedValue;
             string phase = dmPhase.SelectedValue;
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {

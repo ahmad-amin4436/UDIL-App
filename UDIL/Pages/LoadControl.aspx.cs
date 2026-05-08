@@ -21,7 +21,7 @@ namespace UDIL.Pages
         {
             if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
             {
-                string privateKey = Session["PrivateKey"] as string;
+                string privateKey = SessionManager.PrivateKey;
                 AppCommon.HandleTransactionStatusRequest(Request["transactionId"].ToString(), privateKey);
                 return;
             }
@@ -29,9 +29,15 @@ namespace UDIL.Pages
             if (!IsPostBack)
             {
                 ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
-                if (Session["PrivateKey"] != null)
+                if (SessionManager.HasPrivateKey)
                 {
-                    tsPrivateKey.Text = Session["PrivateKey"].ToString();
+                    tsPrivateKey.Text = SessionManager.PrivateKey;
+                }
+
+                // Populate GlobalDeviceId and MSN from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    tsGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
                 // Generate unique transaction ID
@@ -47,6 +53,15 @@ namespace UDIL.Pages
             // Generate new transaction ID for this request
             string transactionId = tsTransactionId.Text.Trim();
             string globalDeviceId = tsGlobalDeviceId.Text.Trim();
+            
+            // Store GlobalDeviceId in session (overwrites existing value)
+            if (!string.IsNullOrEmpty(globalDeviceId))
+            {
+                SessionManager.GlobalDeviceId = globalDeviceId;
+            }
+            
+            // Store MSN in session if it exists on this page (overwrites existing value)
+            
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
             string requestDateTime = tsRequestDateTime.Text.Trim();
             string loadLimit = tsLoadLimit.Text.Trim();
@@ -55,7 +70,7 @@ namespace UDIL.Pages
             string thresholdDuration = tsThresholdDuration.Text.Trim();
             string retryClearInterval = tsRetryClearInterval.Text.Trim();
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {

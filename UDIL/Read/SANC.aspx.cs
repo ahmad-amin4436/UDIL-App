@@ -20,9 +20,16 @@ namespace UDIL.Read
         {
             if (!IsPostBack)
             {
-                if (Session["PrivateKey"] != null)
+                // Populate private key from session
+                if (SessionManager.HasPrivateKey)
                 {
-                    sancPrivateKey.Text = Session["PrivateKey"].ToString();
+                    sancPrivateKey.Text = SessionManager.PrivateKey;
+                }
+
+                // Populate global device ID and MSN from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    sancGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
                 // Generate unique transaction ID
@@ -39,7 +46,7 @@ namespace UDIL.Read
             string globalDeviceId = sancGlobalDeviceId.Text.Trim();
             string type = sancType.SelectedValue;
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {
@@ -56,6 +63,9 @@ namespace UDIL.Read
                 lblSancMessage.CssClass = "text-danger";
                 return;
             }
+
+            // Store global device ID in session for use across the app
+            SessionManager.GlobalDeviceId = globalDeviceId;
 
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceId)}&type={HttpUtility.UrlEncode(type)}";
 
@@ -108,6 +118,16 @@ namespace UDIL.Read
                     lblRespSancRetryInterval.Text = data.sanc_retry_interval ?? "N/A";
                     lblRespSancThresholdDuration.Text = data.sanc_threshold_duration ?? "N/A";
                     lblRespSancRetryClearInterval.Text = data.sanc_retry_clear_interval ?? "N/A";
+
+                    // Store global device ID and MSN in session for use across the app
+                    if (!string.IsNullOrEmpty(data.global_device_id))
+                    {
+                        SessionManager.GlobalDeviceId = data.global_device_id;
+                    }
+                    if (!string.IsNullOrEmpty(data.msn))
+                    {
+                        SessionManager.MSN = data.msn;
+                    }
                 }
                 else
                 {
@@ -124,7 +144,7 @@ namespace UDIL.Read
                 pnlResponse.Visible = true;
 
                 // After success, show data tables
-                Session["CurrentTransactionId"] = transactionId;
+                SessionManager.CurrentTransactionId = transactionId;
                 ShowDataTables();
                 pnlDataTables.Visible = true;
                 timerTables.Enabled = true;
@@ -227,7 +247,7 @@ namespace UDIL.Read
         {
             try
             {
-                string globalDeviceId = sancGlobalDeviceId.Text.Trim();
+                string globalDeviceId = SessionManager.GlobalDeviceId;
                 if (!string.IsNullOrEmpty(globalDeviceId))
                 {
                     LoadTableData(globalDeviceId);
@@ -520,7 +540,7 @@ namespace UDIL.Read
         {
             try
             {
-                string transactionId = Session["CurrentTransactionId"] as string;
+                string transactionId = SessionManager.CurrentTransactionId;
                 SaveApiTestResult(transactionId, "Pass", "SANC Read Response marked as Pass");
 
                 btnSancResponsePass.CssClass = "btn btn-success btn-sm disabled";
@@ -557,8 +577,8 @@ namespace UDIL.Read
                 string remarks = txtSancResponseRemarks.Text.Trim();
                 if (!string.IsNullOrEmpty(remarks))
                 {
-                    string transactionId = Session["CurrentTransactionId"] as string;
-                    string globalDeviceId = sancGlobalDeviceId.Text.Trim();
+                    string transactionId = SessionManager.CurrentTransactionId;
+                    string globalDeviceId = SessionManager.GlobalDeviceId;
 
                     SaveTestResult("SANCReadResponse", "Fail", remarks, transactionId, globalDeviceId);
 
@@ -598,8 +618,8 @@ namespace UDIL.Read
         {
             try
             {
-                string transactionId = Session["CurrentTransactionId"] as string;
-                string globalDeviceId = sancGlobalDeviceId.Text.Trim();
+                string transactionId = SessionManager.CurrentTransactionId;
+                string globalDeviceId = SessionManager.GlobalDeviceId;
 
                 SaveTestResult(tableName, action, reason, transactionId, globalDeviceId);
 
@@ -626,7 +646,7 @@ namespace UDIL.Read
                     return;
                 }
 
-                string globalDeviceId = sancGlobalDeviceId.Text.Trim();
+                string globalDeviceId = SessionManager.GlobalDeviceId;
                 UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
                 {
                     SessionId = currentSession.SessionId,

@@ -597,7 +597,7 @@
                             <a class="nav-link <%= GetActiveClass("sanc.aspx") %>" href="<%= ResolveUrl("~/Read/SANC.aspx") %>"><i class="bi bi-search"></i> SANC On Demand Read</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("events.aspx") %>" href="<%= ResolveUrl("~/Pages/Events.aspx") %>"><i class="bi bi-exclamation-triangle"></i>Events</a>
+                            <a class="nav-link <%= GetActiveClass("lsch.aspx") %>" href="<%= ResolveUrl("~/Read/LSCH.aspx") %>"><i class="bi bi-exclamation-triangle"></i> LSCH On Demand Read</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <%= GetActiveClass("metervisuals.aspx") %>" href="<%= ResolveUrl("~/Pages/MeterVisuals.aspx") %>"><i class="bi bi-eye"></i>Meter Visuals</a>

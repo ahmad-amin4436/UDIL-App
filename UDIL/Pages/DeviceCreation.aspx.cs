@@ -22,7 +22,7 @@ namespace UDIL.Pages
         {
             if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
             {
-                string privateKey = Session["PrivateKey"] as string;
+                string privateKey = SessionManager.PrivateKey;
                 AppCommon.HandleTransactionStatusRequest(Request["transactionId"].ToString(), privateKey);
                 return;
             }
@@ -30,9 +30,19 @@ namespace UDIL.Pages
             if (!IsPostBack)
             {
                 ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
-                if (Session["PrivateKey"] != null)
+                if (SessionManager.HasPrivateKey)
                 {
-                    dcPrivateKey.Text = Session["PrivateKey"].ToString();
+                    dcPrivateKey.Text = SessionManager.PrivateKey;
+                }
+
+                // Populate GlobalDeviceId and MSN from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    dcGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
+                }
+                if (SessionManager.HasMSN)
+                {
+                    dcDsn.Text = SessionManager.MSN;
                 }
 
                 // Generate unique transaction ID
@@ -50,6 +60,19 @@ namespace UDIL.Pages
             string transactionId = dcTransactionId.Text.Trim();
             string dsn = dcDsn.Text.Trim();
             string globalDeviceId = dcGlobalDeviceId.Text.Trim();
+            
+            // Store GlobalDeviceId in session (overwrites existing value)
+            if (!string.IsNullOrEmpty(globalDeviceId))
+            {
+                SessionManager.GlobalDeviceId = globalDeviceId;
+            }
+            
+            // Store MSN in session if it exists on this page (overwrites existing value)
+            string msn = dcDsn.Text.Trim();
+            if (!string.IsNullOrEmpty(msn))
+            {
+                SessionManager.MSN = msn;
+            }
             string deviceIdentity = $"[{{\"dsn\":\"{dsn}\",\"global_device_id\":\"{globalDeviceId}\"}}]";
             string requestDateTime = dcRequestDateTime.Text.Trim();
             string deviceType = dcDeviceType.SelectedValue;
@@ -65,7 +88,7 @@ namespace UDIL.Pages
             string communicationInterval = dcCommunicationInterval.Text.Trim();
             string initialCommunicationTime = NormalizeTimeWithSeconds(dcInitialCommunicationTime.Text.Trim());
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {
@@ -160,8 +183,7 @@ namespace UDIL.Pages
                     lblDeviceCreationMessage.CssClass = "text-success";
 
                     // After success
-                    Session["CurrentTransactionId"] = transactionId;
-                    Session["CurrentPrivateKey"] = privateKey;
+                    SessionManager.CurrentTransactionId = transactionId;
 
 
                     pnlTracker.Visible = true;
@@ -204,8 +226,8 @@ namespace UDIL.Pages
         }
         protected void timerTracker_Tick(object sender, EventArgs e)
         {
-            string transactionId = Session["CurrentTransactionId"] as string;
-            string privateKey = Session["CurrentPrivateKey"] as string;
+            string transactionId = SessionManager.CurrentTransactionId;
+            string privateKey = SessionManager.PrivateKey;
 
             var statusResponse = GetTransactionStatus(transactionId, privateKey);
 

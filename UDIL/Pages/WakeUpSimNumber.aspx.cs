@@ -21,7 +21,7 @@ namespace UDIL.Pages
         {
             if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
             {
-                string privateKey = Session["PrivateKey"] as string;
+                string privateKey = SessionManager.PrivateKey;
                 AppCommon.HandleTransactionStatusRequest(Request["transactionId"].ToString(), privateKey);
                 return;
             }
@@ -29,10 +29,17 @@ namespace UDIL.Pages
             if (!IsPostBack)
             {
                 ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
-                if (Session["PrivateKey"] != null)
+                if (SessionManager.HasPrivateKey)
                 {
-                    wsPrivateKey.Text = Session["PrivateKey"].ToString();
+                    wsPrivateKey.Text = SessionManager.PrivateKey;
                 }
+
+                // Populate GlobalDeviceId and MSN from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    wsGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
+                }
+                
 
                 // Generate unique transaction ID
                 wsTransactionId.Text = AppCommon.GenerateTransactionId();
@@ -47,13 +54,21 @@ namespace UDIL.Pages
             // Generate new transaction ID for this request
             string transactionId = wsTransactionId.Text.Trim();
             string globalDeviceId = wsGlobalDeviceId.Text.Trim();
+            
+            // Store GlobalDeviceId in session (overwrites existing value)
+            if (!string.IsNullOrEmpty(globalDeviceId))
+            {
+                SessionManager.GlobalDeviceId = globalDeviceId;
+            }
+            
+            
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
             string requestDateTime = wsRequestDateTime.Text.Trim();
             string wakeupNumber1 = wsWakeupNumber1.Text.Trim();
             string wakeupNumber2 = wsWakeupNumber2.Text.Trim();
             string wakeupNumber3 = wsWakeupNumber3.Text.Trim();
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {

@@ -5,7 +5,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
@@ -13,374 +12,164 @@ using System.Web.UI.WebControls;
 using UDIL.DAL;
 using UDIL.Shared;
 
-namespace UDIL.Pages
+namespace UDIL.Read
 {
-    public partial class UpdateMeterStatus : UDIL.AuthenticatedPage
+    public partial class LSCH : UDIL.AuthenticatedPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request["GetTransactionStatus"] == "true" && !string.IsNullOrEmpty(Request["transactionId"]))
-            {
-                string privateKey = SessionManager.PrivateKey;
-                AppCommon.HandleTransactionStatusRequest(Request["transactionId"].ToString(), privateKey);
-                return;
-            }
-
             if (!IsPostBack)
             {
-                ScriptManager.RegisterClientScriptInclude(this.Page, this.Page.GetType(), "udil-tester", ResolveUrl("~/udil-tester.js"));
+                // Populate private key from session
                 if (SessionManager.HasPrivateKey)
                 {
-                    msPrivateKey.Text = SessionManager.PrivateKey;
+                    lschPrivateKey.Text = SessionManager.PrivateKey;
                 }
 
-                // Populate GlobalDeviceId and MSN from session if available
+                // Populate global device ID from session if available
                 if (SessionManager.HasGlobalDeviceId)
                 {
-                    msGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
+                    lschGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
-                
+
                 // Generate unique transaction ID
-                msTransactionId.Text = AppCommon.GenerateTransactionId();
+                lschTransactionId.Text = AppCommon.GenerateTransactionId();
             }
         }
 
-        protected void btnMeterStatus_Click(object sender, EventArgs e)
+        protected void btnLschRead_Click(object sender, EventArgs e)
         {
-            lblMeterStatusMessage.Text = string.Empty;
-            // Store Meter Status request time
-            Session["MeterStatusRequestTime"] = DateTime.Now;
-            // Generate new transaction ID for this request
-            string transactionId = msTransactionId.Text.Trim();
-            string globalDeviceId = msGlobalDeviceId.Text.Trim();
-            
-            // Store GlobalDeviceId in session (overwrites existing value)
-            if (!string.IsNullOrEmpty(globalDeviceId))
-            {
-                SessionManager.GlobalDeviceId = globalDeviceId;
-            }
-            
-            
-            string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = msRequestDateTime.Text.Trim();
-            string meterActivationStatus = msMeterActivationStatus.SelectedValue;
+            lblLschMessage.Text = string.Empty;
+            pnlResponse.Visible = false;
+
+            string transactionId = lschTransactionId.Text.Trim();
+            string globalDeviceId = lschGlobalDeviceId.Text.Trim();
+            string type = lschType.SelectedValue;
 
             string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {
-                lblMeterStatusMessage.Text = "Please authorize first to obtain a private key.";
-                lblMeterStatusMessage.CssClass = "text-danger";
+                lblLschMessage.Text = "Please authorize first to obtain a private key.";
+                lblLschMessage.CssClass = "text-danger";
                 return;
             }
 
-            msPrivateKey.Text = privateKey;
+            lschPrivateKey.Text = privateKey;
 
-            if (string.IsNullOrEmpty(transactionId) || string.IsNullOrEmpty(globalDeviceId) || string.IsNullOrEmpty(requestDateTime) ||
-                string.IsNullOrEmpty(meterActivationStatus))
+            if (string.IsNullOrEmpty(transactionId) || string.IsNullOrEmpty(globalDeviceId) || string.IsNullOrEmpty(type))
             {
-                lblMeterStatusMessage.Text = "All fields are required: Transaction ID, Global Device ID, Request DateTime, and Meter Activation Status.";
-                lblMeterStatusMessage.CssClass = "text-danger";
+                lblLschMessage.Text = "All fields are required: Transaction ID, Global Device ID, and Type.";
+                lblLschMessage.CssClass = "text-danger";
                 return;
             }
 
-            string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&meter_activation_status={HttpUtility.UrlEncode(meterActivationStatus)}";
+            // Store global device ID in session for use across the app
+            SessionManager.GlobalDeviceId = globalDeviceId;
+
+            string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceId)}&type={HttpUtility.UrlEncode(type)}";
 
             try
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting Meter Status for transaction: {transactionId}");
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting LSCH read for transaction: {transactionId}");
 
-                MeterStatusResponse meterStatusResponse = PostMeterStatus(transactionId, privateKey, postData);
+                LschReadResponse response = GetLschData(transactionId, privateKey, postData);
 
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] PostMeterStatus returned: {(meterStatusResponse == null ? "NULL" : $"status={meterStatusResponse.status}, message={meterStatusResponse.message}")}");
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] GetLschData returned: {(response == null ? "NULL" : $"status={response.status}, message={response.message}")}");
 
-                if (meterStatusResponse == null)
+                if (response == null)
                 {
-                    lblMeterStatusMessage.Text = "Failed to get a response from the meter status endpoint.";
-                    lblMeterStatusMessage.CssClass = "text-danger";
+                    lblLschMessage.Text = "Failed to get a response from the LSCH read endpoint.";
+                    lblLschMessage.CssClass = "text-danger";
                     return;
                 }
 
-                if (meterStatusResponse.status != "1")
+                if (response.status != "1")
                 {
-                    lblMeterStatusMessage.Text = $"Meter Status failed: {meterStatusResponse.message}";
-                    lblMeterStatusMessage.CssClass = "text-danger";
+                    lblLschMessage.Text = $"LSCH read failed: {response.message}";
+                    lblLschMessage.CssClass = "text-danger";
+
+                    lblResponseStatus.Text = "Failed";
+                    lblResponseStatus.CssClass = "badge bg-danger px-3 py-2";
+                    lblResponseTransactionId.Text = response.transactionid;
+                    lblResponseMessage.Text = response.message;
+                    pnlResponse.Visible = true;
                     return;
                 }
 
-                TransactionStatusResponse statusResponse = AppCommon.GetTransactionStatus(transactionId, privateKey);
+                // Success
+                lblLschMessage.Text = $"LSCH read succeeded. {response.message}";
+                lblLschMessage.CssClass = "text-success";
 
-                if (statusResponse == null)
-                {
-                    lblMeterStatusMessage.Text = "Meter Status accepted, but transaction status could not be retrieved.";
-                    lblMeterStatusMessage.CssClass = "text-warning";
-                    return;
-                }
+                lblResponseStatus.Text = "Success";
+                lblResponseStatus.CssClass = "badge bg-success px-3 py-2";
+                lblResponseTransactionId.Text = response.transactionid;
+                lblResponseMessage.Text = response.message;
 
-                int maxStatusLevel = 0;
-                bool commandCancelled = false;
-                if (statusResponse.data != null)
+                // Display data if available
+                if (response.data != null && response.data.Count > 0)
                 {
-                    foreach (var item in statusResponse.data)
+                    LschData data = response.data[0];
+                    // Store global device ID and MSN in session for use across the app
+                    if (!string.IsNullOrEmpty(data.global_device_id))
                     {
-                        if (int.TryParse(item.status_level, out int level) && level > maxStatusLevel)
-                        {
-                            maxStatusLevel = level;
-                        }
-
-                        // Check if command should be cancelled by meter
-                        if (item.indv_status == "2" && item.status_level == "4")
-                        {
-                            commandCancelled = true;
-                            break; // Exit loop since we found cancellation
-                        }
+                        SessionManager.GlobalDeviceId = data.global_device_id;
+                        lblRespGlobalDeviceId.Text = data.global_device_id;
                     }
-                }
-
-                if (commandCancelled)
-                {
-                    // Handle command cancellation
-                    string stageText = AppCommon.GetStageDescription(-1); // Use cancelled stage
-                    lblMeterStatusMessage.Text = $"Meter Status failed. Command was cancelled by the meter (indv_status: 2, status_level: 4). Status: {stageText}.";
-                    lblMeterStatusMessage.CssClass = "text-danger";
-
-                    // Show cancelled tracker briefly
-                    pnlTracker.Visible = true;
-                    lblTrackerTransactionId.Text = transactionId;
-                    UpdateTrackerUI(-1); // Show cancelled stage
-                    lblStageDescription.Text = "Command was cancelled by the meter (indv_status: 2, status_level: 4).";
-                    lblStageDescription.CssClass = "text-danger";
-
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableMeterStatusBtn", "disableMeterStatusButton();", true);
+                    else
+                    {
+                        lblRespGlobalDeviceId.Text = "N/A";
+                    }
+                    
+                    if (!string.IsNullOrEmpty(data.msn))
+                    {
+                        SessionManager.MSN = data.msn;
+                        lblRespMsn.Text = data.msn;
+                    }
+                    else
+                    {
+                        lblRespMsn.Text = "N/A";
+                    }
+                    
+                    lblRespLschDateTime.Text = !string.IsNullOrEmpty(data.lsch_datetime) ? data.lsch_datetime : "N/A";
+                    lblRespLschStartDateTime.Text = !string.IsNullOrEmpty(data.lsch_start_datetime) ? data.lsch_start_datetime : "N/A";
+                    lblRespLschEndDateTime.Text = !string.IsNullOrEmpty(data.lsch_end_datetime) ? data.lsch_end_datetime : "N/A";
                 }
                 else
                 {
-                    string stageText = AppCommon.GetStageDescription(maxStatusLevel);
-                    lblMeterStatusMessage.Text = $"Meter Status succeeded. Transaction status: {statusResponse.status}. Latest status level: {maxStatusLevel} ({stageText}).";
-                    lblMeterStatusMessage.CssClass = "text-success";
-
-                    // After success
-                    Session["CurrentTransactionId"] = transactionId;
-                    Session["CurrentPrivateKey"] = privateKey;
-
-                    pnlTracker.Visible = true;
-                    lblTrackerTransactionId.Text = transactionId;
-
-                    timerTracker.Enabled = true;
-                    // Hide loader after work
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableMeterStatusBtn", "disableMeterStatusButton();", true);
+                    lblRespGlobalDeviceId.Text = "N/A";
+                    lblRespMsn.Text = "N/A";
+                    lblRespLschDateTime.Text = "N/A";
+                    lblRespLschStartDateTime.Text = "N/A";
+                    lblRespLschEndDateTime.Text = "N/A";
                 }
+
+                pnlResponse.Visible = true;
+
+                // After success, show data tables
+                SessionManager.CurrentTransactionId = transactionId;
+                ShowDataTables();
+                pnlDataTables.Visible = true;
+                timerTables.Enabled = true;
+
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableLschBtn", "disableLschButton();", true);
             }
             catch (WebException ex)
             {
-                lblMeterStatusMessage.Text = "HTTP Error: " + ex.Message;
-                lblMeterStatusMessage.CssClass = "text-danger";
+                lblLschMessage.Text = "HTTP Error: " + ex.Message;
+                lblLschMessage.CssClass = "text-danger";
             }
             catch (Exception ex)
             {
-                lblMeterStatusMessage.Text = "Error: " + ex.Message;
-                lblMeterStatusMessage.CssClass = "text-danger";
+                lblLschMessage.Text = "Error: " + ex.Message;
+                lblLschMessage.CssClass = "text-danger";
             }
         }
 
-        private string NormalizeTimeWithSeconds(string timeValue)
-        {
-            if (string.IsNullOrEmpty(timeValue))
-            {
-                return timeValue;
-            }
-
-            string[] parts = timeValue.Split(':');
-            if (parts.Length == 2)
-            {
-                string hour = parts[0].PadLeft(2, '0');
-                string minute = parts[1].PadLeft(2, '0');
-                return $"{hour}:{minute}:00";
-            }
-
-            return timeValue;
-        }
-
-        protected void timerTracker_Tick(object sender, EventArgs e)
-        {
-            string transactionId = Session["CurrentTransactionId"] as string;
-            string privateKey = Session["CurrentPrivateKey"] as string;
-
-            var statusResponse = AppCommon.GetTransactionStatus(transactionId, privateKey);
-
-            if (statusResponse?.data == null)
-                return;
-
-            int maxLevel = 0;
-
-            foreach (var item in statusResponse.data)
-            {
-                if (int.TryParse(item.status_level, out int lvl) && lvl > maxLevel)
-                    maxLevel = lvl;
-
-                // Check if command should be cancelled by meter
-                if (item.indv_status == "2" && item.status_level == "4")
-                {
-                    // Command cancelled by meter - stop tracking and show cancellation message
-                    timerTracker.Enabled = false;
-                    UpdateTrackerUI(-1); // Use cancelled stage
-                    lblStageDescription.Text = "Command was cancelled by the meter (indv_status: 2, status_level: 4).";
-                    lblStageDescription.CssClass = "text-danger";
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetMeterStatusLoading", "resetMeterStatusLoading();", true);
-                    return; // Exit early since command was cancelled
-                }
-            }
-
-            // Get current stage from session or initialize
-            int currentStage = Session["CurrentStage"] != null ? (int)Session["CurrentStage"] : 0;
-            DateTime stageStartTime = Session["StageStartTime"] != null ? (DateTime)Session["StageStartTime"] : DateTime.Now;
-
-            // Check if stage has changed
-            if (maxLevel != currentStage)
-            {
-                // Stage has changed, update session variables
-                Session["CurrentStage"] = maxLevel;
-                Session["StageStartTime"] = DateTime.Now;
-            }
-            else
-            {
-                // Check for timeout (5 minutes = 300 seconds)
-                TimeSpan timeInStage = DateTime.Now - stageStartTime;
-                if (timeInStage.TotalMinutes >= 5)
-                {
-                    // Stage timeout reached, mark as failed and move to next stage
-                    int nextStage = currentStage + 1;
-                    if (nextStage <= 8)
-                    {
-                        Session["CurrentStage"] = nextStage;
-                        Session["StageStartTime"] = DateTime.Now;
-                        maxLevel = nextStage;
-
-                        // Update UI to show failed stage
-                        UpdateTrackerUIWithTimeout(currentStage, nextStage);
-                        lblStageDescription.Text = $"Stage {currentStage} failed due to timeout (5 minutes). Moving to stage {nextStage}.";
-                        lblStageDescription.CssClass = "text-warning";
-                    }
-                }
-            }
-            
-            UpdateTrackerUI(maxLevel);
-
-            // Save current state to ViewState
-
-            if (maxLevel >= 5)
-            {
-                timerTracker.Enabled = false;
-                lblStage.Text = "Completed";
-                lblStage.CssClass = "badge bg-success px-3 py-2";
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "resetMeterStatusLoading", "resetMeterStatusLoading();", true);
-
-                // Auto-pass API test on tracker completion
-                SaveApiTestResult(transactionId, "Pass", "API test completed successfully via tracker");
-
-                // Show data tables after tracker completion
-                ShowDataTables();
-                timerTables.Enabled = true;
-
-                // Clear ViewState when completed
-                ViewState["TrackerLevel"] = null;
-                ViewState["TrackerTransactionId"] = null;
-
-                // Clear session variables
-                Session["CurrentStage"] = null;
-                Session["StageStartTime"] = null;
-            }
-        }
-
-        private void UpdateTrackerUIWithTimeout(int failedStage, int currentStage)
-        {
-            ResetSteps();
-
-            // Mark completed stages
-            for (int i = 0; i < failedStage; i++)
-            {
-                var step = pnlTracker.FindControl("step" + i) as Label;
-                if (step != null)
-                    step.CssClass = "tracker-step completed";
-            }
-
-            // Mark failed stage
-            var failedStep = pnlTracker.FindControl("step" + failedStage) as Label;
-            if (failedStep != null)
-                failedStep.CssClass = "tracker-step failed";
-
-            // Mark current active stage
-            var activeStep = pnlTracker.FindControl("step" + currentStage) as Label;
-            if (activeStep != null)
-                activeStep.CssClass = "tracker-step active";
-
-            lblStage.Text = $"Stage {currentStage}";
-            lblStage.CssClass = "badge bg-warning px-3 py-2";
-
-            int percent = (currentStage * 100) / 5;
-            progressBar.Style["width"] = percent + "%";
-        }
-
-        private void UpdateTrackerUI(int level)
-        {
-            ResetSteps();
-
-            // Handle cancelled stage specially
-            if (level == -1)
-            {
-                // For cancelled stage, mark all steps as incomplete and show cancellation
-                for (int i = 0; i <= 8; i++)
-                {
-                    var step = pnlTracker.FindControl("step" + i) as Label;
-                    if (step != null)
-                        step.CssClass = "tracker-step cancelled";
-                }
-
-                lblStage.Text = "Cancelled";
-                lblStage.CssClass = "badge bg-dark-danger px-3 py-2";
-                lblStageDescription.Text = AppCommon.GetStageDescription(level);
-                lblStageDescription.CssClass = "text-danger";
-                progressBar.Style["width"] = "0%";
-                return;
-            }
-
-            for (int i = 0; i <= 8; i++)
-            {
-                var step = pnlTracker.FindControl("step" + i) as Label;
-
-                if (step == null) continue;
-
-                if (i < level)
-                    step.CssClass = "tracker-step completed";
-                else if (i == level)
-                    step.CssClass = "tracker-step active";
-                else
-                    step.CssClass = "tracker-step";
-            }
-
-            lblStage.Text = $"Stage {level}";
-            lblStage.CssClass = "badge bg-primary px-3 py-2";
-            lblStageDescription.Text = AppCommon.GetStageDescription(level);
-            lblStageDescription.CssClass = "text-muted";
-
-            int percent = (level * 100) / 5;
-            progressBar.Style["width"] = percent + "%";
-        }
-
-        private void ResetSteps()
-        {
-            for (int i = 0; i <= 8; i++)
-            {
-                var step = pnlTracker.FindControl("step" + i) as Label;
-                if (step != null)
-                    step.CssClass = "tracker-step";
-            }
-        }
-
-        private MeterStatusResponse PostMeterStatus(string transactionId, string privateKey, string postData)
+        private LschReadResponse GetLschData(string transactionId, string privateKey, string postData)
         {
             string baseUrl = GetBaseUrl();
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_meter_status");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/on_demand_parameter_read");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.Accept = "*/*";
@@ -403,13 +192,13 @@ namespace UDIL.Pages
                 {
                     string responseContent = reader.ReadToEnd();
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    return serializer.Deserialize<MeterStatusResponse>(responseContent);
+                    return serializer.Deserialize<LschReadResponse>(responseContent);
                 }
             }
             catch (WebException ex)
             {
                 string body = AppCommon.ReadWebExceptionResponse(ex);
-                throw new WebException($"Meter Status request failed: {ex.Message}. Response body: {body}", ex);
+                throw new WebException($"LSCH read request failed: {ex.Message}. Response body: {body}", ex);
             }
         }
 
@@ -418,64 +207,47 @@ namespace UDIL.Pages
             return UDIL.Shared.ConfigurationManager.GetBaseUrl();
         }
 
-        private int GetTimeout()
-        {
-            return UDIL.Shared.ConfigurationManager.GetTimeout();
-        }
-
-        private string GetConnectionString()
-        {
-            return UDIL.Shared.ConfigurationManager.GetConnectionString();
-        }
-
-        public class AuthResponse
-        {
-            public string status { get; set; }
-            public string privatekey { get; set; }
-            public string message { get; set; }
-        }
-
-        public class TimeSyncResponse
+        public class LschReadResponse
         {
             public string status { get; set; }
             public string transactionid { get; set; }
+            public List<LschData> data { get; set; }
             public string message { get; set; }
-            public object data { get; set; }
         }
 
-        public class MeterStatusResponse
-        {
-            public string status { get; set; }
-            public string transactionid { get; set; }
-            public string message { get; set; }
-            public object data { get; set; }
-        }
-
-        public class TransactionStatusData
+        public class LschData
         {
             public string global_device_id { get; set; }
             public string msn { get; set; }
-            public string type { get; set; }
-            public string transactionid { get; set; }
-            public string request_cancel_reason { get; set; }
-            public string status_4_datetime { get; set; }
-            public string response_data { get; set; }
-            public string status_1_datetime { get; set; }
-            public string command_receiving_datetime { get; set; }
-            public string indv_status { get; set; }
-            public string request_cancel_datetime { get; set; }
-            public string status_5_datetime { get; set; }
-            public string status_2_datetime { get; set; }
-            public string status_level { get; set; }
-            public string request_cancelled { get; set; }
-            public string status_3_datetime { get; set; }
+            public string lsch_datetime { get; set; }
+            public string lsch_start_datetime { get; set; }
+            public string lsch_end_datetime { get; set; }
+        }
+
+        private string ReadWebExceptionResponse(WebException ex)
+        {
+            if (ex.Response == null)
+                return string.Empty;
+
+            try
+            {
+                using (var responseStream = ex.Response.GetResponseStream())
+                using (var reader = new StreamReader(responseStream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         private void ShowDataTables()
         {
             try
             {
-                string globalDeviceId = msGlobalDeviceId.Text.Trim();
+                string globalDeviceId = SessionManager.GlobalDeviceId;
                 if (!string.IsNullOrEmpty(globalDeviceId))
                 {
                     LoadTableData(globalDeviceId);
@@ -492,7 +264,7 @@ namespace UDIL.Pages
         {
             try
             {
-                Tables dal = new Tables(GetConnectionString());
+                Tables dal = new Tables(UDIL.Shared.ConfigurationManager.GetConnectionString());
                 DataSet ds = dal.GetUDILTables(globalDeviceId);
 
                 if (ds.Tables.Contains("MeterVisuals") && ds.Tables["MeterVisuals"].Rows.Count > 0)
@@ -688,7 +460,7 @@ namespace UDIL.Pages
 
                 if (!string.IsNullOrEmpty(remarks))
                 {
-                    HandleTableAction(tableName + "Table - Meter Status", "Fail", remarks);
+                    HandleTableAction(tableName + "Table - AUXR", "Fail", remarks);
                     System.Diagnostics.Debug.WriteLine($"Remarks saved for {tableName}: {remarks}");
 
                     HideRemarksSection(tableName);
@@ -764,12 +536,90 @@ namespace UDIL.Pages
             }
         }
 
+        protected void btnLschResponsePass_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string transactionId = SessionManager.CurrentTransactionId;
+                SaveApiTestResult(transactionId, "Pass", "LSCH Read Response marked as Pass");
+
+                btnLschResponsePass.CssClass = "btn btn-success btn-sm disabled";
+                btnLschResponsePass.Enabled = false;
+                btnLschResponseFail.Visible = false;
+
+                lblLschMessage.Text = "LSCH Response marked as Pass.";
+                lblLschMessage.CssClass = "text-success";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error marking response as pass: {ex.Message}");
+            }
+        }
+
+        protected void btnLschResponseFail_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ((System.Web.UI.HtmlControls.HtmlControl)lschResponseRemarks).Style.Add("display", "block");
+                txtLschResponseRemarks.Text = "";
+                txtLschResponseRemarks.Focus();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing response remarks: {ex.Message}");
+            }
+        }
+
+        protected void btnSaveLschResponseRemarks_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string remarks = txtLschResponseRemarks.Text.Trim();
+                if (!string.IsNullOrEmpty(remarks))
+                {
+                    string transactionId = SessionManager.CurrentTransactionId;
+                    string globalDeviceId = SessionManager.GlobalDeviceId;
+
+                    SaveTestResult("LSCHReadResponse", "Fail", remarks, transactionId, globalDeviceId);
+
+                    ((System.Web.UI.HtmlControls.HtmlControl)lschResponseRemarks).Style.Add("display", "none");
+
+                    btnLschResponsePass.Visible = false;
+                    btnLschResponseFail.CssClass = "btn btn-danger btn-sm disabled";
+                    btnLschResponseFail.Enabled = false;
+
+                    lblLschMessage.Text = $"LSCH Response marked as Fail. Reason: {remarks}";
+                    lblLschMessage.CssClass = "text-danger";
+
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "showResponseFailAlert",
+                        $"alert('LSCH Response marked as Fail with remarks: {remarks.Replace("'", "\\'")}');", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving response remarks: {ex.Message}");
+            }
+        }
+
+        protected void btnCancelLschResponseRemarks_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ((System.Web.UI.HtmlControls.HtmlControl)lschResponseRemarks).Style.Add("display", "none");
+                txtLschResponseRemarks.Text = "";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error canceling response remarks: {ex.Message}");
+            }
+        }
+
         private void HandleTableAction(string tableName, string action, string reason)
         {
             try
             {
-                string transactionId = Session["CurrentTransactionId"] as string;
-                string globalDeviceId = msGlobalDeviceId.Text.Trim();
+                string transactionId = SessionManager.CurrentTransactionId;
+                string globalDeviceId = SessionManager.GlobalDeviceId;
 
                 SaveTestResult(tableName, action, reason, transactionId, globalDeviceId);
 
@@ -796,11 +646,11 @@ namespace UDIL.Pages
                     return;
                 }
 
-                string globalDeviceId = msGlobalDeviceId.Text.Trim();
+                string globalDeviceId = SessionManager.GlobalDeviceId;
                 UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
                 {
                     SessionId = currentSession.SessionId,
-                    TestName = "MeterStatusAPI",
+                    TestName = "LSCHReadAPI",
                     TestType = "API",
                     Status = status,
                     Remarks = remarks,
@@ -853,5 +703,6 @@ namespace UDIL.Pages
                 System.Diagnostics.Debug.WriteLine($"Error saving test result: {ex.Message}");
             }
         }
+
     }
 }

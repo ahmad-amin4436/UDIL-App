@@ -20,9 +20,16 @@ namespace UDIL.Read
         {
             if (!IsPostBack)
             {
-                if (Session["PrivateKey"] != null)
+                // Populate private key from session
+                if (SessionManager.HasPrivateKey)
                 {
-                    dmdtPrivateKey.Text = Session["PrivateKey"].ToString();
+                    dmdtPrivateKey.Text = SessionManager.PrivateKey;
+                }
+
+                // Populate global device ID from session if available
+                if (SessionManager.HasGlobalDeviceId)
+                {
+                    dmdtGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
                 // Generate unique transaction ID
@@ -39,7 +46,7 @@ namespace UDIL.Read
             string globalDeviceId = dmdtGlobalDeviceId.Text.Trim();
             string type = dmdtType.SelectedValue;
 
-            string privateKey = Session["PrivateKey"] as string;
+            string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {
@@ -56,6 +63,9 @@ namespace UDIL.Read
                 lblDmdtMessage.CssClass = "text-danger";
                 return;
             }
+
+            // Store global device ID in session for use across the app
+            SessionManager.GlobalDeviceId = globalDeviceId;
 
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceId)}&type={HttpUtility.UrlEncode(type)}";
 
@@ -103,6 +113,16 @@ namespace UDIL.Read
                     lblRespGlobalDeviceId.Text = data.global_device_id ?? "N/A";
                     lblRespMsn.Text = data.msn ?? "N/A";
                     lblRespBidirectionalDevice.Text = data.dmdt_bidirectional_device ?? "N/A";
+
+                    // Store global device ID and MSN in session for use across the app
+                    if (!string.IsNullOrEmpty(data.global_device_id))
+                    {
+                        SessionManager.GlobalDeviceId = data.global_device_id;
+                    }
+                    if (!string.IsNullOrEmpty(data.msn))
+                    {
+                        SessionManager.MSN = data.msn;
+                    }
                     lblRespCommunicationInterval.Text = data.dmdt_communication_interval ?? "N/A";
                     lblRespCommunicationType.Text = data.dmdt_communication_type ?? "N/A";
                     lblRespInitialCommunicationTime.Text = data.dmdt_initial_communication_time ?? "N/A";
@@ -128,7 +148,7 @@ namespace UDIL.Read
                 pnlResponse.Visible = true;
 
                 // After success, show data tables
-                Session["CurrentTransactionId"] = transactionId;
+                SessionManager.CurrentTransactionId = transactionId;
                 ShowDataTables();
                 pnlDataTables.Visible = true;
                 timerTables.Enabled = true;
@@ -233,7 +253,7 @@ namespace UDIL.Read
         {
             try
             {
-                string globalDeviceId = dmdtGlobalDeviceId.Text.Trim();
+                string globalDeviceId = SessionManager.GlobalDeviceId;
                 if (!string.IsNullOrEmpty(globalDeviceId))
                 {
                     LoadTableData(globalDeviceId);
@@ -526,7 +546,7 @@ namespace UDIL.Read
         {
             try
             {
-                string transactionId = Session["CurrentTransactionId"] as string;
+                string transactionId = SessionManager.CurrentTransactionId;
                 SaveApiTestResult(transactionId, "Pass", "DMDT Read Response marked as Pass");
 
                 btnDmdtResponsePass.CssClass = "btn btn-success btn-sm disabled";
@@ -563,8 +583,8 @@ namespace UDIL.Read
                 string remarks = txtDmdtResponseRemarks.Text.Trim();
                 if (!string.IsNullOrEmpty(remarks))
                 {
-                    string transactionId = Session["CurrentTransactionId"] as string;
-                    string globalDeviceId = dmdtGlobalDeviceId.Text.Trim();
+                    string transactionId = SessionManager.CurrentTransactionId;
+                    string globalDeviceId = SessionManager.GlobalDeviceId;
 
                     SaveTestResult("DMDTReadResponse", "Fail", remarks, transactionId, globalDeviceId);
 
@@ -604,8 +624,8 @@ namespace UDIL.Read
         {
             try
             {
-                string transactionId = Session["CurrentTransactionId"] as string;
-                string globalDeviceId = dmdtGlobalDeviceId.Text.Trim();
+                string transactionId = SessionManager.CurrentTransactionId;
+                string globalDeviceId = SessionManager.GlobalDeviceId;
 
                 SaveTestResult(tableName, action, reason, transactionId, globalDeviceId);
 
@@ -632,7 +652,7 @@ namespace UDIL.Read
                     return;
                 }
 
-                string globalDeviceId = dmdtGlobalDeviceId.Text.Trim();
+                string globalDeviceId = SessionManager.GlobalDeviceId;
                 UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
                 {
                     SessionId = currentSession.SessionId,
