@@ -521,11 +521,11 @@
                                 </li>
                                 <% } else { %>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="Login.aspx"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                                    <a class="nav-link" href="~/Login.aspx"><i class="bi bi-box-arrow-in-right"></i> Login</a>
                                 </li>
                                 <% } %>
                             </ul>
-                            <asp:Button ID="btnLogout" runat="server" CssClass="d-none" OnClick="btnLogout_Click" />
+                            <asp:Button ID="btnLogout" runat="server" CssClass="d-none" OnClick="btnLogout_Click" UseSubmitBehavior="false" />
                         </div>
                     </div>
                 </nav>
@@ -630,20 +630,20 @@
                             <a class="nav-link <%= GetActiveClass("mtst.aspx") %>" href="<%= ResolveUrl("~/Read/MTST.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
                         </li>
                         <li>
-                            <h6 class="sidebar-heading">On-Demand APIs</h6>
+                            <h6 class="sidebar-heading">Events Data Table</h6>
                         </li>
                         
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("parameterread.aspx") %>" href="<%= ResolveUrl("~/Pages/ParameterRead.aspx") %>"><i class="bi bi-file-earmark-text"></i>Parameter Read</a>
+                            <a class="nav-link <%= GetActiveClass("load_profile_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/load_profile_data.aspx") %>"><i class="bi bi-file-earmark-text"></i>Load Profile Data </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("transactionstatus.aspx") %>" href="<%= ResolveUrl("~/Pages/TransactionStatus.aspx") %>"><i class="bi bi-check-circle"></i>Transaction Status</a>
+                            <a class="nav-link <%= GetActiveClass("instantaneous_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/instantaneous_data.aspx") %>"><i class="bi bi-check-circle"></i>Transaction Status</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("transactioncancel.aspx") %>" href="<%= ResolveUrl("~/Pages/TransactionCancel.aspx") %>"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
+                            <a class="nav-link <%= GetActiveClass("billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/billing_data.aspx") %>"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("testresultslogs.aspx") %>" href="<%= ResolveUrl("~/Pages/TestResultsLogs.aspx") %>"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
+                            <a class="nav-link <%= GetActiveClass("monthly_billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/monthly_billing_data.aspx") %>"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
                         </li>
                     </ul>
                 </div>

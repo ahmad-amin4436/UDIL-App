@@ -244,6 +244,10 @@
     <Content Include="bin\UDIL.pdb" />
     <Content Include="bin\WebGrease.dll" />
     <Content Include="Default.aspx" />
+    <Content Include="EventsDataTables\billing_data.aspx" />
+    <Content Include="EventsDataTables\instantaneous_data.aspx" />
+    <Content Include="EventsDataTables\load_profile_data.aspx" />
+    <Content Include="EventsDataTables\monthly_billing_data.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Login.aspx" />
     <Content Include="AccessDenied.aspx" />
@@ -332,6 +336,34 @@
     </Compile>
     <Compile Include="Default.Master.designer.cs">
       <DependentUpon>Default.Master</DependentUpon>
+    </Compile>
+    <Compile Include="EventsDataTables\billing_data.aspx.cs">
+      <DependentUpon>billing_data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EventsDataTables\billing_data.aspx.designer.cs">
+      <DependentUpon>billing_data.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EventsDataTables\instantaneous_data.aspx.cs">
+      <DependentUpon>instantaneous_data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EventsDataTables\instantaneous_data.aspx.designer.cs">
+      <DependentUpon>instantaneous_data.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EventsDataTables\load_profile_data.aspx.cs">
+      <DependentUpon>load_profile_data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EventsDataTables\load_profile_data.aspx.designer.cs">
+      <DependentUpon>load_profile_data.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EventsDataTables\monthly_billing_data.aspx.cs">
+      <DependentUpon>monthly_billing_data.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EventsDataTables\monthly_billing_data.aspx.designer.cs">
+      <DependentUpon>monthly_billing_data.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
