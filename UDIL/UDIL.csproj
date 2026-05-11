@@ -268,13 +268,20 @@
     <Content Include="Pages\Update_IP_Port.aspx" />
     <Content Include="Pages\WakeUpSimNumber.aspx" />
     <Content Include="Read\AUXR.aspx" />
+    <Content Include="Read\BILL.aspx" />
     <Content Include="Read\DMDT.aspx" />
     <Content Include="Read\DVTM.aspx" />
     <Content Include="Read\INST.aspx" />
     <Content Include="Read\IPPO.aspx" />
+    <Content Include="Read\LPRO.aspx" />
     <Content Include="Read\LSCH.aspx" />
+    <Content Include="Read\MBILL.aspx" />
+    <Content Include="Read\MDI.aspx" />
+    <Content Include="Read\MTST.aspx" />
+    <Content Include="Read\OPPO.aspx" />
     <Content Include="Read\SANC.aspx" />
     <Content Include="Read\TIOU.aspx" />
+    <Content Include="Read\WSIM.aspx" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -442,6 +449,13 @@
     <Compile Include="Read\AUXR.aspx.designer.cs">
       <DependentUpon>AUXR.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Read\BILL.aspx.cs">
+      <DependentUpon>BILL.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\BILL.aspx.designer.cs">
+      <DependentUpon>BILL.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Read\DMDT.aspx.cs">
       <DependentUpon>DMDT.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -470,12 +484,47 @@
     <Compile Include="Read\IPPO.aspx.designer.cs">
       <DependentUpon>IPPO.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Read\LPRO.aspx.cs">
+      <DependentUpon>LPRO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\LPRO.aspx.designer.cs">
+      <DependentUpon>LPRO.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Read\LSCH.aspx.cs">
       <DependentUpon>LSCH.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Read\LSCH.aspx.designer.cs">
       <DependentUpon>LSCH.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\MBILL.aspx.cs">
+      <DependentUpon>MBILL.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\MBILL.aspx.designer.cs">
+      <DependentUpon>MBILL.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\MDI.aspx.cs">
+      <DependentUpon>MDI.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\MDI.aspx.designer.cs">
+      <DependentUpon>MDI.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\MTST.aspx.cs">
+      <DependentUpon>MTST.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\MTST.aspx.designer.cs">
+      <DependentUpon>MTST.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\OPPO.aspx.cs">
+      <DependentUpon>OPPO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\OPPO.aspx.designer.cs">
+      <DependentUpon>OPPO.aspx</DependentUpon>
     </Compile>
     <Compile Include="Read\SANC.aspx.cs">
       <DependentUpon>SANC.aspx</DependentUpon>
@@ -490,6 +539,13 @@
     </Compile>
     <Compile Include="Read\TIOU.aspx.designer.cs">
       <DependentUpon>TIOU.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\WSIM.aspx.cs">
+      <DependentUpon>WSIM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\WSIM.aspx.designer.cs">
+      <DependentUpon>WSIM.aspx</DependentUpon>
     </Compile>
     <Compile Include="Shared\SessionManager.cs" />
     <Compile Include="Site.Master.cs">

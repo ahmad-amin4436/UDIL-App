@@ -10,133 +10,97 @@
 namespace UDIL.Read {
     
     
-    public partial class INST {
+    public partial class MDI {
         
         /// <summary>
-        /// lblInstTransactionId control.
+        /// lblMdiTransactionId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstTransactionId;
+        protected global::System.Web.UI.WebControls.Label lblMdiTransactionId;
         
         /// <summary>
-        /// instTransactionId control.
+        /// mdiTransactionId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox instTransactionId;
+        protected global::System.Web.UI.WebControls.TextBox mdiTransactionId;
         
         /// <summary>
-        /// lblInstPrivateKey control.
+        /// lblMdiPrivateKey control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstPrivateKey;
+        protected global::System.Web.UI.WebControls.Label lblMdiPrivateKey;
         
         /// <summary>
-        /// instPrivateKey control.
+        /// mdiPrivateKey control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox instPrivateKey;
+        protected global::System.Web.UI.WebControls.TextBox mdiPrivateKey;
         
         /// <summary>
-        /// lblInstGlobalDeviceId control.
+        /// lblMdiGlobalDeviceId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstGlobalDeviceId;
+        protected global::System.Web.UI.WebControls.Label lblMdiGlobalDeviceId;
         
         /// <summary>
-        /// instGlobalDeviceId control.
+        /// mdiGlobalDeviceId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox instGlobalDeviceId;
+        protected global::System.Web.UI.WebControls.TextBox mdiGlobalDeviceId;
         
         /// <summary>
-        /// lblInstType control.
+        /// lblMdiType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstType;
+        protected global::System.Web.UI.WebControls.Label lblMdiType;
         
         /// <summary>
-        /// instType control.
+        /// mdiType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList instType;
+        protected global::System.Web.UI.WebControls.DropDownList mdiType;
         
         /// <summary>
-        /// lblInstStartDateTime control.
+        /// btnMdiRead control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstStartDateTime;
+        protected global::System.Web.UI.WebControls.Button btnMdiRead;
         
         /// <summary>
-        /// instStartDateTime control.
+        /// lblMdiMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox instStartDateTime;
-        
-        /// <summary>
-        /// lblInstEndDateTime control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstEndDateTime;
-        
-        /// <summary>
-        /// instEndDateTime control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox instEndDateTime;
-        
-        /// <summary>
-        /// btnInstRead control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnInstRead;
-        
-        /// <summary>
-        /// lblInstMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInstMessage;
+        protected global::System.Web.UI.WebControls.Label lblMdiMessage;
         
         /// <summary>
         /// updResponse control.
@@ -166,22 +130,22 @@ namespace UDIL.Read {
         protected global::System.Web.UI.WebControls.Label lblResponseStatus;
         
         /// <summary>
-        /// btnInstResponsePass control.
+        /// btnMdiResponsePass control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnInstResponsePass;
+        protected global::System.Web.UI.WebControls.Button btnMdiResponsePass;
         
         /// <summary>
-        /// btnInstResponseFail control.
+        /// btnMdiResponseFail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnInstResponseFail;
+        protected global::System.Web.UI.WebControls.Button btnMdiResponseFail;
         
         /// <summary>
         /// lblResponseTransactionId control.
@@ -220,220 +184,67 @@ namespace UDIL.Read {
         protected global::System.Web.UI.WebControls.Label lblRespMsn;
         
         /// <summary>
-        /// lblRespMeterDateTime control.
+        /// lblRespMdiDateTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespMeterDateTime;
+        protected global::System.Web.UI.WebControls.Label lblRespMdiDateTime;
         
         /// <summary>
-        /// lblRespMdcReadDateTime control.
+        /// lblRespMdiResetDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespMdcReadDateTime;
+        protected global::System.Web.UI.WebControls.Label lblRespMdiResetDate;
         
         /// <summary>
-        /// lblRespVoltagePhaseA control.
+        /// lblRespMdiResetTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespVoltagePhaseA;
+        protected global::System.Web.UI.WebControls.Label lblRespMdiResetTime;
         
         /// <summary>
-        /// lblRespCurrentPhaseA control.
+        /// mdiResponseRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespCurrentPhaseA;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl mdiResponseRemarks;
         
         /// <summary>
-        /// lblRespFrequency control.
+        /// txtMdiResponseRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespFrequency;
+        protected global::System.Web.UI.WebControls.TextBox txtMdiResponseRemarks;
         
         /// <summary>
-        /// lblRespSignalStrength control.
+        /// btnSaveMdiResponseRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespSignalStrength;
+        protected global::System.Web.UI.WebControls.Button btnSaveMdiResponseRemarks;
         
         /// <summary>
-        /// lblRespDbDateTime control.
+        /// btnCancelMdiResponseRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespDbDateTime;
-        
-        /// <summary>
-        /// lblRespVoltagePhaseB control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespVoltagePhaseB;
-        
-        /// <summary>
-        /// lblRespVoltagePhaseC control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespVoltagePhaseC;
-        
-        /// <summary>
-        /// lblRespCurrentPhaseB control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespCurrentPhaseB;
-        
-        /// <summary>
-        /// lblRespCurrentPhaseC control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespCurrentPhaseC;
-        
-        /// <summary>
-        /// lblRespAggregateReactivePwrNeg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAggregateReactivePwrNeg;
-        
-        /// <summary>
-        /// lblRespAggregateReactivePwrPos control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAggregateReactivePwrPos;
-        
-        /// <summary>
-        /// lblRespAggregateActivePwrNeg control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAggregateActivePwrNeg;
-        
-        /// <summary>
-        /// lblRespCurrentTariffRegister control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespCurrentTariffRegister;
-        
-        /// <summary>
-        /// lblRespAggregateActivePwrPos control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAggregateActivePwrPos;
-        
-        /// <summary>
-        /// lblRespAggregateReactivePwrAbs control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAggregateReactivePwrAbs;
-        
-        /// <summary>
-        /// lblRespAggregateActivePwrAbs control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAggregateActivePwrAbs;
-        
-        /// <summary>
-        /// lblRespAveragePf control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAveragePf;
-        
-        /// <summary>
-        /// lblRespIsSynced control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespIsSynced;
-        
-        /// <summary>
-        /// instResponseRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl instResponseRemarks;
-        
-        /// <summary>
-        /// txtInstResponseRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtInstResponseRemarks;
-        
-        /// <summary>
-        /// btnSaveInstResponseRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSaveInstResponseRemarks;
-        
-        /// <summary>
-        /// btnCancelInstResponseRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelInstResponseRemarks;
+        protected global::System.Web.UI.WebControls.Button btnCancelMdiResponseRemarks;
         
         /// <summary>
         /// hfFailTableName control.
