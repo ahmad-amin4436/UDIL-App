@@ -16,7 +16,7 @@ using System.Text;
 
 namespace UDIL
 {
-    public partial class _Default : Page
+    public partial class _Default : UDIL.AuthenticatedPage
     {
         protected TextBox txtUsername;
         protected TextBox txtPassword;
