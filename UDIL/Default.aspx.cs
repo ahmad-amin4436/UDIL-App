@@ -784,7 +784,7 @@ namespace UDIL
                 excelContent.AppendLine("<table>");
                 // Header row
                 excelContent.AppendLine("<tr>");
-                excelContent.AppendLine("<th style=\"width: 50px;\">ID</th>");
+                //excelContent.AppendLine("<th style=\"width: 50px;\">ID</th>");
                 excelContent.AppendLine("<th style=\"width: 200px;\">Test Name</th>");
                 excelContent.AppendLine("<th style=\"width: 100px;\">Test Type</th>");
                 excelContent.AppendLine("<th style=\"width: 80px;\">Status</th>");
@@ -799,7 +799,7 @@ namespace UDIL
                 foreach (DataRow row in failedTests.Rows)
                 {
                     string rowClass = (rowIndex % 2 == 0) ? "row-even" : "row-odd";
-                    string id = row["id"].ToString();
+                    //string id = row["id"].ToString();
                     string testName = EscapeHtml(row["test_name"].ToString());
                     string testType = EscapeHtml(row["test_type"].ToString());
                     string status = "FAIL";
@@ -809,7 +809,7 @@ namespace UDIL
                     string globalDeviceId = row["global_device_id"] != DBNull.Value ? row["global_device_id"].ToString() : "-";
 
                     excelContent.AppendLine($"<tr class=\"{rowClass}\">");
-                    excelContent.AppendLine($"<td>{id}</td>");
+                    //excelContent.AppendLine($"<td>{id}</td>");
                     excelContent.AppendLine($"<td><b>{testName}</b></td>");
                     excelContent.AppendLine($"<td>{testType}</td>");
                     excelContent.AppendLine($"<td class=\"status-fail\">{status}</td>");
