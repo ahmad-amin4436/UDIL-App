@@ -88,7 +88,7 @@
                                 <asp:Button ID="btnCreateSession" runat="server" Text="Create Session" CssClass="btn btn-success me-2" OnClick="btnCreateSession_Click" />
                                 <asp:Button ID="btnLoadSession" runat="server" Text="Load Session" CssClass="btn btn-info me-2" OnClick="btnLoadSession_Click" />
                                 <asp:Button ID="btnDeleteSession" runat="server" Text="Delete Session" CssClass="btn btn-danger me-2" OnClick="btnDeleteSession_Click" />
-                                <asp:Button ID="btnExportSession" runat="server" Text="Export Session" CssClass="btn btn-warning me-2" OnClick="btnExportSession_Click" />
+                                <asp:Button ID="btnExportSession" runat="server" Text="Export Failed Tests" CssClass="btn btn-warning me-2" OnClick="btnExportSession_Click" UseSubmitBehavior="false" />
                             </div>
                         </div>
                         <div class="row">

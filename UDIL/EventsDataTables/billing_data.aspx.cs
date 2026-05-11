@@ -207,5 +207,165 @@ namespace UDIL.EventsDataTables
         {
             return UDIL.Shared.ConfigurationManager.GetConnectionString();
         }
+
+        protected void TableButton_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+            string action = e.CommandName;
+
+            if (action == "Fail")
+            {
+                ShowFailRemarksSection(tableName);
+            }
+            else if (action == "Pass")
+            {
+                HandleTableAction(tableName, "Pass", null);
+                MakeTableCardGreen(tableName);
+            }
+        }
+
+        private void MakeTableCardGreen(string tableName)
+        {
+            try
+            {
+                btnBillingDataFail.Visible = false;
+                btnBillingDataPass.CssClass = "btn btn-success btn-sm disabled";
+                btnBillingDataPass.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error making table card green: {ex.Message}");
+            }
+        }
+
+        private void MakeTableCardFailed(string tableName)
+        {
+            try
+            {
+                btnBillingDataPass.Visible = false;
+                btnBillingDataFail.CssClass = "btn btn-danger btn-sm disabled";
+                btnBillingDataFail.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error making table card failed: {ex.Message}");
+            }
+        }
+
+        private void ShowFailRemarksSection(string tableName)
+        {
+            try
+            {
+                ((System.Web.UI.HtmlControls.HtmlControl)billingDataRemarks).Style.Add("display", "block");
+                txtBillingDataRemarks.Text = "";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing fail remarks section: {ex.Message}");
+            }
+        }
+
+        private void HideRemarksSection(string tableName)
+        {
+            try
+            {
+                ((System.Web.UI.HtmlControls.HtmlControl)billingDataRemarks).Style.Add("display", "none");
+                txtBillingDataRemarks.Text = "";
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error hiding remarks section: {ex.Message}");
+            }
+        }
+
+        protected void SaveRemarks_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+            string remarks = "";
+
+            try
+            {
+                remarks = txtBillingDataRemarks.Text.Trim();
+
+                if (!string.IsNullOrEmpty(remarks))
+                {
+                    HandleTableAction(tableName, "Fail", remarks);
+                    System.Diagnostics.Debug.WriteLine($"Remarks saved for {tableName}: {remarks}");
+                    HideRemarksSection(tableName);
+                    MakeTableCardFailed(tableName);
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "showFailAlert",
+                        $"alert('{tableName} marked as Fail with remarks: {remarks.Replace("'", "\\'")}');", true);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving remarks: {ex.Message}");
+            }
+        }
+
+        protected void CancelRemarks_Command(object sender, CommandEventArgs e)
+        {
+            string tableName = e.CommandArgument.ToString();
+
+            try
+            {
+                ((System.Web.UI.HtmlControls.HtmlControl)billingDataRemarks).Style.Add("display", "none");
+                txtBillingDataRemarks.Text = "";
+                System.Diagnostics.Debug.WriteLine($"Remarks section hidden for {tableName}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error canceling remarks: {ex.Message}");
+            }
+        }
+
+        private void HandleTableAction(string tableName, string action, string reason)
+        {
+            try
+            {
+                SaveTestResult(tableName, action, reason);
+                string message = action == "Pass"
+                    ? $"{tableName} marked as Pass"
+                    : $"{tableName} marked as Fail. Reason: {reason}";
+                System.Diagnostics.Debug.WriteLine($"Table Action: {message}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error handling table action: {ex.Message}");
+            }
+        }
+
+        private void SaveTestResult(string testName, string status, string remarks)
+        {
+            try
+            {
+                var currentSession = UDIL.Shared.ConfigurationManager.GetCurrentSession();
+                if (currentSession == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("No current session found, skipping test result save");
+                    return;
+                }
+
+                UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
+                {
+                    SessionId = currentSession.SessionId,
+                    TestName = testName,
+                    TestType = "Database",
+                    Status = status,
+                    Remarks = remarks,
+                    TestDate = DateTime.Now,
+                    TransactionId = null,
+                    GlobalDeviceId = null
+                };
+
+                UDIL.DAL.DatabaseLayer dbLayer = new UDIL.DAL.DatabaseLayer(System.Configuration.ConfigurationManager.ConnectionStrings["TestSuitConnenction"]?.ConnectionString);
+                dbLayer.SaveTestResult(testResult);
+                System.Diagnostics.Debug.WriteLine($"Test result saved for {testName}: {status}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving test result: {ex.Message}");
+            }
+        }
     }
 }

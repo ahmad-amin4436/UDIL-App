@@ -83,5 +83,59 @@ namespace UDIL.EventsDataTables {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvMonthlyBillingData;
+        
+        /// <summary>
+        /// btnMonthlyBillingDataPass control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMonthlyBillingDataPass;
+        
+        /// <summary>
+        /// btnMonthlyBillingDataFail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMonthlyBillingDataFail;
+        
+        /// <summary>
+        /// monthlyBillingDataRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl monthlyBillingDataRemarks;
+        
+        /// <summary>
+        /// txtMonthlyBillingDataRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMonthlyBillingDataRemarks;
+        
+        /// <summary>
+        /// btnSaveMonthlyBillingDataRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveMonthlyBillingDataRemarks;
+        
+        /// <summary>
+        /// btnCancelMonthlyBillingDataRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelMonthlyBillingDataRemarks;
     }
 }

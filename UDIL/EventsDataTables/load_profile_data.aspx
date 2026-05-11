@@ -9,6 +9,13 @@
                 <h2 class="section-header"><i class="bi bi-table"></i> Load Profile Data</h2>
 
                 <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Load Profile Data</h6>
+                        <div>
+                            <asp:Button ID="btnLoadProfileDataPass" runat="server" CssClass="btn btn-success btn-sm" Text="Pass" OnCommand="TableButton_Command" CommandName="Pass" CommandArgument="LoadProfileData" UseSubmitBehavior="false" />
+                            <asp:Button ID="btnLoadProfileDataFail" runat="server" CssClass="btn btn-danger btn-sm ms-2" Text="Fail" OnCommand="TableButton_Command" CommandName="Fail" CommandArgument="LoadProfileData" UseSubmitBehavior="false" />
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-4">
@@ -97,6 +104,19 @@
                                     </div>
                                 </PagerTemplate>
                             </asp:GridView>
+                        </div>
+                        <!-- Remarks Section for Load Profile Data -->
+                        <div id="loadProfileDataRemarks" runat="server" class="mt-3" style="display: none;">
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6 class="card-title">Remarks</h6>
+                                    <asp:TextBox ID="txtLoadProfileDataRemarks" runat="server" CssClass="form-control mb-2" TextMode="MultiLine" Rows="2" placeholder="Enter remarks..." ReadOnly="false"></asp:TextBox>
+                                    <div class="mt-2">
+                                        <asp:Button ID="btnSaveLoadProfileDataRemarks" runat="server" CssClass="btn btn-dark-primary btn-sm me-1" Text="Save Remarks" OnCommand="SaveRemarks_Command" CommandName="Save" CommandArgument="LoadProfileData" UseSubmitBehavior="false" />
+                                        <asp:Button ID="btnCancelLoadProfileDataRemarks" runat="server" CssClass="btn btn-secondary btn-sm ms-2" Text="Cancel" OnCommand="CancelRemarks_Command" CommandName="Cancel" CommandArgument="LoadProfileData" UseSubmitBehavior="false" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

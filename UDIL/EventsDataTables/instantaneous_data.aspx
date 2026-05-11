@@ -9,6 +9,13 @@
                 <h2 class="section-header"><i class="bi bi-table"></i> Instantaneous Data</h2>
 
                 <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">Instantaneous Data</h6>
+                        <div>
+                            <asp:Button ID="btnInstantaneousDataPass" runat="server" CssClass="btn btn-success btn-sm" Text="Pass" OnCommand="TableButton_Command" CommandName="Pass" CommandArgument="InstantaneousData" UseSubmitBehavior="false" />
+                            <asp:Button ID="btnInstantaneousDataFail" runat="server" CssClass="btn btn-danger btn-sm ms-2" Text="Fail" OnCommand="TableButton_Command" CommandName="Fail" CommandArgument="InstantaneousData" UseSubmitBehavior="false" />
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-4">
@@ -97,6 +104,19 @@
                                     </div>
                                 </PagerTemplate>
                             </asp:GridView>
+                        </div>
+                        <!-- Remarks Section for Instantaneous Data -->
+                        <div id="instantaneousDataRemarks" runat="server" class="mt-3" style="display: none;">
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6 class="card-title">Remarks</h6>
+                                    <asp:TextBox ID="txtInstantaneousDataRemarks" runat="server" CssClass="form-control mb-2" TextMode="MultiLine" Rows="2" placeholder="Enter remarks..." ReadOnly="false"></asp:TextBox>
+                                    <div class="mt-2">
+                                        <asp:Button ID="btnSaveInstantaneousDataRemarks" runat="server" CssClass="btn btn-dark-primary btn-sm me-1" Text="Save Remarks" OnCommand="SaveRemarks_Command" CommandName="Save" CommandArgument="InstantaneousData" UseSubmitBehavior="false" />
+                                        <asp:Button ID="btnCancelInstantaneousDataRemarks" runat="server" CssClass="btn btn-secondary btn-sm ms-2" Text="Cancel" OnCommand="CancelRemarks_Command" CommandName="Cancel" CommandArgument="InstantaneousData" UseSubmitBehavior="false" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

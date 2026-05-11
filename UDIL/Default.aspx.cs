@@ -11,6 +11,8 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using UDIL.Shared;
 using UDIL.DAL;
+using System.Data;
+using System.Text;
 
 namespace UDIL
 {
@@ -94,6 +96,9 @@ namespace UDIL
                 LoadSessions();
                 LoadCurrentSession();
             }
+
+            // Register export button for full postback (required for file downloads in UpdatePanel)
+            ScriptManager.GetCurrent(this).RegisterPostBackControl(btnExportSession);
 
             if (!IsPostBack)
             {
@@ -725,28 +730,157 @@ namespace UDIL
                     return;
                 }
 
-                // Generate export data (JSON format)
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                string exportData = serializer.Serialize(currentSession);
-                
+                // Get failed test results for current session
+                var dbLayer = new DatabaseLayer();
+                DataSet failedTestsDs = dbLayer.GetFailedTestResultsBySession(currentSession.SessionId);
+
+                if (failedTestsDs.Tables.Count == 0 || failedTestsDs.Tables[0].Rows.Count == 0)
+                {
+                    lblSessionMessage.Text = "No failed test results found for current session.";
+                    lblSessionMessage.CssClass = "text-warning";
+                    return;
+                }
+
+                DataTable failedTests = failedTestsDs.Tables[0];
+
+                // Build professional HTML Excel content
+                StringBuilder excelContent = new StringBuilder();
+                excelContent.AppendLine("<html xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns=\"http://www.w3.org/TR/REC-html40\">");
+                excelContent.AppendLine("<head>");
+                excelContent.AppendLine("<meta charset=\"utf-8\">");
+                excelContent.AppendLine("<style>");
+                excelContent.AppendLine("body { font-family: Calibri, Arial, sans-serif; }");
+                excelContent.AppendLine(".title { font-size: 18pt; font-weight: bold; color: #FFFFFF; background-color: #DC3545; padding: 10px; text-align: center; }");
+                excelContent.AppendLine(".subtitle { font-size: 12pt; font-weight: bold; color: #333333; background-color: #F8F9FA; padding: 8px; }");
+                excelContent.AppendLine(".info { font-size: 10pt; padding: 5px; background-color: #E9ECEF; }");
+                excelContent.AppendLine("table { border-collapse: collapse; width: 100%; }");
+                excelContent.AppendLine("th { background-color: #495057; color: #FFFFFF; font-weight: bold; padding: 10px; border: 1px solid #333333; text-align: left; }");
+                excelContent.AppendLine("td { padding: 8px; border: 1px solid #DEE2E6; font-size: 10pt; }");
+                excelContent.AppendLine(".row-even { background-color: #F8F9FA; }");
+                excelContent.AppendLine(".row-odd { background-color: #FFFFFF; }");
+                excelContent.AppendLine(".status-fail { color: #DC3545; font-weight: bold; }");
+                excelContent.AppendLine(".remarks { color: #6C757D; font-style: italic; }");
+                excelContent.AppendLine("</style>");
+                excelContent.AppendLine("</head>");
+                excelContent.AppendLine("<body>");
+
+                // Report Title
+                excelContent.AppendLine("<table>");
+                excelContent.AppendLine("<tr><td class=\"title\" colspan=\"9\">FAILED TEST RESULTS REPORT</td></tr>");
+                excelContent.AppendLine("</table>");
+                excelContent.AppendLine("<br>");
+
+                // Session Information Section
+                excelContent.AppendLine("<table>");
+                excelContent.AppendLine("<tr><td class=\"subtitle\" colspan=\"2\">Session Information</td></tr>");
+                excelContent.AppendLine($"<tr><td class=\"info\" style=\"width: 150px; font-weight: bold;\">Session Name:</td><td class=\"info\">{EscapeHtml(currentSession.Name)}</td></tr>");
+                excelContent.AppendLine($"<tr><td class=\"info\" style=\"font-weight: bold;\">Session ID:</td><td class=\"info\">{currentSession.SessionId}</td></tr>");
+                excelContent.AppendLine($"<tr><td class=\"info\" style=\"font-weight: bold;\">Export Date:</td><td class=\"info\">{DateTime.Now:yyyy-MM-dd HH:mm:ss}</td></tr>");
+                excelContent.AppendLine($"<tr><td class=\"info\" style=\"font-weight: bold;\">Total Failed Tests:</td><td class=\"info\" style=\"color: #DC3545; font-weight: bold;\">{failedTests.Rows.Count}</td></tr>");
+                excelContent.AppendLine("</table>");
+                excelContent.AppendLine("<br>");
+
+                // Data Table
+                excelContent.AppendLine("<table>");
+                // Header row
+                excelContent.AppendLine("<tr>");
+                excelContent.AppendLine("<th style=\"width: 50px;\">ID</th>");
+                excelContent.AppendLine("<th style=\"width: 200px;\">Test Name</th>");
+                excelContent.AppendLine("<th style=\"width: 100px;\">Test Type</th>");
+                excelContent.AppendLine("<th style=\"width: 80px;\">Status</th>");
+                excelContent.AppendLine("<th style=\"width: 300px;\">Remarks</th>");
+                excelContent.AppendLine("<th style=\"width: 140px;\">Test Date</th>");
+                excelContent.AppendLine("<th style=\"width: 120px;\">Transaction ID</th>");
+                excelContent.AppendLine("<th style=\"width: 120px;\">Global Device ID</th>");
+                excelContent.AppendLine("</tr>");
+
+                // Data rows with alternating colors
+                int rowIndex = 0;
+                foreach (DataRow row in failedTests.Rows)
+                {
+                    string rowClass = (rowIndex % 2 == 0) ? "row-even" : "row-odd";
+                    string id = row["id"].ToString();
+                    string testName = EscapeHtml(row["test_name"].ToString());
+                    string testType = EscapeHtml(row["test_type"].ToString());
+                    string status = "FAIL";
+                    string remarks = EscapeHtml(row["remarks"] != DBNull.Value ? row["remarks"].ToString() : "N/A");
+                    string testDate = Convert.ToDateTime(row["test_date"]).ToString("yyyy-MM-dd HH:mm");
+                    string transactionId = row["transaction_id"] != DBNull.Value ? row["transaction_id"].ToString() : "-";
+                    string globalDeviceId = row["global_device_id"] != DBNull.Value ? row["global_device_id"].ToString() : "-";
+
+                    excelContent.AppendLine($"<tr class=\"{rowClass}\">");
+                    excelContent.AppendLine($"<td>{id}</td>");
+                    excelContent.AppendLine($"<td><b>{testName}</b></td>");
+                    excelContent.AppendLine($"<td>{testType}</td>");
+                    excelContent.AppendLine($"<td class=\"status-fail\">{status}</td>");
+                    excelContent.AppendLine($"<td class=\"remarks\">{remarks}</td>");
+                    excelContent.AppendLine($"<td>{testDate}</td>");
+                    excelContent.AppendLine($"<td>{transactionId}</td>");
+                    excelContent.AppendLine($"<td>{globalDeviceId}</td>");
+                    excelContent.AppendLine("</tr>");
+
+                    rowIndex++;
+                }
+
+                excelContent.AppendLine("</table>");
+                excelContent.AppendLine("<br>");
+
+                // Footer
+                excelContent.AppendLine("<table>");
+                excelContent.AppendLine($"<tr><td style=\"font-size: 9pt; color: #6C757D; text-align: center; padding: 10px;\">Generated by UDIL Tester | {DateTime.Now:yyyy-MM-dd HH:mm:ss}</td></tr>");
+                excelContent.AppendLine("</table>");
+
+                excelContent.AppendLine("</body>");
+                excelContent.AppendLine("</html>");
+
                 // Generate file name with timestamp
-                string fileName = $"Session_{currentSession.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.json";
-                
+                string fileName = $"FailedTests_{currentSession.Name}_{DateTime.Now:yyyyMMdd_HHmmss}.xls";
+
                 // Set up response for file download
                 Response.Clear();
-                Response.ContentType = "application/json";
+                Response.Buffer = true;
+                Response.ContentType = "application/vnd.ms-excel";
                 Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
-                Response.Write(exportData);
-                Response.End();
-
-                lblSessionMessage.Text = "Session exported successfully!";
-                lblSessionMessage.CssClass = "text-success";
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(excelContent.ToString());
+                Response.Flush();
+                Response.SuppressContent = true;
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
+                return;
             }
             catch (Exception ex)
             {
-                lblSessionMessage.Text = "Error exporting session: " + ex.Message;
+                lblSessionMessage.Text = "Error exporting failed tests: " + ex.Message;
                 lblSessionMessage.CssClass = "text-danger";
             }
+        }
+
+        private string EscapeCsvField(string field)
+        {
+            if (string.IsNullOrEmpty(field))
+                return "";
+
+            // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n") || field.Contains("\r"))
+            {
+                field = field.Replace("\"", "\"\""); // Escape quotes
+                return $"\"{field}\""; // Wrap in quotes
+            }
+
+            return field;
+        }
+
+        private string EscapeHtml(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return "";
+
+            return text
+                .Replace("&", "&amp;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("\"", "&quot;")
+                .Replace("'", "&#39;");
         }
 
         protected void ddlSavedSessions_SelectedIndexChanged(object sender, EventArgs e)

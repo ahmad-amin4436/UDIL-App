@@ -508,6 +508,39 @@ namespace UDIL.DAL
             }
         }
 
+        public DataSet GetFailedTestResultsBySession(string sessionId)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT id, session_id, test_name, test_type, status, remarks, test_date, transaction_id, global_device_id 
+                                    FROM test_results 
+                                    WHERE session_id = @session_id 
+                                    AND UPPER(status) = 'FAIL' 
+                                    ORDER BY test_date DESC";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@session_id", sessionId);
+
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                        {
+                            DataSet ds = new DataSet();
+                            adapter.Fill(ds);
+                            return ds;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting failed test results: " + ex.Message);
+            }
+        }
+
         public TestResult GetTestResult(string sessionId, string testName)
         {
             try
