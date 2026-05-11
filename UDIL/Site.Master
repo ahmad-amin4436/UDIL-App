@@ -634,16 +634,16 @@
                         </li>
                         
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("load_profile_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/load_profile_data.aspx") %>"><i class="bi bi-file-earmark-text"></i>Load Profile Data </a>
+                            <a class="nav-link <%= GetActiveClass("load_profile_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/load_profile_data.aspx") %>"><i class="bi bi-table"></i> Load Profile Data </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("instantaneous_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/instantaneous_data.aspx") %>"><i class="bi bi-check-circle"></i>Transaction Status</a>
+                            <a class="nav-link <%= GetActiveClass("instantaneous_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/instantaneous_data.aspx") %>"><i class="bi bi-table"></i> Instantaneous Data</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/billing_data.aspx") %>"><i class="bi bi-x-circle"></i>Transaction Cancel</a>
+                            <a class="nav-link <%= GetActiveClass("billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/billing_data.aspx") %>"><i class="bi bi-table"></i> Billing Data</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("monthly_billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/monthly_billing_data.aspx") %>"><i class="bi bi-journal-text"></i>Test Results / Logs</a>
+                            <a class="nav-link <%= GetActiveClass("monthly_billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/monthly_billing_data.aspx") %>"><i class="bi bi-table"></i> Monthly Billing Data</a>
                         </li>
                     </ul>
                 </div>
