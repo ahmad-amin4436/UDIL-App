@@ -168,7 +168,6 @@
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
-    
     <Reference Include="Microsoft.AspNet.Web.Optimization.WebForms">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.WebForms.1.1.3\lib\net45\Microsoft.AspNet.Web.Optimization.WebForms.dll</HintPath>
@@ -185,59 +184,6 @@
     <Content Include="assets\logo-rm-bg.png" />
     <Content Include="assets\logo.jpeg" />
     <Content Include="assets\LOGO2.jpeg" />
-    <Content Include="bin\AspNet.ScriptManager.bootstrap.dll" />
-    <Content Include="bin\AspNet.ScriptManager.jQuery.dll" />
-    <Content Include="bin\Microsoft.AspNet.FriendlyUrls.dll" />
-    <Content Include="bin\Microsoft.AspNet.FriendlyUrls.xml" />
-    <Content Include="bin\Microsoft.AspNet.Web.Optimization.WebForms.dll" />
-    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
-    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
-    <Content Include="bin\Microsoft.ScriptManager.MSAjax.dll" />
-    <Content Include="bin\Microsoft.ScriptManager.WebForms.dll" />
-    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
-    <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
-    <Content Include="bin\roslyn\csc.exe" />
-    <Content Include="bin\roslyn\csi.exe" />
-    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
-    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
-    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
-    <Content Include="bin\roslyn\System.AppContext.dll" />
-    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
-    <Content Include="bin\roslyn\System.Console.dll" />
-    <Content Include="bin\roslyn\System.Diagnostics.FileVersionInfo.dll" />
-    <Content Include="bin\roslyn\System.Diagnostics.StackTrace.dll" />
-    <Content Include="bin\roslyn\System.IO.Compression.dll" />
-    <Content Include="bin\roslyn\System.IO.FileSystem.dll" />
-    <Content Include="bin\roslyn\System.IO.FileSystem.Primitives.dll" />
-    <Content Include="bin\roslyn\System.IO.Pipes.AccessControl.dll" />
-    <Content Include="bin\roslyn\System.IO.Pipes.dll" />
-    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
-    <Content Include="bin\roslyn\System.Security.AccessControl.dll" />
-    <Content Include="bin\roslyn\System.Security.Claims.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.Algorithms.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.Encoding.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.Primitives.dll" />
-    <Content Include="bin\roslyn\System.Security.Cryptography.X509Certificates.dll" />
-    <Content Include="bin\roslyn\System.Security.Principal.Windows.dll" />
-    <Content Include="bin\roslyn\System.Text.Encoding.CodePages.dll" />
-    <Content Include="bin\roslyn\System.ValueTuple.dll" />
-    <Content Include="bin\roslyn\System.Xml.ReaderWriter.dll" />
-    <Content Include="bin\roslyn\System.Xml.XmlDocument.dll" />
-    <Content Include="bin\roslyn\System.Xml.XPath.dll" />
-    <Content Include="bin\roslyn\System.Xml.XPath.XDocument.dll" />
-    <Content Include="bin\roslyn\vbc.exe" />
-    <Content Include="bin\roslyn\VBCSCompiler.exe" />
-    <Content Include="bin\System.Web.Optimization.dll" />
-    <Content Include="bin\System.Web.Optimization.xml" />
-    <Content Include="bin\UDIL.dll" />
-    <Content Include="bin\UDIL.pdb" />
-    <Content Include="bin\WebGrease.dll" />
     <Content Include="Default.aspx" />
     <Content Include="EventsDataTables\billing_data.aspx" />
     <Content Include="EventsDataTables\instantaneous_data.aspx" />
@@ -247,12 +193,6 @@
     <Content Include="Login.aspx" />
     <Content Include="AccessDenied.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="bin\roslyn\csc.exe.config" />
-    <Content Include="bin\roslyn\csc.rsp" />
-    <Content Include="bin\roslyn\csi.exe.config" />
-    <Content Include="bin\roslyn\csi.rsp" />
-    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
-    <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
     <Content Include="Pages\ActivateOpticalPort.aspx" />
     <Content Include="Pages\AuxRelay.aspx" />
     <Content Include="Pages\MDIReset.aspx" />
@@ -262,6 +202,7 @@
     <Content Include="Pages\LoadSheddingScheduling.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
     <Content Include="Pages\UpdateDeviceMetadata.aspx" />
+    <Content Include="Pages\UpdateMajorAlarms.aspx" />
     <Content Include="Pages\UpdateMeterStatus.aspx" />
     <Content Include="Pages\UpdateTOU.aspx" />
     <Content Include="Pages\Update_IP_Port.aspx" />
@@ -270,6 +211,7 @@
     <Content Include="Read\BILL.aspx" />
     <Content Include="Read\DMDT.aspx" />
     <Content Include="Read\DVTM.aspx" />
+    <Content Include="Read\EVNT.aspx" />
     <Content Include="Read\INST.aspx" />
     <Content Include="Read\IPPO.aspx" />
     <Content Include="Read\LPRO.aspx" />
@@ -278,6 +220,7 @@
     <Content Include="Read\MDI.aspx" />
     <Content Include="Read\MTST.aspx" />
     <Content Include="Read\OPPO.aspx" />
+    <Content Include="Read\PMAL.aspx" />
     <Content Include="Read\SANC.aspx" />
     <Content Include="Read\TIOU.aspx" />
     <Content Include="Read\WSIM.aspx" />
@@ -426,6 +369,13 @@
     <Compile Include="Pages\UpdateDeviceMetadata.aspx.designer.cs">
       <DependentUpon>UpdateDeviceMetadata.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Pages\UpdateMajorAlarms.aspx.cs">
+      <DependentUpon>UpdateMajorAlarms.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\UpdateMajorAlarms.aspx.designer.cs">
+      <DependentUpon>UpdateMajorAlarms.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\UpdateMeterStatus.aspx.cs">
       <DependentUpon>UpdateMeterStatus.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -497,6 +447,13 @@
     <Compile Include="Read\DVTM.aspx.designer.cs">
       <DependentUpon>DVTM.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Read\EVNT.aspx.cs">
+      <DependentUpon>EVNT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\EVNT.aspx.designer.cs">
+      <DependentUpon>EVNT.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Read\INST.aspx.cs">
       <DependentUpon>INST.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -552,6 +509,13 @@
     </Compile>
     <Compile Include="Read\OPPO.aspx.designer.cs">
       <DependentUpon>OPPO.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Read\PMAL.aspx.cs">
+      <DependentUpon>PMAL.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Read\PMAL.aspx.designer.cs">
+      <DependentUpon>PMAL.aspx</DependentUpon>
     </Compile>
     <Compile Include="Read\SANC.aspx.cs">
       <DependentUpon>SANC.aspx</DependentUpon>

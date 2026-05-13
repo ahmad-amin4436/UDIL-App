@@ -14,7 +14,7 @@ using UDIL.Shared;
 
 namespace UDIL.Read
 {
-    public partial class DVTM : UDIL.AuthenticatedPage
+    public partial class PMAL : UDIL.AuthenticatedPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -23,44 +23,44 @@ namespace UDIL.Read
                 // Populate private key from session
                 if (SessionManager.HasPrivateKey)
                 {
-                    dvtmPrivateKey.Text = SessionManager.PrivateKey;
+                    auxrPrivateKey.Text = SessionManager.PrivateKey;
                 }
 
                 // Populate global device ID from session if available
                 if (SessionManager.HasGlobalDeviceId)
                 {
-                    dvtmGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
+                    auxrGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
                 // Generate unique transaction ID
-                dvtmTransactionId.Text = AppCommon.GenerateTransactionId();
+                auxrTransactionId.Text = AppCommon.GenerateTransactionId();
             }
         }
 
-        protected void btnDvtmRead_Click(object sender, EventArgs e)
+        protected void btnAuxrRead_Click(object sender, EventArgs e)
         {
-            lblDvtmMessage.Text = string.Empty;
+            lblAuxrMessage.Text = string.Empty;
             pnlResponse.Visible = false;
 
-            string transactionId = dvtmTransactionId.Text.Trim();
-            string globalDeviceId = dvtmGlobalDeviceId.Text.Trim();
-            string type = dvtmType.SelectedValue;
+            string transactionId = auxrTransactionId.Text.Trim();
+            string globalDeviceId = auxrGlobalDeviceId.Text.Trim();
+            string type = auxrType.SelectedValue;
 
             string privateKey = SessionManager.PrivateKey;
 
             if (string.IsNullOrEmpty(privateKey))
             {
-                lblDvtmMessage.Text = "Please authorize first to obtain a private key.";
-                lblDvtmMessage.CssClass = "text-danger";
+                lblAuxrMessage.Text = "Please authorize first to obtain a private key.";
+                lblAuxrMessage.CssClass = "text-danger";
                 return;
             }
 
-            dvtmPrivateKey.Text = privateKey;
+            auxrPrivateKey.Text = privateKey;
 
             if (string.IsNullOrEmpty(transactionId) || string.IsNullOrEmpty(globalDeviceId) || string.IsNullOrEmpty(type))
             {
-                lblDvtmMessage.Text = "All fields are required: Transaction ID, Global Device ID, and Type.";
-                lblDvtmMessage.CssClass = "text-danger";
+                lblAuxrMessage.Text = "All fields are required: Transaction ID, Global Device ID, and Type.";
+                lblAuxrMessage.CssClass = "text-danger";
                 return;
             }
 
@@ -71,23 +71,23 @@ namespace UDIL.Read
 
             try
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting DVTM read for transaction: {transactionId}");
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Starting PMAL read for transaction: {transactionId}");
 
-                DvtmReadResponse response = GetDvtmData(transactionId, privateKey, postData);
+                PmalReadResponse response = GetPmalData(transactionId, privateKey, postData);
 
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] GetDvtmData returned: {(response == null ? "NULL" : $"status={response.status}, message={response.message}")}");
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] GetPmalData returned: {(response == null ? "NULL" : $"status={response.status}, message={response.message}")}");
 
                 if (response == null)
                 {
-                    lblDvtmMessage.Text = "Failed to get a response from the DVTM read endpoint.";
-                    lblDvtmMessage.CssClass = "text-danger";
+                    lblAuxrMessage.Text = "Failed to get a response from the PMAL read endpoint.";
+                    lblAuxrMessage.CssClass = "text-danger";
                     return;
                 }
 
                 if (response.status != "1")
                 {
-                    lblDvtmMessage.Text = $"DVTM read failed: {response.message}";
-                    lblDvtmMessage.CssClass = "text-danger";
+                    lblAuxrMessage.Text = $"PMAL read failed: {response.message}";
+                    lblAuxrMessage.CssClass = "text-danger";
 
                     lblResponseStatus.Text = "Failed";
                     lblResponseStatus.CssClass = "badge bg-danger px-3 py-2";
@@ -98,8 +98,8 @@ namespace UDIL.Read
                 }
 
                 // Success
-                lblDvtmMessage.Text = $"DVTM read succeeded. {response.message}";
-                lblDvtmMessage.CssClass = "text-success";
+                lblAuxrMessage.Text = $"PMAL read succeeded. {response.message}";
+                lblAuxrMessage.CssClass = "text-success";
 
                 lblResponseStatus.Text = "Success";
                 lblResponseStatus.CssClass = "badge bg-success px-3 py-2";
@@ -109,55 +109,69 @@ namespace UDIL.Read
                 // Display data if available
                 if (response.data != null && response.data.Count > 0)
                 {
-                    DvtmData data = response.data[0];
-                    
-                    // Populate the response data labels
-                    lblRespGlobalDeviceId.Text = !string.IsNullOrEmpty(data.global_device_id) ? data.global_device_id : "N/A";
-                    lblRespMsn.Text = !string.IsNullOrEmpty(data.msn) ? data.msn : "N/A";
-                    lblRespDvtmDateTime.Text = !string.IsNullOrEmpty(data.dvtm_datetime) ? data.dvtm_datetime : "N/A";
-                    lblRespDvtmMeterClock.Text = !string.IsNullOrEmpty(data.dvtm_meter_clock) ? data.dvtm_meter_clock : "N/A";
-                    
+                    PmalData data = response.data[0];
+                    List<MajorAlarm> majorAlarms = data.major_alarms_list ?? new List<MajorAlarm>();
+
+                    gvPmalData.DataSource = majorAlarms;
+                    gvPmalData.DataBind();
+
                     // Store global device ID and MSN in session for use across the app
                     if (!string.IsNullOrEmpty(data.global_device_id))
                     {
                         SessionManager.GlobalDeviceId = data.global_device_id;
+                        lblRespGlobalDeviceId.Text = data.global_device_id;
+                    }
+                    else
+                    {
+                        lblRespGlobalDeviceId.Text = "N/A";
                     }
                     if (!string.IsNullOrEmpty(data.msn))
                     {
                         SessionManager.MSN = data.msn;
+                        lblRespMsn.Text = data.msn;
                     }
+                    else
+                    {
+                        lblRespMsn.Text = "N/A";
+                    }
+
+                    lblRespAuxrDateTime.Text = majorAlarms.Count.ToString();
+                    lblRespAuxrStatus.Text = type;
                 }
                 else
                 {
+                    gvPmalData.DataSource = null;
+                    gvPmalData.DataBind();
+
                     lblRespGlobalDeviceId.Text = "N/A";
                     lblRespMsn.Text = "N/A";
-                    lblRespDvtmDateTime.Text = "N/A";
-                    lblRespDvtmMeterClock.Text = "N/A";
+                    lblRespAuxrDateTime.Text = "N/A";
+                    lblRespAuxrStatus.Text = "N/A";
                 }
 
                 pnlResponse.Visible = true;
 
                 // After success, show data tables
-                Session["CurrentTransactionId"] = transactionId;
+                SessionManager.CurrentTransactionId = transactionId;
                 ShowDataTables();
                 pnlDataTables.Visible = true;
                 timerTables.Enabled = true;
 
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableDvtmBtn", "disableDvtmButton();", true);
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableAuxrBtn", "disableAuxrButton();", true);
             }
             catch (WebException ex)
             {
-                lblDvtmMessage.Text = "HTTP Error: " + ex.Message;
-                lblDvtmMessage.CssClass = "text-danger";
+                lblAuxrMessage.Text = "HTTP Error: " + ex.Message;
+                lblAuxrMessage.CssClass = "text-danger";
             }
             catch (Exception ex)
             {
-                lblDvtmMessage.Text = "Error: " + ex.Message;
-                lblDvtmMessage.CssClass = "text-danger";
+                lblAuxrMessage.Text = "Error: " + ex.Message;
+                lblAuxrMessage.CssClass = "text-danger";
             }
         }
 
-        private DvtmReadResponse GetDvtmData(string transactionId, string privateKey, string postData)
+        private PmalReadResponse GetPmalData(string transactionId, string privateKey, string postData)
         {
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/on_demand_parameter_read");
@@ -183,13 +197,13 @@ namespace UDIL.Read
                 {
                     string responseContent = reader.ReadToEnd();
                     JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    return serializer.Deserialize<DvtmReadResponse>(responseContent);
+                    return serializer.Deserialize<PmalReadResponse>(responseContent);
                 }
             }
             catch (WebException ex)
             {
                 string body = AppCommon.ReadWebExceptionResponse(ex);
-                throw new WebException($"DVTM read request failed: {ex.Message}. Response body: {body}", ex);
+                throw new WebException($"PMAL read request failed: {ex.Message}. Response body: {body}", ex);
             }
         }
 
@@ -198,20 +212,25 @@ namespace UDIL.Read
             return UDIL.Shared.ConfigurationManager.GetBaseUrl();
         }
 
-        public class DvtmReadResponse
+        public class PmalReadResponse
         {
             public string status { get; set; }
             public string transactionid { get; set; }
-            public List<DvtmData> data { get; set; }
+            public List<PmalData> data { get; set; }
             public string message { get; set; }
         }
 
-        public class DvtmData
+        public class PmalData
         {
             public string global_device_id { get; set; }
             public string msn { get; set; }
-            public string dvtm_datetime { get; set; }
-            public string dvtm_meter_clock { get; set; }
+            public List<MajorAlarm> major_alarms_list { get; set; }
+        }
+
+        public class MajorAlarm
+        {
+            public string event_code { get; set; }
+            public string event_description { get; set; }
         }
 
         private string ReadWebExceptionResponse(WebException ex)
@@ -450,7 +469,7 @@ namespace UDIL.Read
 
                 if (!string.IsNullOrEmpty(remarks))
                 {
-                    HandleTableAction(tableName + "Table - AUXR", "Fail", remarks);
+                    HandleTableAction(tableName + "Table - PMAL", "Fail", remarks);
                     System.Diagnostics.Debug.WriteLine($"Remarks saved for {tableName}: {remarks}");
 
                     HideRemarksSection(tableName);
@@ -526,19 +545,19 @@ namespace UDIL.Read
             }
         }
 
-        protected void btnDvtmResponsePass_Click(object sender, EventArgs e)
+        protected void btnAuxrResponsePass_Click(object sender, EventArgs e)
         {
             try
             {
                 string transactionId = SessionManager.CurrentTransactionId;
-                SaveApiTestResult(transactionId, "Pass", "DVTM Read Response marked as Pass");
+                SaveApiTestResult(transactionId, "Pass", "PMAL Read Response marked as Pass");
 
-                btnDvtmResponsePass.CssClass = "btn btn-success btn-sm disabled";
-                btnDvtmResponsePass.Enabled = false;
-                btnDvtmResponseFail.Visible = false;
+                btnAuxrResponsePass.CssClass = "btn btn-success btn-sm disabled";
+                btnAuxrResponsePass.Enabled = false;
+                btnAuxrResponseFail.Visible = false;
 
-                lblDvtmMessage.Text = "DVTM Response marked as Pass.";
-                lblDvtmMessage.CssClass = "text-success";
+                lblAuxrMessage.Text = "PMAL Response marked as Pass.";
+                lblAuxrMessage.CssClass = "text-success";
             }
             catch (Exception ex)
             {
@@ -546,13 +565,13 @@ namespace UDIL.Read
             }
         }
 
-        protected void btnDvtmResponseFail_Click(object sender, EventArgs e)
+        protected void btnAuxrResponseFail_Click(object sender, EventArgs e)
         {
             try
             {
-                ((System.Web.UI.HtmlControls.HtmlControl)dvtmResponseRemarks).Style.Add("display", "block");
-                txtDvtmResponseRemarks.Text = "";
-                txtDvtmResponseRemarks.Focus();
+                ((System.Web.UI.HtmlControls.HtmlControl)auxrResponseRemarks).Style.Add("display", "block");
+                txtAuxrResponseRemarks.Text = "";
+                txtAuxrResponseRemarks.Focus();
             }
             catch (Exception ex)
             {
@@ -560,29 +579,29 @@ namespace UDIL.Read
             }
         }
 
-        protected void btnSaveDvtmResponseRemarks_Click(object sender, EventArgs e)
+        protected void btnSaveAuxrResponseRemarks_Click(object sender, EventArgs e)
         {
             try
             {
-                string remarks = txtDvtmResponseRemarks.Text.Trim();
+                string remarks = txtAuxrResponseRemarks.Text.Trim();
                 if (!string.IsNullOrEmpty(remarks))
                 {
                     string transactionId = SessionManager.CurrentTransactionId;
                     string globalDeviceId = SessionManager.GlobalDeviceId;
 
-                    SaveTestResult("DVTMReadResponse", "Fail", remarks, transactionId, globalDeviceId);
+                    SaveTestResult("PMALReadResponse", "Fail", remarks, transactionId, globalDeviceId);
 
-                    ((System.Web.UI.HtmlControls.HtmlControl)dvtmResponseRemarks).Style.Add("display", "none");
+                    ((System.Web.UI.HtmlControls.HtmlControl)auxrResponseRemarks).Style.Add("display", "none");
 
-                    btnDvtmResponsePass.Visible = false;
-                    btnDvtmResponseFail.CssClass = "btn btn-danger btn-sm disabled";
-                    btnDvtmResponseFail.Enabled = false;
+                    btnAuxrResponsePass.Visible = false;
+                    btnAuxrResponseFail.CssClass = "btn btn-danger btn-sm disabled";
+                    btnAuxrResponseFail.Enabled = false;
 
-                    lblDvtmMessage.Text = $"DVTM Response marked as Fail. Reason: {remarks}";
-                    lblDvtmMessage.CssClass = "text-danger";
+                    lblAuxrMessage.Text = $"PMAL Response marked as Fail. Reason: {remarks}";
+                    lblAuxrMessage.CssClass = "text-danger";
 
                     ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "showResponseFailAlert",
-                        $"alert('DVTM Response marked as Fail with remarks: {remarks.Replace("'", "\\'")}');", true);
+                        $"alert('PMAL Response marked as Fail with remarks: {remarks.Replace("'", "\\'")}');", true);
                 }
             }
             catch (Exception ex)
@@ -591,12 +610,12 @@ namespace UDIL.Read
             }
         }
 
-        protected void btnCancelDvtmResponseRemarks_Click(object sender, EventArgs e)
+        protected void btnCancelAuxrResponseRemarks_Click(object sender, EventArgs e)
         {
             try
             {
-                ((System.Web.UI.HtmlControls.HtmlControl)dvtmResponseRemarks).Style.Add("display", "none");
-                txtDvtmResponseRemarks.Text = "";
+                ((System.Web.UI.HtmlControls.HtmlControl)auxrResponseRemarks).Style.Add("display", "none");
+                txtAuxrResponseRemarks.Text = "";
             }
             catch (Exception ex)
             {
@@ -640,7 +659,7 @@ namespace UDIL.Read
                 UDIL.DAL.TestResult testResult = new UDIL.DAL.TestResult
                 {
                     SessionId = currentSession.SessionId,
-                    TestName = "DVTMReadAPI",
+                    TestName = "PMALReadAPI",
                     TestType = "API",
                     Status = status,
                     Remarks = remarks,

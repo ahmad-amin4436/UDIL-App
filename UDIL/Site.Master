@@ -580,6 +580,9 @@
                         <li class="nav-item">
                             <a class="nav-link <%= GetActiveClass("updatemeterstatus.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateMeterStatus.aspx") %>"><i class="bi bi-arrow-repeat"></i> Update Meter Status</a>
                         </li>
+                       <li class="nav-item">
+                            <a class="nav-link <%= GetActiveClass("updatemajoralarms.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateMajorAlarms.aspx") %>"><i class="bi bi-exclamation-triangle"></i> Update Meter Status</a>
+                        </li>
                        
                         <li>
                             <h6 class="sidebar-heading">Read Requests</h6>
