@@ -631,6 +631,11 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <%= GetActiveClass("mtst.aspx") %>" href="<%= ResolveUrl("~/Read/MTST.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
+                        </li><li class="nav-item">
+                            <a class="nav-link <%= GetActiveClass("evnt.aspx") %>" href="<%= ResolveUrl("~/Read/EVNT.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= GetActiveClass("pmal.aspx") %>" href="<%= ResolveUrl("~/Read/PMAL.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
                         </li>
                         <li>
                             <h6 class="sidebar-heading">Events Data Table</h6>

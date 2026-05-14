@@ -84,6 +84,7 @@ namespace UDIL.Read {
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList auxrType;
         
+        /// <summary>
         /// btnAuxrRead control.
         /// </summary>
         /// <remarks>
