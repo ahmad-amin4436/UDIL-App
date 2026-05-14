@@ -586,5 +586,297 @@ namespace UDIL.DAL
         }
 
         #endregion
+
+        #region Navigation Management
+
+        /// <summary>
+        /// Get all active navigation items ordered by group and sort order
+        /// </summary>
+        public List<NavigationItem> GetAllNavigationItems()
+        {
+            try
+            {
+                List<NavigationItem> navigationItems = new List<NavigationItem>();
+
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT id, title, url, icon, `group`, sort_order, is_active, required_role, is_external 
+                                    FROM navigation_items 
+                                    WHERE is_active = 1 
+                                    ORDER BY `group`, sort_order, id";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                navigationItems.Add(new NavigationItem
+                                {
+                                    Id = Convert.ToInt32(reader["id"]),
+                                    Title = reader["title"].ToString(),
+                                    Url = reader["url"].ToString(),
+                                    Icon = reader["icon"].ToString(),
+                                    Group = reader["group"] != DBNull.Value ? reader["group"].ToString() : null,
+                                    SortOrder = Convert.ToInt32(reader["sort_order"]),
+                                    IsActive = Convert.ToBoolean(reader["is_active"]),
+                                    RequiredRole = reader["required_role"] != DBNull.Value ? reader["required_role"].ToString() : null,
+                                    IsExternal = reader["is_external"] != DBNull.Value && Convert.ToBoolean(reader["is_external"])
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return navigationItems;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting navigation items: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get navigation items grouped by their group name
+        /// </summary>
+        public Dictionary<string, List<NavigationItem>> GetGroupedNavigationItems()
+        {
+            try
+            {
+                var groupedItems = new Dictionary<string, List<NavigationItem>>();
+                var allItems = GetAllNavigationItems();
+
+                foreach (var item in allItems)
+                {
+                    string groupKey = string.IsNullOrEmpty(item.Group) ? "General" : item.Group;
+                    
+                    if (!groupedItems.ContainsKey(groupKey))
+                    {
+                        groupedItems[groupKey] = new List<NavigationItem>();
+                    }
+
+                    groupedItems[groupKey].Add(item);
+                }
+
+                // Sort each group by sort order
+                foreach (var key in groupedItems.Keys.ToList())
+                {
+                    groupedItems[key] = groupedItems[key].OrderBy(x => x.SortOrder).ToList();
+                }
+
+                return groupedItems;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting grouped navigation items: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get navigation items for a specific group
+        /// </summary>
+        public List<NavigationItem> GetNavigationItemsByGroup(string group)
+        {
+            try
+            {
+                List<NavigationItem> navigationItems = new List<NavigationItem>();
+
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT id, title, url, icon, `group`, sort_order, is_active, required_role, is_external 
+                                    FROM navigation_items 
+                                    WHERE is_active = 1 AND `group` = @group
+                                    ORDER BY sort_order, id";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@group", group);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                navigationItems.Add(new NavigationItem
+                                {
+                                    Id = Convert.ToInt32(reader["id"]),
+                                    Title = reader["title"].ToString(),
+                                    Url = reader["url"].ToString(),
+                                    Icon = reader["icon"].ToString(),
+                                    Group = reader["group"] != DBNull.Value ? reader["group"].ToString() : null,
+                                    SortOrder = Convert.ToInt32(reader["sort_order"]),
+                                    IsActive = Convert.ToBoolean(reader["is_active"]),
+                                    RequiredRole = reader["required_role"] != DBNull.Value ? reader["required_role"].ToString() : null,
+                                    IsExternal = reader["is_external"] != DBNull.Value && Convert.ToBoolean(reader["is_external"])
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return navigationItems;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting navigation items by group: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Add a new navigation item
+        /// </summary>
+        public bool AddNavigationItem(NavigationItem item)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"INSERT INTO navigation_items (title, url, icon, `group`, sort_order, is_active, required_role, is_external) 
+                                   VALUES (@title, @url, @icon, @group, @sort_order, @is_active, @required_role, @is_external)";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@title", item.Title);
+                        command.Parameters.AddWithValue("@url", item.Url);
+                        command.Parameters.AddWithValue("@icon", (object)item.Icon ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@group", (object)item.Group ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@sort_order", item.SortOrder);
+                        command.Parameters.AddWithValue("@is_active", item.IsActive);
+                        command.Parameters.AddWithValue("@required_role", (object)item.RequiredRole ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@is_external", item.IsExternal);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding navigation item: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update an existing navigation item
+        /// </summary>
+        public bool UpdateNavigationItem(NavigationItem item)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"UPDATE navigation_items 
+                                   SET title = @title, url = @url, icon = @icon, `group` = @group, 
+                                       sort_order = @sort_order, is_active = @is_active, 
+                                       required_role = @required_role, is_external = @is_external
+                                   WHERE id = @id";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", item.Id);
+                        command.Parameters.AddWithValue("@title", item.Title);
+                        command.Parameters.AddWithValue("@url", item.Url);
+                        command.Parameters.AddWithValue("@icon", (object)item.Icon ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@group", (object)item.Group ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@sort_order", item.SortOrder);
+                        command.Parameters.AddWithValue("@is_active", item.IsActive);
+                        command.Parameters.AddWithValue("@required_role", (object)item.RequiredRole ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@is_external", item.IsExternal);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating navigation item: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Delete a navigation item
+        /// </summary>
+        public bool DeleteNavigationItem(int id)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = "DELETE FROM navigation_items WHERE id = @id";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error deleting navigation item: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get a single navigation item by ID
+        /// </summary>
+        public NavigationItem GetNavigationItemById(int id)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string query = @"SELECT id, title, url, icon, `group`, sort_order, is_active, required_role, is_external 
+                                    FROM navigation_items 
+                                    WHERE id = @id";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new NavigationItem
+                                {
+                                    Id = Convert.ToInt32(reader["id"]),
+                                    Title = reader["title"].ToString(),
+                                    Url = reader["url"].ToString(),
+                                    Icon = reader["icon"].ToString(),
+                                    Group = reader["group"] != DBNull.Value ? reader["group"].ToString() : null,
+                                    SortOrder = Convert.ToInt32(reader["sort_order"]),
+                                    IsActive = Convert.ToBoolean(reader["is_active"]),
+                                    RequiredRole = reader["required_role"] != DBNull.Value ? reader["required_role"].ToString() : null,
+                                    IsExternal = reader["is_external"] != DBNull.Value && Convert.ToBoolean(reader["is_external"])
+                                };
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting navigation item: " + ex.Message);
+            }
+        }
+
+        #endregion
     }
 }

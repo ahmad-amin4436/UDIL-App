@@ -493,172 +493,123 @@
             </Scripts>
         </asp:ScriptManager>
         <asp:UpdatePanel ID="upMain" runat="server" UpdateMode="Conditional">
-            <ContentTemplate>
-                <nav class="navbar navbar-expand-lg fixed-top">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#">   
-                                        <img runat="server" src="assets/logo-rm-bg.png" alt="UDIL Logo" class="img-fluid" style="max-height: 40px;" />
+        <ContentTemplate>
+            <nav class="navbar navbar-expand-lg fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img runat="server" src="assets/logo-rm-bg.png" alt="UDIL Logo" class="img-fluid" style="max-height: 40px;" />
 
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"  aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-auto">
-                                <% if (Session["UserId"] != null && !string.IsNullOrEmpty(Session["UserId"].ToString())) { %>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-person-circle"></i> <%= Session["FullName"] ?? Session["Username"] %>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <% if (Session["UserId"] != null && !string.IsNullOrEmpty(Session["UserId"].ToString()))
+                                { %>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i><%= Session["FullName"] ?? Session["Username"] %>
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><h6 class="dropdown-header"><%= Session["Role"] %></h6></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Profile</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('<%= btnLogout.ClientID %>').click();"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
-                                    </ul>
-                                </li>
-                                <% } else { %>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="~/Login.aspx"><i class="bi bi-box-arrow-in-right"></i> Login</a>
-                                </li>
-                                <% } %>
-                            </ul>
-                            <asp:Button ID="btnLogout" runat="server" CssClass="d-none" OnClick="btnLogout_Click" UseSubmitBehavior="false" />
-                        </div>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li>
+                                        <h6 class="dropdown-header"><%= Session["Role"] %></h6>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i>Profile</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i>Settings</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#" onclick="document.getElementById('<%= btnLogout.ClientID %>').click();"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
+                                </ul>
+                            </li>
+                            <% }
+                                else
+                                { %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="~/Login.aspx"><i class="bi bi-box-arrow-in-right"></i>Login</a>
+                            </li>
+                            <% } %>
+                        </ul>
+                        <asp:Button ID="btnLogout" runat="server" CssClass="d-none" OnClick="btnLogout_Click" UseSubmitBehavior="false" />
                     </div>
-                </nav>
-                <div class="sidebar">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("default.aspx") %>" href="<%= ResolveUrl("~/Default.aspx") %>"><i class="bi bi-house-door"></i> Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("default.aspx", "auth") %>" href="<%= ResolveUrl("~/Default.aspx?page=auth") %>"><i class="bi bi-shield-lock"></i> Authorization</a>
-                        </li>
-                        <li>
-                            <h6 class="sidebar-heading">Write Requests</h6>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("devicecreation.aspx") %>" href="<%= ResolveUrl("~/Pages/DeviceCreation.aspx") %>"><i class="bi bi-plus-circle"></i> Device Creation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("auxrelay.aspx") %>" href="<%= ResolveUrl("~/Pages/AuxRelay.aspx") %>"><i class="bi bi-toggle-on"></i> Aux Relay Operations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("timesync.aspx") %>" href="<%= ResolveUrl("~/Pages/TimeSync.aspx") %>"><i class="bi bi-clock"></i> Time Synchronization</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("loadcontrol.aspx") %>" href="<%= ResolveUrl("~/Pages/LoadControl.aspx") %>"><i class="bi bi-lightning"></i> Load Control</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("loadsheddingscheduling.aspx") %>" href="<%= ResolveUrl("~/Pages/LoadSheddingScheduling.aspx") %>"><i class="bi bi-calendar-x"></i> Load Shedding Sch.</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatetou.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateTOU.aspx") %>"><i class="bi bi-clock-history"></i> Update TOU</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("update_ip_port.aspx") %>" href="<%= ResolveUrl("~/Pages/Update_IP_Port.aspx") %>"><i class="bi bi-gear"></i> Update IP/Port</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("meterdatasampling.aspx") %>" href="<%= ResolveUrl("~/Pages/MeterDataSampling.aspx") %>"><i class="bi bi-clipboard-data"></i> Meter Data Sampling</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("activateopticalport.aspx") %>" href="<%= ResolveUrl("~/Pages/ActivateOpticalPort.aspx") %>"><i class="bi bi-plug"></i> Activate Optical Port</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatedevicemetadata.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateDeviceMetadata.aspx") %>"><i class="bi bi-pencil-square"></i> Update Device Metadata</a>
-                        </li>
-                       <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("wakeupsimnumber.aspx") %>" href="<%= ResolveUrl("~/Pages/WakeUpSimNumber.aspx") %>"><i class="bi bi-reception-4"></i> WakeUp Sim Numbers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("mdireset.aspx") %>" href="<%= ResolveUrl("~/Pages/MDIReset.aspx") %>"><i class="bi bi-arrow-clockwise"></i> Update MDI Reset</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatemeterstatus.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateMeterStatus.aspx") %>"><i class="bi bi-arrow-repeat"></i> Update Meter Status</a>
-                        </li>
-                       <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("updatemajoralarms.aspx") %>" href="<%= ResolveUrl("~/Pages/UpdateMajorAlarms.aspx") %>"><i class="bi bi-exclamation-triangle"></i> Update Meter Status</a>
-                        </li>
-                       
-                        <li>
-                            <h6 class="sidebar-heading">Read Requests</h6>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("dmdt.aspx") %>" href="<%= ResolveUrl("~/Read/DMDT.aspx") %>"><i class="bi bi-search"></i> DMDT On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("auxr.aspx") %>" href="<%= ResolveUrl("~/Read/AUXR.aspx") %>"><i class="bi bi-search"></i> AUXR On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("dvtm.aspx") %>" href="<%= ResolveUrl("~/Read/DVTM.aspx") %>"><i class="bi bi-search"></i> DVTM On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("sanc.aspx") %>" href="<%= ResolveUrl("~/Read/SANC.aspx") %>"><i class="bi bi-search"></i> SANC On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("lsch.aspx") %>" href="<%= ResolveUrl("~/Read/LSCH.aspx") %>"><i class="bi bi-search"></i> LSCH On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("tiou.aspx") %>" href="<%= ResolveUrl("~/Read/TIOU.aspx") %>"><i class="bi bi-search"></i> TIOU On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("ippo.aspx") %>" href="<%= ResolveUrl("~/Read/IPPO.aspx") %>"><i class="bi bi-search"></i> IPPO On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("inst.aspx") %>" href="<%= ResolveUrl("~/Read/INST.aspx") %>"><i class="bi bi-search"></i> INST On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("lpro.aspx") %>" href="<%= ResolveUrl("~/Read/LPRO.aspx") %>"><i class="bi bi-search"></i> LPRO On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("bill.aspx") %>" href="<%= ResolveUrl("~/Read/BILL.aspx") %>"><i class="bi bi-search"></i> BILL On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("mbill.aspx") %>" href="<%= ResolveUrl("~/Read/MBILL.aspx") %>"><i class="bi bi-search"></i> MBILL On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("oppo.aspx") %>" href="<%= ResolveUrl("~/Read/OPPO.aspx") %>"><i class="bi bi-search"></i> OPPO On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("wsim.aspx") %>" href="<%= ResolveUrl("~/Read/WSIM.aspx") %>"><i class="bi bi-search"></i> WSIM On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("mdi.aspx") %>" href="<%= ResolveUrl("~/Read/MDI.aspx") %>"><i class="bi bi-search"></i> MDI On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("mtst.aspx") %>" href="<%= ResolveUrl("~/Read/MTST.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
-                        </li><li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("evnt.aspx") %>" href="<%= ResolveUrl("~/Read/EVNT.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("pmal.aspx") %>" href="<%= ResolveUrl("~/Read/PMAL.aspx") %>"><i class="bi bi-search"></i> MTST On Demand Read</a>
-                        </li>
-                        <li>
-                            <h6 class="sidebar-heading">Events Data Table</h6>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("load_profile_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/load_profile_data.aspx") %>"><i class="bi bi-table"></i> Load Profile Data </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("instantaneous_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/instantaneous_data.aspx") %>"><i class="bi bi-table"></i> Instantaneous Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/billing_data.aspx") %>"><i class="bi bi-table"></i> Billing Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= GetActiveClass("monthly_billing_data.aspx") %>" href="<%= ResolveUrl("~/EventsDataTables/monthly_billing_data.aspx") %>"><i class="bi bi-table"></i> Monthly Billing Data</a>
-                        </li>
-                    </ul>
                 </div>
-                <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
-                <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
-            </ContentTemplate>
-        </asp:UpdatePanel>
+            </nav>
+            <div class="sidebar">
+                <ul class="nav flex-column">
+                    <% 
+                        var groupedNavItems = GetGroupedNavigationItems();
+                        // Define display order for groups
+                        var groupOrder = new[] { "General", "Write Requests", "Read Requests", "Events Data Table" };
+
+                        foreach (var group in groupOrder)
+                        {
+                            if (groupedNavItems.ContainsKey(group))
+                            {
+                                // Show group heading if not "General"
+                                if (group != "General")
+                                {
+                        %>
+                    <li>
+                        <h6 class="sidebar-heading"><%= group %></h6>
+                    </li>
+                    <% 
+                        }
+
+                        foreach (var item in groupedNavItems[group])
+                        {
+                            // Check if user has permission to view this item
+                            if (!HasNavigationPermission(item.RequiredRole))
+                            {
+                                continue;
+                            }
+
+                            // Determine if this link should be active
+                            string activeClass = "";
+                            string itemUrl = item.Url;
+
+                            // For General group items, use special active class logic
+                            if (group == "General")
+                            {
+                                if (itemUrl.Contains("default.aspx") && string.IsNullOrEmpty(Request.QueryString["page"]))
+                                {
+                                    activeClass = GetActiveClass("default.aspx");
+                                }
+                                else if (itemUrl.Contains("default.aspx?page=auth"))
+                                {
+                                    activeClass = GetActiveClass("default.aspx", "auth");
+                                }
+                            }
+                            else
+                            {
+                                // Extract the page name from URL for other items
+                                string pageName = itemUrl.Substring(itemUrl.LastIndexOf('/') + 1).ToLower();
+                                activeClass = GetActiveClass(pageName);
+                            }
+
+                            // Get the icon class
+                            string iconClass = GetIconClass(item.Icon);
+                            string target = GetTargetAttribute(item.IsExternal);
+                        %>
+                    <li class="nav-item">
+                        <a class="nav-link <%= activeClass %>" href="<%= ResolveUrl(itemUrl) %>" target="<%= target %>">
+                            <i class="<%= iconClass %>"></i><%= item.Title %>
+                            </a>
+                    </li>
+                    <% 
+                                }
+                            }
+                        }
+                        %>
+                </ul>
+            </div>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+            <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
+        </ContentTemplate>
+    </asp:UpdatePanel>
 
         <!-- ═══════════════ MODAL & TOASTS ═══════════════ -->
                         <div id="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:1060;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;">
