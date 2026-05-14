@@ -90,6 +90,8 @@ namespace UDIL.Pages
                 return;
             }
 
+            TransactionLogger.SavePendingTransaction(transactionId, globalDeviceId);
+
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&load_limit={HttpUtility.UrlEncode(loadLimit)}&maximum_retries={HttpUtility.UrlEncode(maximumRetries)}&retry_interval={HttpUtility.UrlEncode(retryInterval)}&threshold_duration={HttpUtility.UrlEncode(thresholdDuration)}&retry_clear_interval={HttpUtility.UrlEncode(retryClearInterval)}";
 
             try

@@ -18,18 +18,15 @@
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <asp:Label ID="lblSearch" runat="server" AssociatedControlID="txtSearch" CssClass="form-label" Text="Search"></asp:Label>
-                                <div class="input-group">
-                                    <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control" placeholder="Search in all columns..."></asp:TextBox>
-                                    <asp:Button ID="btnSearch" runat="server" CssClass="btn btn-dark-primary" Text="Search" OnClick="btnSearch_Click" UseSubmitBehavior="false" />
-                                </div>
+                                <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control" placeholder="Search in all columns..." AutoPostBack="true" OnTextChanged="txtSearch_TextChanged"></asp:TextBox>
                             </div>
                             <div class="col-md-2">
                                 <asp:Label ID="lblClear" runat="server" CssClass="form-label" Text="&nbsp;"></asp:Label>
                                 <asp:Button ID="btnClear" runat="server" CssClass="btn btn-secondary w-100" Text="Clear" OnClick="btnClear_Click" UseSubmitBehavior="false" />
                             </div>
-                            <div class="col-md-6 text-end">
+                            <div class="col-md-4 text-end">
                                 <asp:Label ID="lblRecordCount" runat="server" CssClass="form-label d-block mb-2" Text=""></asp:Label>
                                 <div class="d-flex justify-content-end gap-2">
                                     <asp:DropDownList ID="ddlPageSize" runat="server" CssClass="form-select form-select-sm" AutoPostBack="true" OnSelectedIndexChanged="ddlPageSize_SelectedIndexChanged" Style="width: auto;">

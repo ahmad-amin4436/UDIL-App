@@ -184,6 +184,7 @@
     <Content Include="assets\logo-rm-bg.png" />
     <Content Include="assets\logo.jpeg" />
     <Content Include="assets\LOGO2.jpeg" />
+    <Content Include="Dashboard.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="EventsDataTables\billing_data.aspx" />
     <Content Include="EventsDataTables\instantaneous_data.aspx" />
@@ -201,6 +202,7 @@
     <Content Include="Pages\LoadControl.aspx" />
     <Content Include="Pages\LoadSheddingScheduling.aspx" />
     <Content Include="Pages\TimeSync.aspx" />
+    <Content Include="Pages\TransactionStatus.aspx" />
     <Content Include="Pages\UpdateDeviceMetadata.aspx" />
     <Content Include="Pages\UpdateMajorAlarms.aspx" />
     <Content Include="Pages\UpdateMeterStatus.aspx" />
@@ -261,6 +263,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="AuthHelper.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Dashboard.aspx.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Dashboard.aspx.designer.cs">
+      <DependentUpon>Dashboard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -361,6 +370,14 @@
     </Compile>
     <Compile Include="Pages\TimeSync.aspx.designer.cs">
       <DependentUpon>TimeSync.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\TransactionLogger.cs" />
+    <Compile Include="Pages\TransactionStatus.aspx.cs">
+      <DependentUpon>TransactionStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\TransactionStatus.aspx.designer.cs">
+      <DependentUpon>TransactionStatus.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\UpdateDeviceMetadata.aspx.cs">
       <DependentUpon>UpdateDeviceMetadata.aspx</DependentUpon>

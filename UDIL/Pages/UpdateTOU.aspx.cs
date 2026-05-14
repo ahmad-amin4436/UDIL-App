@@ -138,6 +138,8 @@ namespace UDIL.Pages
                 return;
             }
 
+            TransactionLogger.SavePendingTransaction(transactionId, globalDeviceId);
+
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&activation_datetime={HttpUtility.UrlEncode(activationDateTime)}&day_profile={HttpUtility.UrlEncode(dayProfile)}&week_profile={HttpUtility.UrlEncode(weekProfile)}&season_profile={HttpUtility.UrlEncode(seasonProfile)}&holiday_profile={HttpUtility.UrlEncode(holidayProfile)}";
 
             try

@@ -93,6 +93,8 @@ namespace UDIL.Pages
                 return;
             }
 
+            TransactionLogger.SavePendingTransaction(transactionId, globalDeviceId);
+
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&communication_mode={HttpUtility.UrlEncode(communicationMode)}&bidirectional_device={HttpUtility.UrlEncode(bidirectionalDevice)}&communication_type={HttpUtility.UrlEncode(communicationType)}&initial_communication_time={HttpUtility.UrlEncode(initialCommunicationTime)}&communication_interval={HttpUtility.UrlEncode(communicationInterval)}&meter_type={HttpUtility.UrlEncode(meterType)}&phase={HttpUtility.UrlEncode(phase)}";
 
             try

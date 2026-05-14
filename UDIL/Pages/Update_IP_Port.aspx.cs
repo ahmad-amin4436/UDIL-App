@@ -96,6 +96,8 @@ namespace UDIL.Pages
                 return;
             }
 
+            TransactionLogger.SavePendingTransaction(transactionId, globalDeviceId);
+
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&primary_ip_address={HttpUtility.UrlEncode(primaryIpAddressValue)}&secondary_ip_address={HttpUtility.UrlEncode(secondaryIpAddressValue)}&primary_port={HttpUtility.UrlEncode(primaryPortValue)}&secondary_port={HttpUtility.UrlEncode(secondaryPortValue)}";
 
             try

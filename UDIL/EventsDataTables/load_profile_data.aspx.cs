@@ -21,6 +21,14 @@ namespace UDIL.EventsDataTables
         {
             if (!IsPostBack)
             {
+                // If global device ID exists in session, use it for filtering
+                if (UDIL.Shared.SessionManager.HasGlobalDeviceId)
+                {
+                    string deviceId = UDIL.Shared.SessionManager.GlobalDeviceId;
+                    txtSearch.Text = deviceId;
+                    SearchTerm = deviceId;
+                }
+
                 LoadLoadProfileData();
             }
         }
@@ -56,7 +64,7 @@ namespace UDIL.EventsDataTables
             LoadLoadProfileData();
         }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
+        protected void txtSearch_TextChanged(object sender, EventArgs e)
         {
             SearchTerm = txtSearch.Text.Trim();
             gvLoadProfileData.PageIndex = 0;

@@ -87,6 +87,8 @@ namespace UDIL.Pages
                 return;
             }
 
+            TransactionLogger.SavePendingTransaction(transactionId, globalDeviceId);
+
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&optical_port_on_datetime={HttpUtility.UrlEncode(opticalPortOnDateTime)}&optical_port_off_datetime={HttpUtility.UrlEncode(opticalPortOffDateTime)}";
 
             try

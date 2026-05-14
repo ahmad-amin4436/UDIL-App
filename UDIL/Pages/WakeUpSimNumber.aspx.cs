@@ -87,6 +87,8 @@ namespace UDIL.Pages
                 return;
             }
 
+            TransactionLogger.SavePendingTransaction(transactionId, globalDeviceId);
+
             string postData = $"global_device_id={HttpUtility.UrlEncode(globalDeviceIdArray)}&request_datetime={HttpUtility.UrlEncode(requestDateTime)}&wakeup_number_1={HttpUtility.UrlEncode(wakeupNumber1)}&wakeup_number_2={HttpUtility.UrlEncode(wakeupNumber2)}&wakeup_number_3={HttpUtility.UrlEncode(wakeupNumber3)}";
 
             try

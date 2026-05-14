@@ -86,7 +86,7 @@ namespace UDIL
                         }
                         else
                         {
-                            Response.Redirect("Default.aspx");
+                            Response.Redirect("Dashboard.aspx");
                         }
                     }
                     else

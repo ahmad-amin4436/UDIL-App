@@ -28,6 +28,25 @@ namespace UDIL.DAL
             Status = "Pending";
         }
     }
+
+    public class TransactionRecord
+    {
+        public int Id { get; set; }
+        public string TransactionId { get; set; }
+        public string SessionId { get; set; }
+        public string PageName { get; set; }
+        public string TestType { get; set; }
+        public string Status { get; set; }
+        public string GlobalDeviceId { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public TransactionRecord()
+        {
+            CreatedDate = DateTime.Now;
+            Status = "Pending";
+        }
+    }
+
     public class DatabaseLayer
     {
         private string connectionString;
@@ -437,6 +456,99 @@ namespace UDIL.DAL
             catch (Exception ex)
             {
                 throw new Exception("Error updating session progress: " + ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Transaction Management
+
+        public bool SaveTransaction(TransactionRecord transaction)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    EnsureTransactionsTable(connection);
+
+                    string query = @"INSERT INTO `transactions` (transaction_id, session_id, page_name, test_type, status, global_device_id, created_date)
+                                   VALUES (@transaction_id, @session_id, @page_name, @test_type, @status, @global_device_id, @created_date)
+                                   ON DUPLICATE KEY UPDATE
+                                   session_id = @session_id, page_name = @page_name, test_type = @test_type,
+                                   status = @status, global_device_id = @global_device_id, created_date = @created_date";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@transaction_id", transaction.TransactionId);
+                        command.Parameters.AddWithValue("@session_id", transaction.SessionId ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@page_name", transaction.PageName ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@test_type", transaction.TestType ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@status", transaction.Status);
+                        command.Parameters.AddWithValue("@global_device_id", transaction.GlobalDeviceId ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@created_date", transaction.CreatedDate);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+                        return rowsAffected > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error saving transaction: " + ex.Message);
+            }
+        }
+
+        public DataTable GetTransactions()
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+                    EnsureTransactionsTable(connection);
+
+                    string query = @"SELECT transaction_id, session_id, page_name, test_type, status, global_device_id, created_date
+                                   FROM `transactions`
+                                   ORDER BY created_date DESC";
+
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                    {
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+                        return table;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error getting transactions: " + ex.Message);
+            }
+        }
+
+        private void EnsureTransactionsTable(MySqlConnection connection)
+        {
+            string query = @"CREATE TABLE IF NOT EXISTS `transactions` (
+                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                transaction_id VARCHAR(100) NOT NULL,
+                                session_id VARCHAR(32) NULL,
+                                page_name VARCHAR(255) NULL,
+                                test_type VARCHAR(50) NULL,
+                                status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+                                global_device_id VARCHAR(100) NULL,
+                                created_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                UNIQUE KEY unique_transaction_id (transaction_id),
+                                INDEX idx_transaction_session_id (session_id),
+                                INDEX idx_transaction_id (transaction_id),
+                                INDEX idx_transaction_status (status),
+                                INDEX idx_transaction_created_date (created_date),
+                                CONSTRAINT fk_transactions_session_id FOREIGN KEY (session_id) REFERENCES test_sessions(session_id) ON DELETE SET NULL
+                            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
             }
         }
 

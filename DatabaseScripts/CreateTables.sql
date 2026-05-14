@@ -36,6 +36,24 @@ CREATE TABLE IF NOT EXISTS test_sessions (
     INDEX idx_session_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Transactions Table
+CREATE TABLE IF NOT EXISTS `transactions` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    transaction_id VARCHAR(100) NOT NULL,
+    session_id VARCHAR(32) NULL,
+    page_name VARCHAR(255) NULL,
+    test_type VARCHAR(50) NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    global_device_id VARCHAR(100) NULL,
+    created_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_transaction_id (transaction_id),
+    INDEX idx_transaction_session_id (session_id),
+    INDEX idx_transaction_id (transaction_id),
+    INDEX idx_transaction_status (status),
+    INDEX idx_transaction_created_date (created_date),
+    FOREIGN KEY (session_id) REFERENCES test_sessions(session_id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Test Results Table
 CREATE TABLE IF NOT EXISTS test_results (
     id INT AUTO_INCREMENT PRIMARY KEY,
