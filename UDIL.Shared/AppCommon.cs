@@ -16,7 +16,7 @@ namespace UDIL.Shared
     {
         public static string GenerateTransactionId()
         {
-            return "TXN" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            return UdilConstants.TransactionIdPrefix + DateTime.Now.ToString("yyyyMMddHHmmss");
         }
 
         public static string HandleTransactionStatusRequest(string transactionId, string privateKey)
@@ -123,7 +123,7 @@ namespace UDIL.Shared
         public static TransactionStatusResponse PollTransactionStatus(string transactionId, string privateKey)
         {
             TransactionStatusResponse lastResponse = null;
-            int maxAttempts = 10;
+            int maxAttempts = UdilConstants.StatusPollMaxAttempts;
             int attempt = 0;
 
             while (attempt < maxAttempts)
@@ -132,13 +132,17 @@ namespace UDIL.Shared
                 if (lastResponse?.data != null)
                 {
                     // Check if command was cancelled by meter
-                    bool commandCancelled = lastResponse.data.Any(item => item.indv_status == "2" && item.status_level == "4");
+                    bool commandCancelled = lastResponse.data.Any(item =>
+                        item.indv_status == UdilConstants.MeterCancelIndvStatus &&
+                        item.status_level == UdilConstants.MeterCancelStatusLevel);
                     if (commandCancelled)
                     {
                         break; // Exit polling if command was cancelled
                     }
 
-                    bool reachedFinal = lastResponse.data.All(item => int.TryParse(item.status_level, out int statusLevel) && statusLevel >= 5);
+                    bool reachedFinal = lastResponse.data.All(item =>
+                        int.TryParse(item.status_level, out int statusLevel) &&
+                        statusLevel >= UdilConstants.FinalTrackerStage);
                     if (reachedFinal)
                     {
                         break;
@@ -146,14 +150,14 @@ namespace UDIL.Shared
                 }
 
                 attempt++;
-                Thread.Sleep(2000);
+                Thread.Sleep(UdilConstants.StatusPollSleepMs);
             }
 
             return lastResponse;
         }
         public static TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
         {
-            int maxRetries = 5;
+            int maxRetries = UdilConstants.StatusHttpMaxRetries;
             int timeoutMs = GetTimeout() * 1000; // Convert seconds to milliseconds
 
             for (int attempt = 1; attempt <= maxRetries; attempt++)

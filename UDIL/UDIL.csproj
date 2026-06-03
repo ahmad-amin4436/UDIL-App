@@ -184,6 +184,10 @@
     <Content Include="assets\logo-rm-bg.png" />
     <Content Include="assets\logo.jpeg" />
     <Content Include="assets\LOGO2.jpeg" />
+    <Content Include="Cancellations\LSCH.aspx" />
+    <Content Include="Cancellations\SANC.aspx" />
+    <Content Include="Cancellations\TIOU.aspx" />
+    <Content Include="Cancellations\TXN.aspx" />
     <Content Include="Dashboard.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="EventsDataTables\billing_data.aspx" />
@@ -263,6 +267,34 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="AuthHelper.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Cancellations\LSCH.aspx.cs">
+      <DependentUpon>LSCH.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Cancellations\LSCH.aspx.designer.cs">
+      <DependentUpon>LSCH.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Cancellations\SANC.aspx.cs">
+      <DependentUpon>SANC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Cancellations\SANC.aspx.designer.cs">
+      <DependentUpon>SANC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Cancellations\TIOU.aspx.cs">
+      <DependentUpon>TIOU.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Cancellations\TIOU.aspx.designer.cs">
+      <DependentUpon>TIOU.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Cancellations\TXN.aspx.cs">
+      <DependentUpon>TXN.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Cancellations\TXN.aspx.designer.cs">
+      <DependentUpon>TXN.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -555,7 +587,11 @@
     <Compile Include="Read\WSIM.aspx.designer.cs">
       <DependentUpon>WSIM.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Shared\MeterTablesRefreshService.cs" />
+    <Compile Include="Shared\MeterValidationGridBinder.cs" />
+    <Compile Include="Shared\OperationPageSupport.cs" />
     <Compile Include="Shared\SessionManager.cs" />
+    <Compile Include="Shared\TrackerUiHelper.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

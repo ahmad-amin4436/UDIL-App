@@ -32,6 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -45,6 +47,11 @@
     <Compile Include="AppCommon.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="DateTimeHelper.cs" />
+    <Compile Include="MasterDataProvider.cs" />
+    <Compile Include="TransactionTrackerService.cs" />
+    <Compile Include="TouProfileBuilder.cs" />
+    <Compile Include="UdilConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
