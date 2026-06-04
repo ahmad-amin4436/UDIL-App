@@ -1,4 +1,4 @@
-﻿<%@ Page Title="UDIL Tester - Configuration" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
+﻿    <%@ Page Title="UDIL Tester - Configuration" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
    CodeBehind="Default.aspx.cs" Inherits="UDIL._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">

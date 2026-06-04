@@ -110,6 +110,11 @@ namespace UDIL.Read
                 if (response.data != null && response.data.Count > 0)
                 {
                     AuxrData data = response.data[0];
+                    lblRespGlobalDeviceId.Text = data.global_device_id ?? "N/A";
+                    lblRespMsn.Text = data.msn ?? "N/A";
+                    lblRespAuxrDateTime.Text = data.auxr_datetime ?? "N/A";
+                    lblRespAuxrStatus.Text = data.auxr_status ?? "N/A";
+
                     // Store global device ID and MSN in session for use across the app
                     if (!string.IsNullOrEmpty(data.global_device_id))
                     {
