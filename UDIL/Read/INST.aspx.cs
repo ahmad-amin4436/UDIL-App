@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -11,6 +11,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using UDIL.DAL;
 using UDIL.Shared;
+using UDIL.Shared.Web;
 
 namespace UDIL.Read
 {
@@ -18,6 +19,7 @@ namespace UDIL.Read
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            timerTables.Interval = UdilConstants.TablesTimerIntervalMs;
             if (!IsPostBack)
             {
                 // Populate private key from session
@@ -41,6 +43,9 @@ namespace UDIL.Read
         {
             lblInstMessage.Text = string.Empty;
             pnlResponse.Visible = false;
+            pnlDataTables.Visible = false;
+            timerTables.Enabled = false;
+            MeterTablesRefreshService.ClearCache(Session);
 
             string transactionId = instTransactionId.Text.Trim();
             string globalDeviceId = instGlobalDeviceId.Text.Trim();
@@ -182,10 +187,9 @@ namespace UDIL.Read
 
                 pnlResponse.Visible = true;
 
-                // After success, show data tables
+                // After success, defer data-table loading to timer ticks so response details render quickly.
                 SessionManager.CurrentTransactionId = transactionId;
-                ShowDataTables();
-                pnlDataTables.Visible = true;
+                MeterTablesRefreshService.ClearCache(Session);
                 timerTables.Enabled = true;
 
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "disableInstBtn", "disableInstButton();", true);
@@ -296,66 +300,29 @@ namespace UDIL.Read
             }
         }
 
-        private void ShowDataTables()
+        private void ShowDataTables(bool forceRefresh = false)
         {
             try
             {
                 string globalDeviceId = SessionManager.GlobalDeviceId;
-                if (!string.IsNullOrEmpty(globalDeviceId))
+                if (string.IsNullOrWhiteSpace(globalDeviceId))
                 {
-                    LoadTableData(globalDeviceId);
-                    pnlDataTables.Visible = true;
+                    return;
                 }
+
+                string connectionString = UDIL.Shared.ConfigurationManager.GetConnectionString();
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    return;
+                }
+
+                MeterTablesRefreshResult refresh = MeterTablesRefreshService.Refresh(Session, connectionString, globalDeviceId, forceRefresh);
+                MeterValidationGridBinder.BindIfChanged(refresh, gvMeterVisuals, gvCommunicationHistory, gvEvents);
+                pnlDataTables.Visible = true;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error showing data tables: {ex.Message}");
-            }
-        }
-
-        private void LoadTableData(string globalDeviceId)
-        {
-            try
-            {
-                Tables dal = new Tables(UDIL.Shared.ConfigurationManager.GetConnectionString());
-                DataSet ds = dal.GetUDILTables(globalDeviceId);
-
-                if (ds.Tables.Contains("MeterVisuals") && ds.Tables["MeterVisuals"].Rows.Count > 0)
-                {
-                    gvMeterVisuals.DataSource = ds.Tables["MeterVisuals"];
-                    gvMeterVisuals.DataBind();
-                }
-                else
-                {
-                    gvMeterVisuals.DataSource = null;
-                    gvMeterVisuals.DataBind();
-                }
-
-                if (ds.Tables.Contains("CommunicationHistory") && ds.Tables["CommunicationHistory"].Rows.Count > 0)
-                {
-                    gvCommunicationHistory.DataSource = ds.Tables["CommunicationHistory"];
-                    gvCommunicationHistory.DataBind();
-                }
-                else
-                {
-                    gvCommunicationHistory.DataSource = null;
-                    gvCommunicationHistory.DataBind();
-                }
-
-                if (ds.Tables.Contains("Events") && ds.Tables["Events"].Rows.Count > 0)
-                {
-                    gvEvents.DataSource = ds.Tables["Events"];
-                    gvEvents.DataBind();
-                }
-                else
-                {
-                    gvEvents.DataSource = null;
-                    gvEvents.DataBind();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error loading table data: {ex.Message}");
             }
         }
 

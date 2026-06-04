@@ -588,6 +588,7 @@
       <DependentUpon>WSIM.aspx</DependentUpon>
     </Compile>
     <Compile Include="Shared\MeterTablesRefreshService.cs" />
+    <Compile Include="Shared\CommunicationHistoryGridHelper.cs" />
     <Compile Include="Shared\MeterValidationGridBinder.cs" />
     <Compile Include="Shared\OperationPageSupport.cs" />
     <Compile Include="Shared\SessionManager.cs" />

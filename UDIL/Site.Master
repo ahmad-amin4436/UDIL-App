@@ -92,6 +92,43 @@
     border-radius: 0.375rem;
     padding: 0.5rem 0.75rem;
 }
+
+.comm-history-log {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+}
+
+.comm-history-log-summary {
+    cursor: pointer;
+    list-style: none;
+    word-break: break-word;
+    color: #212529;
+}
+
+.comm-history-log-summary::-webkit-details-marker {
+    display: none;
+}
+
+.comm-history-log-summary::before {
+    content: "▸ ";
+    color: #6c757d;
+}
+
+.comm-history-log[open] .comm-history-log-summary::before {
+    content: "▾ ";
+}
+
+.comm-history-log-full {
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #f8f9fa;
+    border-radius: 0.375rem;
+    border: 1px solid #e9ecef;
+    max-height: 400px;
+    overflow: auto;
+}
 </style>
     <style>
         /* Command Progress Tracker Styles */

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="UDIL Tester - Time Sync" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
+<%@ Page Title="UDIL Tester - Time Sync" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
    CodeBehind="TimeSync.aspx.cs" Inherits="UDIL.Pages.TimeSync" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -174,7 +174,10 @@
                                             <Columns>
                                                 <asp:TemplateField HeaderText="Message Log">
                                                     <ItemTemplate>
-                                                        <asp:Label ID="lblMessageLog" runat="server" Text='<%# Eval("message_log") %>' CssClass="text-break" style="white-space: pre-wrap; font-family: monospace; font-size: 12px;"></asp:Label>
+                                                        <details class="comm-history-log">
+                                                            <summary class="comm-history-log-summary"><%# UDIL.Shared.CommunicationHistoryGridHelper.GetPreview(Eval("message_log")) %></summary>
+                                                            <pre class="comm-history-log-full mb-0"><%# UDIL.Shared.CommunicationHistoryGridHelper.GetFull(Eval("message_log")) %></pre>
+                                                        </details>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                             </Columns>

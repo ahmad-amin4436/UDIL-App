@@ -1,5 +1,6 @@
 using System.Data;
 using System.Web.UI.WebControls;
+using UDIL.Shared;
 
 namespace UDIL.Shared.Web
 {
@@ -37,6 +38,11 @@ namespace UDIL.Shared.Web
             if (ds != null && ds.Tables.Contains(tableName) && ds.Tables[tableName].Rows.Count > 0)
             {
                 var table = ds.Tables[tableName];
+
+                if (tableName == "CommunicationHistory")
+                {
+                    table = CommunicationHistoryGridHelper.SortDescending(table);
+                }
 
                 // Ensure any BoundFields declared in the GridView that reference
                 // columns not present in the DataTable are created with empty values.

@@ -1,4 +1,4 @@
-﻿
+
 <%@ Page Title="UDIL Tester - INST - ODR" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true"
    CodeBehind="INST.aspx.cs" Inherits="UDIL.Read.INST" %>
 
@@ -302,7 +302,7 @@
                 <asp:TextBox ID="txtFailReason" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" placeholder="Enter reason..." style="display: none;" />
 
                 <!-- Data Tables Section -->
-                <asp:UpdatePanel ID="updDataTables" runat="server">
+                <asp:UpdatePanel ID="updDataTables" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
                         <asp:Panel ID="pnlDataTables" runat="server" Visible="false" CssClass="mt-4">
                             <h4 class="mb-4">Device Data Tables</h4>
@@ -372,7 +372,10 @@
                                             <Columns>
                                                 <asp:TemplateField HeaderText="Message Log">
                                                     <ItemTemplate>
-                                                        <asp:Label ID="lblMessageLog" runat="server" Text='<%# Eval("message_log") %>' CssClass="text-break" style="white-space: pre-wrap; font-family: monospace; font-size: 12px;"></asp:Label>
+                                                        <details class="comm-history-log">
+                                                            <summary class="comm-history-log-summary"><%# UDIL.Shared.CommunicationHistoryGridHelper.GetPreview(Eval("message_log")) %></summary>
+                                                            <pre class="comm-history-log-full mb-0"><%# UDIL.Shared.CommunicationHistoryGridHelper.GetFull(Eval("message_log")) %></pre>
+                                                        </details>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                             </Columns>
@@ -444,8 +447,11 @@
                         </asp:Panel>
 
                         <!-- Timer for refreshing tables -->
-                        <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick" Enabled="false" />
+                        <asp:Timer ID="timerTables" runat="server" Interval="5000" OnTick="timerTables_Tick" Enabled="false" />
                     </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="btnInstRead" EventName="Click" />
+                    </Triggers>
                 </asp:UpdatePanel>
             </section>
 

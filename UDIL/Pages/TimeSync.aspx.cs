@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -496,16 +496,8 @@ namespace UDIL.Pages
                 }
 
                 // Bind Communication History table
-                if (ds.Tables.Contains("CommunicationHistory") && ds.Tables["CommunicationHistory"].Rows.Count > 0)
-                {
-                    gvCommunicationHistory.DataSource = ds.Tables["CommunicationHistory"];
-                    gvCommunicationHistory.DataBind();
-                }
-                else
-                {
-                    gvCommunicationHistory.DataSource = null;
-                    gvCommunicationHistory.DataBind();
-                }
+                CommunicationHistoryGridHelper.Bind(gvCommunicationHistory,
+                    ds.Tables.Contains("CommunicationHistory") ? ds.Tables["CommunicationHistory"] : null);
 
                 // Bind Events table
                 if (ds.Tables.Contains("Events") && ds.Tables["Events"].Rows.Count > 0)

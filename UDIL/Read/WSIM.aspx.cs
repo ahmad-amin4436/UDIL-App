@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -280,17 +280,8 @@ namespace UDIL.Read
                     gvMeterVisuals.DataSource = null;
                     gvMeterVisuals.DataBind();
                 }
-
-                if (ds.Tables.Contains("CommunicationHistory") && ds.Tables["CommunicationHistory"].Rows.Count > 0)
-                {
-                    gvCommunicationHistory.DataSource = ds.Tables["CommunicationHistory"];
-                    gvCommunicationHistory.DataBind();
-                }
-                else
-                {
-                    gvCommunicationHistory.DataSource = null;
-                    gvCommunicationHistory.DataBind();
-                }
+                CommunicationHistoryGridHelper.Bind(gvCommunicationHistory,
+                    ds.Tables.Contains("CommunicationHistory") ? ds.Tables["CommunicationHistory"] : null);
 
                 if (ds.Tables.Contains("Events") && ds.Tables["Events"].Rows.Count > 0)
                 {
