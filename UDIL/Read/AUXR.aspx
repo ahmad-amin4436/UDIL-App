@@ -291,8 +291,8 @@
                             </div>
                         </asp:Panel>
 
-                        <!-- Timer for refreshing tables -->
-                        <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick" Enabled="false" />
+                        <!-- Hidden field to track if communication history logs are expanded -->
+                        <asp:Timer ID="timerTables" runat="server" Interval="10000" OnTick="timerTables_Tick" Enabled="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </section>
@@ -307,6 +307,50 @@
 <asp:Content ID="ScriptsContent" ContentPlaceHolderID="ScriptsContent" runat="server">
 
     <script>
+        // Timer pause/resume for communication history log expansion
+        var commHistoryTimerPaused = false;
+
+        function initCommHistoryLogToggle() {
+            var detailsElements = document.querySelectorAll('.comm-history-log');
+            detailsElements.forEach(function(details) {
+                // Remove existing listener to prevent duplicates after UpdatePanel refresh
+                details.removeEventListener('toggle', commHistoryLogToggleHandler);
+                // Add toggle event listener
+                details.addEventListener('toggle', commHistoryLogToggleHandler);
+            });
+        }
+
+        function commHistoryLogToggleHandler(event) {
+            var details = event.target;
+            var timer = document.getElementById('<%= timerTables.ClientID %>');
+
+            if (details.open) {
+                // Log is expanded - pause the timer
+                if (timer && !commHistoryTimerPaused) {
+                    commHistoryTimerPaused = true;
+                    timer.enabled = false;
+                }
+            } else {
+                // Log is collapsed - resume the timer
+                if (timer && commHistoryTimerPaused) {
+                    commHistoryTimerPaused = false;
+                    timer.enabled = true;
+                }
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initCommHistoryLogToggle();
+        });
+
+        // Re-initialize after UpdatePanel async postback
+        if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function() {
+                initCommHistoryLogToggle();
+            });
+        }
+
         function showAuxrLoading(button) {
             if (!button) return;
 

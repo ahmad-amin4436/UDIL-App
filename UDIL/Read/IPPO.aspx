@@ -316,7 +316,7 @@
                         </asp:Panel>
 
                         <!-- Timer for refreshing tables -->
-                        <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick" Enabled="false" />
+                        <asp:Timer ID="timerTables" runat="server" Interval="10000" OnTick="timerTables_Tick" Enabled="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </section>

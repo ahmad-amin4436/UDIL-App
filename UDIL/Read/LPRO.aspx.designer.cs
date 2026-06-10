@@ -202,6 +202,24 @@ namespace UDIL.Read {
         protected global::System.Web.UI.WebControls.Label lblResponseMessage;
         
         /// <summary>
+        /// updLproData control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updLproData;
+        
+        /// <summary>
+        /// pnlLproData control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlLproData;
+        
+        /// <summary>
         /// gvLproData control.
         /// </summary>
         /// <remarks>
@@ -245,15 +263,6 @@ namespace UDIL.Read {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelLproResponseRemarks;
-        
-        /// <summary>
-        /// pnlLproData control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlLproData;
         
         /// <summary>
         /// hfFailTableName control.

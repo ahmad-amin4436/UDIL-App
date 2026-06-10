@@ -202,42 +202,6 @@ namespace UDIL.Read {
         protected global::System.Web.UI.WebControls.Label lblResponseMessage;
         
         /// <summary>
-        /// lblRespGlobalDeviceId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespGlobalDeviceId;
-        
-        /// <summary>
-        /// lblRespMsn control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespMsn;
-        
-        /// <summary>
-        /// lblRespAuxrDateTime control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAuxrDateTime;
-        
-        /// <summary>
-        /// lblRespAuxrStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRespAuxrStatus;
-        
-        /// <summary>
         /// gvEvntData control.
         /// </summary>
         /// <remarks>

@@ -111,20 +111,31 @@ namespace UDIL.Read
                 // Display data if available
                 if (response.data != null && response.data.Count > 0)
                 {
-                    // Bind data to GridView
-                    gvMbillData.DataSource = response.data;
-                    gvMbillData.DataBind();
-
                     // Store global device ID and MSN in session for use across the app
-                    if (!string.IsNullOrEmpty(response.data[0].global_device_id))
-                    {
-                        SessionManager.GlobalDeviceId = response.data[0].global_device_id;
-                    }
+                    if (response.data[0].TryGetValue("global_device_id", out object gdid) && gdid != null)
+                        SessionManager.GlobalDeviceId = gdid.ToString();
+                    if (response.data[0].TryGetValue("msn", out object msn) && msn != null)
+                        SessionManager.MSN = msn.ToString();
 
-                    if (!string.IsNullOrEmpty(response.data[0].msn))
+                    // Build dynamic DataTable from response data
+                    DataTable dt = new DataTable();
+                    foreach (var key in response.data[0].Keys)
                     {
-                        SessionManager.MSN = response.data[0].msn;
+                        dt.Columns.Add(FormatColumnName(key));
                     }
+                    foreach (var dict in response.data)
+                    {
+                        DataRow row = dt.NewRow();
+                        int colIndex = 0;
+                        foreach (var kvp in dict)
+                        {
+                            row[colIndex] = ValueToString(kvp.Value);
+                            colIndex++;
+                        }
+                        dt.Rows.Add(row);
+                    }
+                    gvMbillData.DataSource = dt;
+                    gvMbillData.DataBind();
                 }
                 else
                 {
@@ -200,104 +211,8 @@ namespace UDIL.Read
         {
             public string status { get; set; }
             public string transactionid { get; set; }
-            public List<MbillData> data { get; set; }
+            public List<Dictionary<string, object>> data { get; set; }
             public string message { get; set; }
-        }
-
-        public class MbillData
-        {
-            public string meter_datetime { get; set; }
-            public string global_device_id { get; set; }
-            public string msn { get; set; }
-            public string mdi_reset_datetime { get; set; }
-            public string reset_count { get; set; }
-            public string longitude { get; set; }
-            public string latitude { get; set; }
-            public string reading_mode { get; set; }
-            public string picture_1 { get; set; }
-            public string picture_2 { get; set; }
-            public string active_energy_abs_t1 { get; set; }
-            public string active_energy_abs_t2 { get; set; }
-            public string active_energy_abs_t3 { get; set; }
-            public string active_energy_abs_t4 { get; set; }
-            public string active_energy_abs_tl { get; set; }
-            public string active_energy_pos_t1 { get; set; }
-            public string active_energy_pos_t2 { get; set; }
-            public string active_energy_pos_t3 { get; set; }
-            public string active_energy_pos_t4 { get; set; }
-            public string active_energy_pos_tl { get; set; }
-            public string active_energy_neg_t1 { get; set; }
-            public string active_energy_neg_t2 { get; set; }
-            public string active_energy_neg_t3 { get; set; }
-            public string active_energy_neg_t4 { get; set; }
-            public string active_energy_neg_tl { get; set; }
-            public string reactive_energy_abs_t1 { get; set; }
-            public string reactive_energy_abs_t2 { get; set; }
-            public string reactive_energy_abs_t3 { get; set; }
-            public string reactive_energy_abs_t4 { get; set; }
-            public string reactive_energy_abs_tl { get; set; }
-            public string reactive_energy_pos_t1 { get; set; }
-            public string reactive_energy_pos_t2 { get; set; }
-            public string reactive_energy_pos_t3 { get; set; }
-            public string reactive_energy_pos_t4 { get; set; }
-            public string reactive_energy_pos_tl { get; set; }
-            public string reactive_energy_neg_t1 { get; set; }
-            public string reactive_energy_neg_t2 { get; set; }
-            public string reactive_energy_neg_t3 { get; set; }
-            public string reactive_energy_neg_t4 { get; set; }
-            public string reactive_energy_neg_tl { get; set; }
-            public string active_mdi_pos_t1 { get; set; }
-            public string active_mdi_pos_t2 { get; set; }
-            public string active_mdi_pos_t3 { get; set; }
-            public string active_mdi_pos_t4 { get; set; }
-            public string active_mdi_pos_tl { get; set; }
-            public string active_mdi_neg_t1 { get; set; }
-            public string active_mdi_neg_t2 { get; set; }
-            public string active_mdi_neg_t3 { get; set; }
-            public string active_mdi_neg_t4 { get; set; }
-            public string active_mdi_neg_tl { get; set; }
-            public string active_mdi_abs_t1 { get; set; }
-            public string active_mdi_abs_t2 { get; set; }
-            public string active_mdi_abs_t3 { get; set; }
-            public string active_mdi_abs_t4 { get; set; }
-            public string active_mdi_abs_tl { get; set; }
-            public string cumulative_mdi_pos_t1 { get; set; }
-            public string cumulative_mdi_pos_t2 { get; set; }
-            public string cumulative_mdi_pos_t3 { get; set; }
-            public string cumulative_mdi_pos_t4 { get; set; }
-            public string cumulative_mdi_pos_tl { get; set; }
-            public string cumulative_mdi_neg_t1 { get; set; }
-            public string cumulative_mdi_neg_t2 { get; set; }
-            public string cumulative_mdi_neg_t3 { get; set; }
-            public string cumulative_mdi_neg_t4 { get; set; }
-            public string cumulative_mdi_neg_tl { get; set; }
-            public string cumulative_mdi_abs_t1 { get; set; }
-            public string cumulative_mdi_abs_t2 { get; set; }
-            public string cumulative_mdi_abs_t3 { get; set; }
-            public string cumulative_mdi_abs_t4 { get; set; }
-            public string cumulative_mdi_abs_tl { get; set; }
-            public string mdc_read_datetime { get; set; }
-            public string db_datetime { get; set; }
-            public string is_synced { get; set; }
-        }
-
-        private string ReadWebExceptionResponse(WebException ex)
-        {
-            if (ex.Response == null)
-                return string.Empty;
-
-            try
-            {
-                using (var responseStream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(responseStream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
         }
 
         private void ShowDataTables()
@@ -753,6 +668,30 @@ namespace UDIL.Read
             {
                 System.Diagnostics.Debug.WriteLine($"Error saving test result: {ex.Message}");
             }
+        }
+
+        private string FormatColumnName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+            string[] parts = name.Split('_');
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].Length > 0)
+                    parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
+            }
+            return string.Join(" ", parts);
+        }
+
+        private string ValueToString(object value)
+        {
+            if (value == null) return "N/A";
+            if (value is string s) return string.IsNullOrEmpty(s) ? "N/A" : s;
+            if (value is Dictionary<string, object>)
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                return serializer.Serialize(value);
+            }
+            return value.ToString();
         }
 
     }

@@ -105,75 +105,7 @@
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <asp:GridView ID="gvBillData" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="false" GridLines="None">
-                                            <Columns>
-                                                <asp:BoundField DataField="meter_datetime" HeaderText="Meter DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                                <asp:BoundField DataField="global_device_id" HeaderText="Global Device ID" />
-                                                <asp:BoundField DataField="msn" HeaderText="MSN" />
-                                                <asp:BoundField DataField="active_energy_abs_t1" HeaderText="Active Energy Abs T1" />
-                                                <asp:BoundField DataField="active_energy_abs_t2" HeaderText="Active Energy Abs T2" />
-                                                <asp:BoundField DataField="active_energy_abs_t3" HeaderText="Active Energy Abs T3" />
-                                                <asp:BoundField DataField="active_energy_abs_t4" HeaderText="Active Energy Abs T4" />
-                                                <asp:BoundField DataField="active_energy_abs_tl" HeaderText="Active Energy Abs TL" />
-                                                <asp:BoundField DataField="active_energy_pos_t1" HeaderText="Active Energy Pos T1" />
-                                                <asp:BoundField DataField="active_energy_pos_t2" HeaderText="Active Energy Pos T2" />
-                                                <asp:BoundField DataField="active_energy_pos_t3" HeaderText="Active Energy Pos T3" />
-                                                <asp:BoundField DataField="active_energy_pos_t4" HeaderText="Active Energy Pos T4" />
-                                                <asp:BoundField DataField="active_energy_pos_tl" HeaderText="Active Energy Pos TL" />
-                                                <asp:BoundField DataField="active_energy_neg_t1" HeaderText="Active Energy Neg T1" />
-                                                <asp:BoundField DataField="active_energy_neg_t2" HeaderText="Active Energy Neg T2" />
-                                                <asp:BoundField DataField="active_energy_neg_t3" HeaderText="Active Energy Neg T3" />
-                                                <asp:BoundField DataField="active_energy_neg_t4" HeaderText="Active Energy Neg T4" />
-                                                <asp:BoundField DataField="active_energy_neg_tl" HeaderText="Active Energy Neg TL" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t1" HeaderText="Reactive Energy Abs T1" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t2" HeaderText="Reactive Energy Abs T2" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t3" HeaderText="Reactive Energy Abs T3" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t4" HeaderText="Reactive Energy Abs T4" />
-                                                <asp:BoundField DataField="reactive_energy_abs_tl" HeaderText="Reactive Energy Abs TL" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t1" HeaderText="Reactive Energy Pos T1" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t2" HeaderText="Reactive Energy Pos T2" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t3" HeaderText="Reactive Energy Pos T3" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t4" HeaderText="Reactive Energy Pos T4" />
-                                                <asp:BoundField DataField="reactive_energy_pos_tl" HeaderText="Reactive Energy Pos TL" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t1" HeaderText="Reactive Energy Neg T1" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t2" HeaderText="Reactive Energy Neg T2" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t3" HeaderText="Reactive Energy Neg T3" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t4" HeaderText="Reactive Energy Neg T4" />
-                                                <asp:BoundField DataField="reactive_energy_neg_tl" HeaderText="Reactive Energy Neg TL" />
-                                                <asp:BoundField DataField="active_mdi_pos_t1" HeaderText="Active MDI Pos T1" />
-                                                <asp:BoundField DataField="active_mdi_pos_t2" HeaderText="Active MDI Pos T2" />
-                                                <asp:BoundField DataField="active_mdi_pos_t3" HeaderText="Active MDI Pos T3" />
-                                                <asp:BoundField DataField="active_mdi_pos_t4" HeaderText="Active MDI Pos T4" />
-                                                <asp:BoundField DataField="active_mdi_pos_tl" HeaderText="Active MDI Pos TL" />
-                                                <asp:BoundField DataField="active_mdi_neg_t1" HeaderText="Active MDI Neg T1" />
-                                                <asp:BoundField DataField="active_mdi_neg_t2" HeaderText="Active MDI Neg T2" />
-                                                <asp:BoundField DataField="active_mdi_neg_t3" HeaderText="Active MDI Neg T3" />
-                                                <asp:BoundField DataField="active_mdi_neg_t4" HeaderText="Active MDI Neg T4" />
-                                                <asp:BoundField DataField="active_mdi_neg_tl" HeaderText="Active MDI Neg TL" />
-                                                <asp:BoundField DataField="active_mdi_abs_t1" HeaderText="Active MDI Abs T1" />
-                                                <asp:BoundField DataField="active_mdi_abs_t2" HeaderText="Active MDI Abs T2" />
-                                                <asp:BoundField DataField="active_mdi_abs_t3" HeaderText="Active MDI Abs T3" />
-                                                <asp:BoundField DataField="active_mdi_abs_t4" HeaderText="Active MDI Abs T4" />
-                                                <asp:BoundField DataField="active_mdi_abs_tl" HeaderText="Active MDI Abs TL" />
-                                                <asp:BoundField DataField="cumulative_mdi_pos_t1" HeaderText="Cumulative MDI Pos T1" />
-                                                <asp:BoundField DataField="cumulative_mdi_pos_t2" HeaderText="Cumulative MDI Pos T2" />
-                                                <asp:BoundField DataField="cumulative_mdi_pos_t3" HeaderText="Cumulative MDI Pos T3" />
-                                                <asp:BoundField DataField="cumulative_mdi_pos_t4" HeaderText="Cumulative MDI Pos T4" />
-                                                <asp:BoundField DataField="cumulative_mdi_pos_tl" HeaderText="Cumulative MDI Pos TL" />
-                                                <asp:BoundField DataField="cumulative_mdi_neg_t1" HeaderText="Cumulative MDI Neg T1" />
-                                                <asp:BoundField DataField="cumulative_mdi_neg_t2" HeaderText="Cumulative MDI Neg T2" />
-                                                <asp:BoundField DataField="cumulative_mdi_neg_t3" HeaderText="Cumulative MDI Neg T3" />
-                                                <asp:BoundField DataField="cumulative_mdi_neg_t4" HeaderText="Cumulative MDI Neg T4" />
-                                                <asp:BoundField DataField="cumulative_mdi_neg_tl" HeaderText="Cumulative MDI Neg TL" />
-                                                <asp:BoundField DataField="cumulative_mdi_abs_t1" HeaderText="Cumulative MDI Abs T1" />
-                                                <asp:BoundField DataField="cumulative_mdi_abs_t2" HeaderText="Cumulative MDI Abs T2" />
-                                                <asp:BoundField DataField="cumulative_mdi_abs_t3" HeaderText="Cumulative MDI Abs T3" />
-                                                <asp:BoundField DataField="cumulative_mdi_abs_t4" HeaderText="Cumulative MDI Abs T4" />
-                                                <asp:BoundField DataField="cumulative_mdi_abs_tl" HeaderText="Cumulative MDI Abs TL" />
-                                                <asp:BoundField DataField="mdc_read_datetime" HeaderText="MDC Read DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                                <asp:BoundField DataField="db_datetime" HeaderText="DB DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                                <asp:BoundField DataField="is_synced" HeaderText="Is Synced" />
-                                            </Columns>
+                                        <asp:GridView ID="gvBillData" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="true" GridLines="None">
                                             <EmptyDataTemplate>
                                                 <div class="text-muted">No BILL data records found.</div>
                                             </EmptyDataTemplate>
@@ -348,7 +280,7 @@
                         </asp:Panel>
 
                         <!-- Timer for refreshing tables -->
-                        <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick" Enabled="false" />
+                        <asp:Timer ID="timerTables" runat="server" Interval="10000" OnTick="timerTables_Tick" Enabled="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </section>

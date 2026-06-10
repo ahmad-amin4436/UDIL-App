@@ -59,7 +59,6 @@ namespace UDIL.Shared
             {
                 return "(empty)";
             }
-
             string oneLine = text.Replace("\r\n", " ").Replace("\n", " ").Trim();
             if (oneLine.Length <= PreviewMaxLength)
             {
@@ -70,7 +69,7 @@ namespace UDIL.Shared
         }
 
         public static string GetFull(object messageLog)
-        {
+            {
             string text = messageLog?.ToString() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(text))
             {

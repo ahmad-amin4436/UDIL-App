@@ -64,7 +64,7 @@
                             </div>
                         </asp:Panel>
 
-                        <asp:Timer ID="timerTracker" runat="server" Interval="2000" OnTick="timerTracker_Tick" Enabled="false" />
+                        <asp:Timer ID="timerTracker" runat="server" Interval="10000" OnTick="timerTracker_Tick" Enabled="false" />
                     </ContentTemplate>
                     <Triggers>
                         <asp:AsyncPostBackTrigger ControlID="tsTransactionId" EventName="SelectedIndexChanged" />

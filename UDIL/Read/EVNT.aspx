@@ -109,58 +109,10 @@
                                         </div>
                                         <hr />
                                         <h6 class="mb-3">EVNT Data</h6>
-                                        <div class="row g-3">
-                                            <div class="col-md-3">
-                                                <div class="card h-100 border-light">
-                                                    <div class="card-body">
-                                                        <small class="text-muted d-block">Global Device ID</small>
-                                                        <asp:Label ID="lblRespGlobalDeviceId" runat="server"
-                                                            CssClass="fw-bold" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card h-100 border-light">
-                                                    <div class="card-body">
-                                                        <small class="text-muted d-block">MSN</small>
-                                                        <asp:Label ID="lblRespMsn" runat="server" CssClass="fw-bold" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card h-100 border-light">
-                                                    <div class="card-body">
-                                                        <small class="text-muted d-block">Event DateTime</small>
-                                                        <asp:Label ID="lblRespAuxrDateTime" runat="server"
-                                                            CssClass="fw-bold" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card h-100 border-light">
-                                                    <div class="card-body">
-                                                        <small class="text-muted d-block">Event Code</small>
-                                                        <asp:Label ID="lblRespAuxrStatus" runat="server"
-                                                            CssClass="fw-bold" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive mt-4">
+                                        <div class="table-responsive">
                                             <asp:GridView ID="gvEvntData" runat="server"
-                                                CssClass="table table-striped table-hover" AutoGenerateColumns="false"
+                                                CssClass="table table-striped table-hover" AutoGenerateColumns="true"
                                                 GridLines="None">
-                                                <Columns>
-                                                    <asp:BoundField DataField="global_device_id" HeaderText="Global Device ID" />
-                                                    <asp:BoundField DataField="msn" HeaderText="MSN" />
-                                                    <asp:BoundField DataField="event_datetime" HeaderText="Event DateTime" />
-                                                    <asp:BoundField DataField="event_code" HeaderText="Event Code" />
-                                                    <asp:BoundField DataField="event_counter" HeaderText="Event Counter" />
-                                                    <asp:BoundField DataField="event_description" HeaderText="Event Description" />
-                                                    <asp:BoundField DataField="mdc_read_datetime" HeaderText="MDC Read DateTime" />
-                                                    <asp:BoundField DataField="db_datetime" HeaderText="DB DateTime" />
-                                                    <asp:BoundField DataField="is_synced" HeaderText="Is Synced" />
-                                                </Columns>
                                                 <EmptyDataTemplate>
                                                     <div class="text-muted">No EVNT data records found.</div>
                                                 </EmptyDataTemplate>
@@ -421,7 +373,7 @@
                             </asp:Panel>
 
                             <!-- Timer for refreshing tables -->
-                            <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick"
+                            <asp:Timer ID="timerTables" runat="server" Interval="10000" OnTick="timerTables_Tick"
                                 Enabled="false" />
                         </ContentTemplate>
                     </asp:UpdatePanel>

@@ -48,7 +48,7 @@ namespace UDIL.DAL
                         FROM events
                         WHERE global_device_id = @global_device_id
                         ORDER BY event_datetime DESC
-                        LIMIT 5;
+                        LIMIT 10;
                     ";
 
                     using (MySqlCommand cmd = new MySqlCommand(query, connection))
@@ -107,7 +107,8 @@ namespace UDIL.DAL
                             `average_pf` LIKE @searchTerm OR
                             `mdc_read_datetime` LIKE @searchTerm OR
                             `db_datetime` LIKE @searchTerm OR
-                            `is_synced` LIKE @searchTerm";
+                            `is_synced` LIKE @searchTerm
+                            ORDER BY `meter_datetime` DESC";
                     }
 
                     query += " LIMIT 1000;";
@@ -174,7 +175,8 @@ namespace UDIL.DAL
                             `average_pf` LIKE @searchTerm OR
                             `mdc_read_datetime` LIKE @searchTerm OR
                             `db_datetime` LIKE @searchTerm OR
-                            `is_synced` LIKE @searchTerm";
+                            `is_synced` LIKE @searchTerm
+                            ORDER BY `meter_datetime` DESC";
                     }
 
                     query += " LIMIT 1000;";
@@ -285,7 +287,9 @@ namespace UDIL.DAL
                             `cumulative_mdi_abs_tl` LIKE @searchTerm OR
                             `mdc_read_datetime` LIKE @searchTerm OR
                             `db_datetime` LIKE @searchTerm OR
-                            `is_synced` LIKE @searchTerm";
+                            `is_synced` LIKE @searchTerm
+                            ORDER BY `meter_datetime` DESC";
+
                     }
 
                     query += " LIMIT 1000;";
@@ -403,7 +407,8 @@ namespace UDIL.DAL
                             `reset_count` LIKE @searchTerm OR
                             `mdc_read_datetime` LIKE @searchTerm OR
                             `db_datetime` LIKE @searchTerm OR
-                            `is_synced` LIKE @searchTerm";
+                            `is_synced` LIKE @searchTerm
+                            ORDER BY `meter_datetime` DESC";
                     }
 
                     query += " LIMIT 1000;";

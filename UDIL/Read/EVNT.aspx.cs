@@ -112,42 +112,34 @@ namespace UDIL.Read
                 // Display data if available
                 if (response.data != null && response.data.Count > 0)
                 {
-                    gvEvntData.DataSource = response.data;
-                    gvEvntData.DataBind();
+                    var data = response.data[0];
 
-                    EvntData data = response.data[0];
                     // Store global device ID and MSN in session for use across the app
-                    if (!string.IsNullOrEmpty(data.global_device_id))
-                    {
-                        SessionManager.GlobalDeviceId = data.global_device_id;
-                        lblRespGlobalDeviceId.Text = data.global_device_id;
-                    }
-                    else
-                    {
-                        lblRespGlobalDeviceId.Text = "N/A";
-                    }
-                    if (!string.IsNullOrEmpty(data.msn))
-                    {
-                        SessionManager.MSN = data.msn;
-                        lblRespMsn.Text = data.msn;
-                    }
-                    else
-                    {
-                        lblRespMsn.Text = "N/A";
-                    }
+                    if (data.TryGetValue("global_device_id", out object gdid) && gdid != null)
+                        SessionManager.GlobalDeviceId = gdid.ToString();
+                    if (data.TryGetValue("msn", out object msn) && msn != null)
+                        SessionManager.MSN = msn.ToString();
 
-                    lblRespAuxrDateTime.Text = !string.IsNullOrEmpty(data.event_datetime) ? data.event_datetime : "N/A";
-                    lblRespAuxrStatus.Text = !string.IsNullOrEmpty(data.event_code) ? data.event_code : "N/A";
+                    DataTable dt = new DataTable();
+                    foreach (var kvp in data)
+                    {
+                        dt.Columns.Add(FormatColumnName(kvp.Key));
+                    }
+                    DataRow row = dt.NewRow();
+                    int colIndex = 0;
+                    foreach (var kvp in data)
+                    {
+                        row[colIndex] = ValueToString(kvp.Value);
+                        colIndex++;
+                    }
+                    dt.Rows.Add(row);
+                    gvEvntData.DataSource = dt;
+                    gvEvntData.DataBind();
                 }
                 else
                 {
                     gvEvntData.DataSource = null;
                     gvEvntData.DataBind();
-
-                    lblRespGlobalDeviceId.Text = "N/A";
-                    lblRespMsn.Text = "N/A";
-                    lblRespAuxrDateTime.Text = "N/A";
-                    lblRespAuxrStatus.Text = "N/A";
                 }
 
                 pnlResponse.Visible = true;
@@ -217,40 +209,8 @@ namespace UDIL.Read
         {
             public string status { get; set; }
             public string transactionid { get; set; }
-            public List<EvntData> data { get; set; }
+            public List<Dictionary<string, object>> data { get; set; }
             public string message { get; set; }
-        }
-
-        public class EvntData
-        {
-            public string global_device_id { get; set; }
-            public string msn { get; set; }
-            public string event_datetime { get; set; }
-            public string event_code { get; set; }
-            public string event_counter { get; set; }
-            public string event_description { get; set; }
-            public string mdc_read_datetime { get; set; }
-            public string db_datetime { get; set; }
-            public string is_synced { get; set; }
-        }
-
-        private string ReadWebExceptionResponse(WebException ex)
-        {
-            if (ex.Response == null)
-                return string.Empty;
-
-            try
-            {
-                using (var responseStream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(responseStream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
         }
 
         private void ShowDataTables()
@@ -705,5 +665,28 @@ namespace UDIL.Read
             }
         }
 
+        private string FormatColumnName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+            string[] parts = name.Split('_');
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].Length > 0)
+                    parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
+            }
+            return string.Join(" ", parts);
+        }
+
+        private string ValueToString(object value)
+        {
+            if (value == null) return "N/A";
+            if (value is string s) return string.IsNullOrEmpty(s) ? "N/A" : s;
+            if (value is Dictionary<string, object>)
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                return serializer.Serialize(value);
+            }
+            return value.ToString();
+        }
     }
 }

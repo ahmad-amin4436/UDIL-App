@@ -111,7 +111,7 @@
                               </div>
                           </asp:Panel>
 
-                          <asp:Timer ID="timerTracker" runat="server" Interval="2000"
+                          <asp:Timer ID="timerTracker" runat="server" Interval="10000"
                               OnTick="timerTracker_Tick" Enabled="false" />
 
                       </ContentTemplate>
@@ -258,7 +258,7 @@
                         </asp:Panel>
 
                         <!-- Timer for refreshing tables -->
-                        <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick" Enabled="false" />
+                        <asp:Timer ID="timerTables" runat="server" Interval="10000" OnTick="timerTables_Tick" Enabled="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </section>

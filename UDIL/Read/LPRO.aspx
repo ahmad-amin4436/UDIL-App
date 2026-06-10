@@ -105,73 +105,7 @@
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <asp:GridView ID="gvLproData" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="false" GridLines="None">
-                                            <Columns>
-                                                <asp:BoundField DataField="meter_datetime" HeaderText="Meter DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                                <asp:BoundField DataField="channel_id" HeaderText="Channel ID" />
-                                                <asp:BoundField DataField="interval" HeaderText="Interval" />
-                                                <asp:BoundField DataField="frequency" HeaderText="Frequency" />
-                                                <asp:BoundField DataField="active_energy_pos_t1" HeaderText="Active Energy Pos T1" />
-                                                <asp:BoundField DataField="active_energy_pos_t2" HeaderText="Active Energy Pos T2" />
-                                                <asp:BoundField DataField="active_energy_pos_t3" HeaderText="Active Energy Pos T3" />
-                                                <asp:BoundField DataField="active_energy_pos_t4" HeaderText="Active Energy Pos T4" />
-                                                <asp:BoundField DataField="active_energy_pos_tl" HeaderText="Active Energy Pos TL" />
-                                                <asp:BoundField DataField="active_energy_neg_t1" HeaderText="Active Energy Neg T1" />
-                                                <asp:BoundField DataField="active_energy_neg_t2" HeaderText="Active Energy Neg T2" />
-                                                <asp:BoundField DataField="active_energy_neg_t3" HeaderText="Active Energy Neg T3" />
-                                                <asp:BoundField DataField="active_energy_neg_t4" HeaderText="Active Energy Neg T4" />
-                                                <asp:BoundField DataField="active_energy_neg_tl" HeaderText="Active Energy Neg TL" />
-                                                <asp:BoundField DataField="active_energy_abs_t1" HeaderText="Active Energy Abs T1" />
-                                                <asp:BoundField DataField="active_energy_abs_t2" HeaderText="Active Energy Abs T2" />
-                                                <asp:BoundField DataField="active_energy_abs_t3" HeaderText="Active Energy Abs T3" />
-                                                <asp:BoundField DataField="active_energy_abs_t4" HeaderText="Active Energy Abs T4" />
-                                                <asp:BoundField DataField="active_energy_abs_tl" HeaderText="Active Energy Abs TL" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t1" HeaderText="Reactive Energy Pos T1" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t2" HeaderText="Reactive Energy Pos T2" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t3" HeaderText="Reactive Energy Pos T3" />
-                                                <asp:BoundField DataField="reactive_energy_pos_t4" HeaderText="Reactive Energy Pos T4" />
-                                                <asp:BoundField DataField="reactive_energy_pos_tl" HeaderText="Reactive Energy Pos TL" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t1" HeaderText="Reactive Energy Neg T1" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t2" HeaderText="Reactive Energy Neg T2" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t3" HeaderText="Reactive Energy Neg T3" />
-                                                <asp:BoundField DataField="reactive_energy_neg_t4" HeaderText="Reactive Energy Neg T4" />
-                                                <asp:BoundField DataField="reactive_energy_neg_tl" HeaderText="Reactive Energy Neg TL" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t1" HeaderText="Reactive Energy Abs T1" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t2" HeaderText="Reactive Energy Abs T2" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t3" HeaderText="Reactive Energy Abs T3" />
-                                                <asp:BoundField DataField="reactive_energy_abs_t4" HeaderText="Reactive Energy Abs T4" />
-                                                <asp:BoundField DataField="reactive_energy_abs_tl" HeaderText="Reactive Energy Abs TL" />
-                                                <asp:BoundField DataField="current_phase_a" HeaderText="Current Phase A" />
-                                                <asp:BoundField DataField="current_phase_b" HeaderText="Current Phase B" />
-                                                <asp:BoundField DataField="current_phase_c" HeaderText="Current Phase C" />
-                                                <asp:BoundField DataField="voltage_phase_a" HeaderText="Voltage Phase A" />
-                                                <asp:BoundField DataField="voltage_phase_b" HeaderText="Voltage Phase B" />
-                                                <asp:BoundField DataField="voltage_phase_c" HeaderText="Voltage Phase C" />
-                                                <asp:BoundField DataField="active_pwr_pos_phase_a" HeaderText="Active Pwr Pos Phase A" />
-                                                <asp:BoundField DataField="active_pwr_pos_phase_b" HeaderText="Active Pwr Pos Phase B" />
-                                                <asp:BoundField DataField="active_pwr_pos_phase_c" HeaderText="Active Pwr Pos Phase C" />
-                                                <asp:BoundField DataField="aggregate_active_pwr_pos" HeaderText="Aggregate Active Pwr Pos" />
-                                                <asp:BoundField DataField="active_pwr_neg_phase_a" HeaderText="Active Pwr Neg Phase A" />
-                                                <asp:BoundField DataField="active_pwr_neg_phase_b" HeaderText="Active Pwr Neg Phase B" />
-                                                <asp:BoundField DataField="active_pwr_neg_phase_c" HeaderText="Active Pwr Neg Phase C" />
-                                                <asp:BoundField DataField="aggregate_active_pwr_neg" HeaderText="Aggregate Active Pwr Neg" />
-                                                <asp:BoundField DataField="aggregate_active_pwr_abs" HeaderText="Aggregate Active Pwr Abs" />
-                                                <asp:BoundField DataField="reactive_pwr_pos_phase_a" HeaderText="Reactive Pwr Pos Phase A" />
-                                                <asp:BoundField DataField="reactive_pwr_pos_phase_b" HeaderText="Reactive Pwr Pos Phase B" />
-                                                <asp:BoundField DataField="reactive_pwr_pos_phase_c" HeaderText="Reactive Pwr Pos Phase C" />
-                                                <asp:BoundField DataField="aggregate_reactive_pwr_pos" HeaderText="Aggregate Reactive Pwr Pos" />
-                                                <asp:BoundField DataField="reactive_pwr_neg_phase_a" HeaderText="Reactive Pwr Neg Phase A" />
-                                                <asp:BoundField DataField="reactive_pwr_neg_phase_b" HeaderText="Reactive Pwr Neg Phase B" />
-                                                <asp:BoundField DataField="reactive_pwr_neg_phase_c" HeaderText="Reactive Pwr Neg Phase C" />
-                                                <asp:BoundField DataField="aggregate_reactive_pwr_neg" HeaderText="Aggregate Reactive Pwr Neg" />
-                                                <asp:BoundField DataField="aggregate_reactive_pwr_abs" HeaderText="Aggregate Reactive Pwr Abs" />
-                                                <asp:BoundField DataField="average_pf" HeaderText="Average PF" />
-                                                <asp:BoundField DataField="mdc_read_datetime" HeaderText="MDC Read DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                                <asp:BoundField DataField="db_datetime" HeaderText="DB DateTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
-                                                <asp:BoundField DataField="global_device_id" HeaderText="Global Device ID" />
-                                                <asp:BoundField DataField="msn" HeaderText="MSN" />
-                                                <asp:BoundField DataField="is_synced" HeaderText="Is Synced" />
-                                            </Columns>
+                                        <asp:GridView ID="gvLproData" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="true" GridLines="None">
                                             <EmptyDataTemplate>
                                                 <div class="text-muted">No LPRO data records found.</div>
                                             </EmptyDataTemplate>
@@ -346,7 +280,7 @@
                         </asp:Panel>
 
                         <!-- Timer for refreshing tables -->
-                        <asp:Timer ID="timerTables" runat="server" Interval="2000" OnTick="timerTables_Tick" Enabled="false" />
+                        <asp:Timer ID="timerTables" runat="server" Interval="10000" OnTick="timerTables_Tick" Enabled="false" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </section>

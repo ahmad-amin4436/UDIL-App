@@ -116,73 +116,34 @@ namespace UDIL.Read
                 // Display data if available
                 if (response.data != null && response.data.Count > 0)
                 {
-                    InstData data = response.data[0];
+                    var data = response.data[0];
+
                     // Store global device ID and MSN in session for use across the app
-                    if (!string.IsNullOrEmpty(data.global_device_id))
-                    {
-                        SessionManager.GlobalDeviceId = data.global_device_id;
-                        lblRespGlobalDeviceId.Text = data.global_device_id;
-                    }
-                    else
-                    {
-                        lblRespGlobalDeviceId.Text = "N/A";
-                    }
+                    if (data.TryGetValue("global_device_id", out object gdid) && gdid != null)
+                        SessionManager.GlobalDeviceId = gdid.ToString();
+                    if (data.TryGetValue("msn", out object msn) && msn != null)
+                        SessionManager.MSN = msn.ToString();
 
-                    if (!string.IsNullOrEmpty(data.msn))
+                    DataTable dt = new DataTable();
+                    foreach (var kvp in data)
                     {
-                        SessionManager.MSN = data.msn;
-                        lblRespMsn.Text = data.msn;
+                        dt.Columns.Add(FormatColumnName(kvp.Key));
                     }
-                    else
+                    DataRow row = dt.NewRow();
+                    int colIndex = 0;
+                    foreach (var kvp in data)
                     {
-                        lblRespMsn.Text = "N/A";
+                        row[colIndex] = ValueToString(kvp.Value);
+                        colIndex++;
                     }
-
-                    lblRespMeterDateTime.Text = !string.IsNullOrEmpty(data.meter_datetime) ? data.meter_datetime : "N/A";
-                    lblRespMdcReadDateTime.Text = !string.IsNullOrEmpty(data.mdc_read_datetime) ? data.mdc_read_datetime : "N/A";
-                    lblRespDbDateTime.Text = !string.IsNullOrEmpty(data.db_datetime) ? data.db_datetime : "N/A";
-                    lblRespVoltagePhaseA.Text = !string.IsNullOrEmpty(data.voltage_phase_a) ? data.voltage_phase_a : "N/A";
-                    lblRespVoltagePhaseB.Text = !string.IsNullOrEmpty(data.voltage_phase_b) ? data.voltage_phase_b : "N/A";
-                    lblRespVoltagePhaseC.Text = !string.IsNullOrEmpty(data.voltage_phase_c) ? data.voltage_phase_c : "N/A";
-                    lblRespCurrentPhaseA.Text = !string.IsNullOrEmpty(data.current_phase_a) ? data.current_phase_a : "N/A";
-                    lblRespCurrentPhaseB.Text = !string.IsNullOrEmpty(data.current_phase_b) ? data.current_phase_b : "N/A";
-                    lblRespCurrentPhaseC.Text = !string.IsNullOrEmpty(data.current_phase_c) ? data.current_phase_c : "N/A";
-                    lblRespFrequency.Text = !string.IsNullOrEmpty(data.frequency) ? data.frequency : "N/A";
-                    lblRespSignalStrength.Text = !string.IsNullOrEmpty(data.signal_strength) ? data.signal_strength : "N/A";
-                    lblRespAggregateReactivePwrNeg.Text = !string.IsNullOrEmpty(data.aggregate_reactive_pwr_neg) ? data.aggregate_reactive_pwr_neg : "N/A";
-                    lblRespAggregateReactivePwrPos.Text = !string.IsNullOrEmpty(data.aggregate_reactive_pwr_pos) ? data.aggregate_reactive_pwr_pos : "N/A";
-                    lblRespAggregateActivePwrNeg.Text = !string.IsNullOrEmpty(data.aggregate_active_pwr_neg) ? data.aggregate_active_pwr_neg : "N/A";
-                    lblRespCurrentTariffRegister.Text = !string.IsNullOrEmpty(data.current_tariff_register) ? data.current_tariff_register : "N/A";
-                    lblRespAggregateActivePwrPos.Text = !string.IsNullOrEmpty(data.aggregate_active_pwr_pos) ? data.aggregate_active_pwr_pos : "N/A";
-                    lblRespAggregateReactivePwrAbs.Text = !string.IsNullOrEmpty(data.aggregate_reactive_pwr_abs) ? data.aggregate_reactive_pwr_abs : "N/A";
-                    lblRespAggregateActivePwrAbs.Text = !string.IsNullOrEmpty(data.aggregate_active_pwr_abs) ? data.aggregate_active_pwr_abs : "N/A";
-                    lblRespAveragePf.Text = !string.IsNullOrEmpty(data.average_pf) ? data.average_pf : "N/A";
-                    lblRespIsSynced.Text = !string.IsNullOrEmpty(data.is_synced) ? data.is_synced : "N/A";
+                    dt.Rows.Add(row);
+                    gvInstData.DataSource = dt;
+                    gvInstData.DataBind();
                 }
                 else
                 {
-                    lblRespGlobalDeviceId.Text = "N/A";
-                    lblRespMsn.Text = "N/A";
-                    lblRespMeterDateTime.Text = "N/A";
-                    lblRespMdcReadDateTime.Text = "N/A";
-                    lblRespDbDateTime.Text = "N/A";
-                    lblRespVoltagePhaseA.Text = "N/A";
-                    lblRespVoltagePhaseB.Text = "N/A";
-                    lblRespVoltagePhaseC.Text = "N/A";
-                    lblRespCurrentPhaseA.Text = "N/A";
-                    lblRespCurrentPhaseB.Text = "N/A";
-                    lblRespCurrentPhaseC.Text = "N/A";
-                    lblRespFrequency.Text = "N/A";
-                    lblRespSignalStrength.Text = "N/A";
-                    lblRespAggregateReactivePwrNeg.Text = "N/A";
-                    lblRespAggregateReactivePwrPos.Text = "N/A";
-                    lblRespAggregateActivePwrNeg.Text = "N/A";
-                    lblRespCurrentTariffRegister.Text = "N/A";
-                    lblRespAggregateActivePwrPos.Text = "N/A";
-                    lblRespAggregateReactivePwrAbs.Text = "N/A";
-                    lblRespAggregateActivePwrAbs.Text = "N/A";
-                    lblRespAveragePf.Text = "N/A";
-                    lblRespIsSynced.Text = "N/A";
+                    gvInstData.DataSource = null;
+                    gvInstData.DataBind();
                 }
 
                 pnlResponse.Visible = true;
@@ -251,53 +212,8 @@ namespace UDIL.Read
         {
             public string status { get; set; }
             public string transactionid { get; set; }
-            public List<InstData> data { get; set; }
+            public List<Dictionary<string, object>> data { get; set; }
             public string message { get; set; }
-        }
-
-        public class InstData
-        {
-            public string global_device_id { get; set; }
-            public string msn { get; set; }
-            public string meter_datetime { get; set; }
-            public string mdc_read_datetime { get; set; }
-            public string db_datetime { get; set; }
-            public string voltage_phase_a { get; set; }
-            public string voltage_phase_b { get; set; }
-            public string voltage_phase_c { get; set; }
-            public string current_phase_a { get; set; }
-            public string current_phase_b { get; set; }
-            public string current_phase_c { get; set; }
-            public string signal_strength { get; set; }
-            public string aggregate_reactive_pwr_neg { get; set; }
-            public string aggregate_reactive_pwr_pos { get; set; }
-            public string aggregate_active_pwr_neg { get; set; }
-            public string current_tariff_register { get; set; }
-            public string aggregate_active_pwr_pos { get; set; }
-            public string aggregate_reactive_pwr_abs { get; set; }
-            public string aggregate_active_pwr_abs { get; set; }
-            public string frequency { get; set; }
-            public string average_pf { get; set; }
-            public string is_synced { get; set; }
-        }
-
-        private string ReadWebExceptionResponse(WebException ex)
-        {
-            if (ex.Response == null)
-                return string.Empty;
-
-            try
-            {
-                using (var responseStream = ex.Response.GetResponseStream())
-                using (var reader = new StreamReader(responseStream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-            catch
-            {
-                return string.Empty;
-            }
         }
 
         private void ShowDataTables(bool forceRefresh = false)
@@ -722,6 +638,30 @@ namespace UDIL.Read
             {
                 System.Diagnostics.Debug.WriteLine($"Error saving test result: {ex.Message}");
             }
+        }
+
+        private string FormatColumnName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return name;
+            string[] parts = name.Split('_');
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].Length > 0)
+                    parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
+            }
+            return string.Join(" ", parts);
+        }
+
+        private string ValueToString(object value)
+        {
+            if (value == null) return "N/A";
+            if (value is string s) return string.IsNullOrEmpty(s) ? "N/A" : s;
+            if (value is Dictionary<string, object>)
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                return serializer.Serialize(value);
+            }
+            return value.ToString();
         }
 
     }

@@ -193,35 +193,6 @@ namespace UDIL.Read {
         protected global::System.Web.UI.WebControls.Label lblRespIppoDateTime;
         
         /// <summary>
-        /// gvDayProfiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvDayProfiles;
-        
-       
-        
-        /// <summary>
-        /// gvWeekProfiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvWeekProfiles;
-        
-        /// <summary>
-        /// gvSeasonProfiles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvSeasonProfiles;
-        
-        /// <summary>
         /// lblRespPrimaryIpAddress control.
         /// </summary>
         /// <remarks>
