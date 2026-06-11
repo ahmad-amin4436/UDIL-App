@@ -41,6 +41,15 @@ namespace UDIL.Pages
                 }
              
 
+                // Initialize date/time fields to current datetime
+                tsRequestDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                tsStartDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                tsEndDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                tsSlab1Time.Text = DateTime.Now.ToString("HH:mm");
+                tsSlab2Time.Text = DateTime.Now.ToString("HH:mm");
+                tsSlab3Time.Text = DateTime.Now.ToString("HH:mm");
+                tsSlab4Time.Text = DateTime.Now.ToString("HH:mm");
+
                 // Generate unique transaction ID
                 tsTransactionId.Text = AppCommon.GenerateTransactionId();
             }

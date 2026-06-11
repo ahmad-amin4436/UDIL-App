@@ -41,6 +41,10 @@ namespace UDIL.Pages
                 }
                
 
+                // Initialize date/time fields to current datetime
+                dmRequestDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                dmInitialCommunicationTime.Text = DateTime.Now.ToString("HH:mm");
+
                 // Generate unique transaction ID
                 dmTransactionId.Text = AppCommon.GenerateTransactionId();
             }

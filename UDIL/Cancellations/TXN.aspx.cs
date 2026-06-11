@@ -44,6 +44,9 @@ namespace UDIL.Cancellations
                     txnGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
+                // Initialize date/time fields to current datetime
+                txnRequestDatetime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
                 // Generate unique transaction ID
                 txnTransactionId.Text = AppCommon.GenerateTransactionId();
             }

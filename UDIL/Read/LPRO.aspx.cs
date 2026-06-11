@@ -32,6 +32,10 @@ namespace UDIL.Read
                     lproGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
+                // Initialize date/time fields to current datetime
+                lproStartDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                lproEndDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+
                 // Generate unique transaction ID
                 lproTransactionId.Text = AppCommon.GenerateTransactionId();
             }

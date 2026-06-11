@@ -45,6 +45,11 @@ namespace UDIL.Pages
                     dcDsn.Text = SessionManager.MSN;
                 }
 
+                // Initialize date/time fields to current datetime
+                dcRequestDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                dcMdiResetTime.Text = DateTime.Now.ToString("HH:mm");
+                dcInitialCommunicationTime.Text = DateTime.Now.ToString("HH:mm");
+
                 // Generate unique transaction ID
                 dcTransactionId.Text = AppCommon.GenerateTransactionId();
             }

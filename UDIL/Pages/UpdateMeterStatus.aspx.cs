@@ -40,6 +40,9 @@ namespace UDIL.Pages
                     msGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
                 
+                // Initialize date/time fields to current datetime
+                msRequestDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+
                 // Generate unique transaction ID
                 msTransactionId.Text = AppCommon.GenerateTransactionId();
             }

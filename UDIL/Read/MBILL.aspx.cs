@@ -32,6 +32,10 @@ namespace UDIL.Read
                     mbillGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
+                // Initialize date/time fields to current datetime
+                mbillStartDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                mbillEndDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+
                 // Generate unique transaction ID
                 mbillTransactionId.Text = AppCommon.GenerateTransactionId();
             }

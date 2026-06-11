@@ -32,6 +32,10 @@ namespace UDIL.Read
                     auxrGlobalDeviceId.Text = SessionManager.GlobalDeviceId;
                 }
 
+                // Initialize date/time fields to current datetime
+                auxrStartDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+                auxrEndDateTime.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+
                 // Generate unique transaction ID
                 auxrTransactionId.Text = AppCommon.GenerateTransactionId();
             }
