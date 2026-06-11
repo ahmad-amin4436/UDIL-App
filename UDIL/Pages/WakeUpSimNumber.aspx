@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblWsRequestDateTime" runat="server" AssociatedControlID="wsRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="wsRequestDateTime" runat="server" Text="2022-03-30 13:56:00" CssClass="form-control" placeholder="2022-03-30 13:56:00" />
+                                <asp:TextBox ID="wsRequestDateTime" runat="server" Text="2022-03-30T13:56:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                         </div>
                         <div class="row">

@@ -124,6 +124,27 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Load Shedding Slabs Section -->
+                                    <div class="mt-4">
+                                        <div class="card mb-4">
+                                            <div class="card-header">
+                                                <h6 class="mb-0">Load Shedding Slabs</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <asp:GridView ID="gvSlabs" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="false" GridLines="None">
+                                                        <Columns>
+                                                            <asp:BoundField DataField="action_time" HeaderText="Action Time" />
+                                                            <asp:BoundField DataField="relay_operate" HeaderText="Relay Operate" />
+                                                        </Columns>
+                                                        <EmptyDataTemplate>
+                                                            <div class="text-muted">No load shedding slabs found.</div>
+                                                        </EmptyDataTemplate>
+                                                    </asp:GridView>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- Response Remarks Section -->
                                     <div id="lschResponseRemarks" runat="server" class="mt-3" style="display: none;">
                                         <div class="card border-warning">

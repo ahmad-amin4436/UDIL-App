@@ -61,7 +61,7 @@ namespace UDIL.Pages
             }
             
            
-            string requestDateTime = mrRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(mrRequestDateTime.Text.Trim());
             string mdiResetDate = mrMdiResetDate.Text.Trim();
             string mdiResetTime = NormalizeTimeWithSeconds(mrMdiResetTime.Text.Trim());
 
@@ -183,6 +183,24 @@ namespace UDIL.Pages
                 lblMdiResetMessage.Text = "Error: " + ex.Message;
                 lblMdiResetMessage.CssClass = "text-danger";
             }
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -380,6 +398,7 @@ namespace UDIL.Pages
 
         private MdiResetResponse PostMdiReset(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_mdi_reset_date");
             request.Method = "POST";

@@ -61,7 +61,7 @@ namespace UDIL.Pages
                 SessionManager.GlobalDeviceId = globalDeviceId;
             }
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
 
             string privateKey = SessionManager.PrivateKey;
 
@@ -196,6 +196,24 @@ namespace UDIL.Pages
                 lblIPPortUpdateMessage.CssClass = "text-danger";
             }
         }
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
+        }
+
         private string NormalizeTimeWithSeconds(string timeValue)
         {
             if (string.IsNullOrEmpty(timeValue))
@@ -332,6 +350,7 @@ namespace UDIL.Pages
         }
         private IPPortUpdateResponse PostIPPortUpdate(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_ip_port");
             request.Method = "POST";

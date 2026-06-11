@@ -35,11 +35,11 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblBillStartDateTime" runat="server" AssociatedControlID="billStartDateTime" CssClass="form-label" Text="Start DateTime"></asp:Label>
-                                <asp:TextBox ID="billStartDateTime" runat="server" CssClass="form-control" placeholder="YYYY-MM-DD HH:mm:ss" Text="2026-05-11 09:00:00" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <asp:Label ID="lblBillEndDateTime" runat="server" AssociatedControlID="billEndDateTime" CssClass="form-label" Text="End DateTime"></asp:Label>
-                                <asp:TextBox ID="billEndDateTime" runat="server" CssClass="form-control" placeholder="YYYY-MM-DD HH:mm:ss" Text="2026-05-11 10:00:00" />
+                                 <asp:TextBox ID="billStartDateTime" runat="server" CssClass="form-control" TextMode="DateTimeLocal" Text="2026-05-11T09:00:00" />
+                             </div>
+                             <div class="col-md-6 mb-3">
+                                 <asp:Label ID="lblBillEndDateTime" runat="server" AssociatedControlID="billEndDateTime" CssClass="form-label" Text="End DateTime"></asp:Label>
+                                 <asp:TextBox ID="billEndDateTime" runat="server" CssClass="form-control" TextMode="DateTimeLocal" Text="2026-05-11T10:00:00" />
                             </div>
                         </div>
                         <div class="position-relative d-inline-block">

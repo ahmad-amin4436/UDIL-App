@@ -45,8 +45,8 @@ namespace UDIL.Read
             string transactionId = billTransactionId.Text.Trim();
             string globalDeviceId = billGlobalDeviceId.Text.Trim();
             string type = billType.SelectedValue;
-            string startDateTime = billStartDateTime.Text.Trim();
-            string endDateTime = billEndDateTime.Text.Trim();
+            string startDateTime = NormalizeDateTimeFormat(billStartDateTime.Text.Trim());
+            string endDateTime = NormalizeDateTimeFormat(billEndDateTime.Text.Trim());
 
             string privateKey = SessionManager.PrivateKey;
 
@@ -168,6 +168,7 @@ namespace UDIL.Read
 
         private BillReadResponse GetBillData(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/on_demand_data_read");
             request.Method = "POST";
@@ -680,6 +681,24 @@ namespace UDIL.Read
                     parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
             }
             return string.Join(" ", parts);
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string ValueToString(object value)

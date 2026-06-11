@@ -74,7 +74,7 @@ namespace UDIL.Pages
                 SessionManager.MSN = msn;
             }
             string deviceIdentity = $"[{{\"dsn\":\"{dsn}\",\"global_device_id\":\"{globalDeviceId}\"}}]";
-            string requestDateTime = dcRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(dcRequestDateTime.Text.Trim());
             string deviceType = dcDeviceType.SelectedValue;
             string mdiResetDate = dcMdiResetDate.Text.Trim();
             string mdiResetTime = NormalizeTimeWithSeconds(dcMdiResetTime.Text.Trim());
@@ -209,6 +209,24 @@ namespace UDIL.Pages
                 lblDeviceCreationMessage.CssClass = "text-danger";
             }
         }
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
+        }
+
         private string NormalizeTimeWithSeconds(string timeValue)
         {
             if (string.IsNullOrEmpty(timeValue))
@@ -318,6 +336,7 @@ namespace UDIL.Pages
         }
         private TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
         {
+            SessionHelper.Unlock();
             int maxRetries = 3;
             int timeoutMs = GetTimeout() * 1000; // Convert seconds to milliseconds
 
@@ -383,6 +402,7 @@ namespace UDIL.Pages
         }
         private bool ReauthorizeWithFixedCredentials()
         {
+            SessionHelper.Unlock();
             try
             {
                 string baseUrl = GetBaseUrl();
@@ -581,6 +601,7 @@ namespace UDIL.Pages
         }
         private DeviceCreationResponse PostDeviceCreation(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/device_creation");
             request.Method = "POST";

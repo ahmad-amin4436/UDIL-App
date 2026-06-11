@@ -64,7 +64,7 @@ namespace UDIL.Pages
             
            
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
 
             string privateKey = SessionManager.PrivateKey;
 
@@ -183,6 +183,24 @@ namespace UDIL.Pages
                 lblTimeSyncMessage.CssClass = "text-danger";
             }
         }
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
+        }
+
         private string NormalizeTimeWithSeconds(string timeValue)
         {
             if (string.IsNullOrEmpty(timeValue))
@@ -321,6 +339,7 @@ namespace UDIL.Pages
         }
         private TimeSyncResponse PostTimeSync(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/time_synchronization");
             request.Method = "POST";

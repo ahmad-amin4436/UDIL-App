@@ -263,6 +263,7 @@ namespace UDIL.Cancellations
 
         private TXNCancellationResponse PostTXNCancellation(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             string url = $"{baseUrl}/transaction_cancel";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

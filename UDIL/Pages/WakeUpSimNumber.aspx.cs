@@ -63,7 +63,7 @@ namespace UDIL.Pages
             
             
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = wsRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(wsRequestDateTime.Text.Trim());
             string wakeupNumber1 = wsWakeupNumber1.Text.Trim();
             string wakeupNumber2 = wsWakeupNumber2.Text.Trim();
             string wakeupNumber3 = wsWakeupNumber3.Text.Trim();
@@ -186,6 +186,24 @@ namespace UDIL.Pages
                 lblWakeSimNumberMessage.Text = "Error: " + ex.Message;
                 lblWakeSimNumberMessage.CssClass = "text-danger";
             }
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -385,6 +403,7 @@ namespace UDIL.Pages
 
         private WakeSimNumberResponse PostWakeSimNumber(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_wake_up_sim_number");
             request.Method = "POST";

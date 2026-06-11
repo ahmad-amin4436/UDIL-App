@@ -65,8 +65,8 @@ namespace UDIL.Pages
             
             
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
-            string activationDateTime = tsActivationDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
+            string activationDateTime = NormalizeDateTimeFormat(tsActivationDateTime.Text.Trim());
 
             string privateKey = SessionManager.PrivateKey;
 
@@ -261,6 +261,24 @@ namespace UDIL.Pages
             }
         }
 
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
+        }
+
         private string NormalizeTimeWithSeconds(string timeValue)
         {
             if (string.IsNullOrEmpty(timeValue))
@@ -402,6 +420,7 @@ namespace UDIL.Pages
 
         private IPPortUpdateResponse PostIPPortUpdate(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_ip_port");
             request.Method = "POST";
@@ -438,6 +457,7 @@ namespace UDIL.Pages
 
         private AuxRelayOperationsResponse PostAuxRelayOperations(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             string url = $"{baseUrl}/aux_relay_operations";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -475,6 +495,7 @@ namespace UDIL.Pages
 
         private UpdateTOUResponse PostUpdateTOU(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             string url = $"{baseUrl}/update_time_of_use";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

@@ -45,8 +45,8 @@ namespace UDIL.Read
             string transactionId = lproTransactionId.Text.Trim();
             string globalDeviceId = lproGlobalDeviceId.Text.Trim();
             string type = lproType.SelectedValue;
-            string startDateTime = lproStartDateTime.Text.Trim();
-            string endDateTime = lproEndDateTime.Text.Trim();
+            string startDateTime = NormalizeDateTimeFormat(lproStartDateTime.Text.Trim());
+            string endDateTime = NormalizeDateTimeFormat(lproEndDateTime.Text.Trim());
 
             string privateKey = SessionManager.PrivateKey;
 
@@ -168,6 +168,7 @@ namespace UDIL.Read
 
         private LproReadResponse GetLproData(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/on_demand_data_read");
             request.Method = "POST";
@@ -680,6 +681,24 @@ namespace UDIL.Read
                     parts[i] = char.ToUpper(parts[i][0]) + parts[i].Substring(1);
             }
             return string.Join(" ", parts);
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string ValueToString(object value)

@@ -63,7 +63,7 @@ namespace UDIL.Pages
             // Store MSN in session if it exists on this page (overwrites existing value)
             
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
             string loadLimit = tsLoadLimit.Text.Trim();
             string maximumRetries = tsMaximumRetries.Text.Trim();
             string retryInterval = tsRetryInterval.Text.Trim();
@@ -189,6 +189,24 @@ namespace UDIL.Pages
                 lblSancLoadControlMessage.Text = "Error: " + ex.Message;
                 lblSancLoadControlMessage.CssClass = "text-danger";
             }
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -387,6 +405,7 @@ namespace UDIL.Pages
 
         private SancLoadControlResponse PostSancLoadControl(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/sanctioned_load_control");
             request.Method = "POST";

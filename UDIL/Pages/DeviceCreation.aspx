@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblDcRequestDateTime" runat="server" AssociatedControlID="dcRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="dcRequestDateTime" runat="server" Text="2024-06-27 11:29:00" CssClass="form-control" placeholder="2024-06-27 11:29:00" />
+                                <asp:TextBox ID="dcRequestDateTime" runat="server" TextMode="DateTimeLocal" Text="2024-06-27T11:29:00" CssClass="form-control" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblDcDeviceType" runat="server" AssociatedControlID="dcDeviceType" CssClass="form-label" Text="Device Type"></asp:Label>
@@ -110,7 +110,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblDcInitialCommunicationTime" runat="server" AssociatedControlID="dcInitialCommunicationTime" CssClass="form-label" Text="Initial Communication Time"></asp:Label>
-                                <asp:TextBox ID="dcInitialCommunicationTime" runat="server" CssClass="form-control" TextMode="Time" Text="00:00:00" />
+                                <asp:TextBox ID="dcInitialCommunicationTime" runat="server" CssClass="form-control" TextMode="Time" Text="00:00" />
                             </div>
                         </div>
                         <div class="position-relative d-inline-block">

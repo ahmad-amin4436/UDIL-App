@@ -262,6 +262,7 @@ namespace UDIL.Cancellations
 
         private LSCHCancellationResponse PostLSCHCancellation(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             string url = $"{baseUrl}/parameterization_cancellation";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

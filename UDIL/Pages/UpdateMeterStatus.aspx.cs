@@ -62,7 +62,7 @@ namespace UDIL.Pages
             
             
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = msRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(msRequestDateTime.Text.Trim());
             string meterActivationStatus = msMeterActivationStatus.SelectedValue;
 
             string privateKey = SessionManager.PrivateKey;
@@ -183,6 +183,24 @@ namespace UDIL.Pages
                 lblMeterStatusMessage.Text = "Error: " + ex.Message;
                 lblMeterStatusMessage.CssClass = "text-danger";
             }
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -381,6 +399,7 @@ namespace UDIL.Pages
 
         private MeterStatusResponse PostMeterStatus(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_meter_status");
             request.Method = "POST";

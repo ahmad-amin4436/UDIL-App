@@ -694,6 +694,16 @@
     </form>
     
     <script>
+        // Abort any pending ASP.NET async postback immediately
+        function abortPendingRequests() {
+            if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+                var prm = Sys.WebForms.PageRequestManager.getInstance();
+                if (prm && prm.get_isInAsyncPostBack()) {
+                    prm.abortPostBack();
+                }
+            }
+        }
+
         function setActiveNavLink() {
             // Get current page path
             var currentPath = window.location.pathname.toLowerCase();
@@ -725,6 +735,13 @@
             });
         }
 
+        // Abort pending async postbacks before any navigation
+        function abortBeforeNavigate(href) {
+            if (href && (href.includes('.aspx') || href.includes('#'))) {
+                abortPendingRequests();
+            }
+        }
+
         // Handle click events for navigation links
         document.addEventListener('click', function(e) {
             var target = e.target.closest('.sidebar .nav-link');
@@ -733,6 +750,8 @@
                 
                 // Only handle internal navigation links
                 if (href && href.includes('.aspx')) {
+                    abortPendingRequests();
+                    
                     // Store the active link in sessionStorage
                     sessionStorage.setItem('activeNavLink', href);
                     
@@ -750,6 +769,17 @@
                 }
             }
         });
+
+        // Also abort on any link click that navigates away (Reset buttons, etc.)
+        document.addEventListener('click', function(e) {
+            var link = e.target.closest('a');
+            if (link && !e.target.closest('.sidebar')) {
+                var href = link.getAttribute('href');
+                if (href && href.includes('.aspx') && !href.startsWith('javascript')) {
+                    abortPendingRequests();
+                }
+            }
+        }, true); // Use capture phase to run before default navigation
 
         // Restore active state from sessionStorage on page load
         function restoreActiveState() {
@@ -818,6 +848,11 @@
         function pageLoad() {
             initializeSiteControls();
         }
+
+        // Abort pending requests on page unload (catches browser back/forward)
+        window.addEventListener('unload', function() {
+            abortPendingRequests();
+        });
     </script>
   
 </body>

@@ -63,9 +63,9 @@ namespace UDIL.Pages
             
             
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
-            string startDateTime = tsStartDateTime.Text.Trim();
-            string endDateTime = tsEndDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
+            string startDateTime = NormalizeDateTimeFormat(tsStartDateTime.Text.Trim());
+            string endDateTime = NormalizeDateTimeFormat(tsEndDateTime.Text.Trim());
             // Build load shedding slabs JSON from individual input fields
             string loadSheddingSlabs = BuildLoadSheddingSlabsJson();
 
@@ -205,29 +205,47 @@ namespace UDIL.Pages
             // Slab 1
             if (!string.IsNullOrEmpty(tsSlab1Time.Text.Trim()))
             {
-                slabs.Add(new { action_time = tsSlab1Time.Text.Trim(), relay_operate = ddlSlab1Relay.SelectedValue });
+                slabs.Add(new { action_time = NormalizeTimeWithSeconds(tsSlab1Time.Text.Trim()), relay_operate = ddlSlab1Relay.SelectedValue });
             }
             
             // Slab 2
             if (!string.IsNullOrEmpty(tsSlab2Time.Text.Trim()))
             {
-                slabs.Add(new { action_time = tsSlab2Time.Text.Trim(), relay_operate = ddlSlab2Relay.SelectedValue });
+                slabs.Add(new { action_time = NormalizeTimeWithSeconds(tsSlab2Time.Text.Trim()), relay_operate = ddlSlab2Relay.SelectedValue });
             }
             
             // Slab 3
             if (!string.IsNullOrEmpty(tsSlab3Time.Text.Trim()))
             {
-                slabs.Add(new { action_time = tsSlab3Time.Text.Trim(), relay_operate = ddlSlab3Relay.SelectedValue });
+                slabs.Add(new { action_time = NormalizeTimeWithSeconds(tsSlab3Time.Text.Trim()), relay_operate = ddlSlab3Relay.SelectedValue });
             }
             
             // Slab 4
             if (!string.IsNullOrEmpty(tsSlab4Time.Text.Trim()))
             {
-                slabs.Add(new { action_time = tsSlab4Time.Text.Trim(), relay_operate = ddlSlab4Relay.SelectedValue });
+                slabs.Add(new { action_time = NormalizeTimeWithSeconds(tsSlab4Time.Text.Trim()), relay_operate = ddlSlab4Relay.SelectedValue });
             }
             
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             return serializer.Serialize(slabs);
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -426,6 +444,7 @@ namespace UDIL.Pages
 
         private LoadSheddingScheduleResponse PostLoadSheddingSchedule(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/load_shedding_scheduling");
             request.Method = "POST";

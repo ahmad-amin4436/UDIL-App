@@ -168,6 +168,7 @@ namespace UDIL.Read
 
         private OppoReadResponse GetOppoData(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/on_demand_parameter_read");
             request.Method = "POST";

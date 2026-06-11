@@ -64,11 +64,11 @@ namespace UDIL.Pages
             
            
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = dmRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(dmRequestDateTime.Text.Trim());
             string communicationMode = dmCommunicationMode.SelectedValue;
             string bidirectionalDevice = dmBidirectionalDevice.SelectedValue;
             string communicationType = dmCommunicationType.SelectedValue;
-            string initialCommunicationTime = dmInitialCommunicationTime.Text.Trim();
+            string initialCommunicationTime = NormalizeTimeWithSeconds(dmInitialCommunicationTime.Text.Trim());
             string communicationInterval = dmCommunicationInterval.Text.Trim();
             string meterType = dmMeterType.SelectedValue;
             string phase = dmPhase.SelectedValue;
@@ -193,6 +193,24 @@ namespace UDIL.Pages
                 lblUpdateDeviceMetadataMessage.CssClass = "text-danger";
             }
         }
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
+        }
+
         private string NormalizeTimeWithSeconds(string timeValue)
         {
             if (string.IsNullOrEmpty(timeValue))
@@ -301,6 +319,7 @@ namespace UDIL.Pages
         }
         private TransactionStatusResponse GetTransactionStatus(string transactionId, string privateKey)
         {
+            SessionHelper.Unlock();
             int maxRetries = 3;
             int timeoutMs = GetTimeout() * 1000; // Convert seconds to milliseconds
 
@@ -366,6 +385,7 @@ namespace UDIL.Pages
         }
         private bool ReauthorizeWithFixedCredentials()
         {
+            SessionHelper.Unlock();
             try
             {
                 string baseUrl = GetBaseUrl();
@@ -532,6 +552,7 @@ namespace UDIL.Pages
         }
         private UpdateDeviceMetadataResponse PostUpdateDeviceMetadata(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_device_metadata");
             request.Method = "POST";

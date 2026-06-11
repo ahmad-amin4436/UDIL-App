@@ -134,6 +134,18 @@ namespace UDIL.Read
                     lblRespLschDateTime.Text = !string.IsNullOrEmpty(data.lsch_datetime) ? data.lsch_datetime : "N/A";
                     lblRespLschStartDateTime.Text = !string.IsNullOrEmpty(data.lsch_start_datetime) ? data.lsch_start_datetime : "N/A";
                     lblRespLschEndDateTime.Text = !string.IsNullOrEmpty(data.lsch_end_datetime) ? data.lsch_end_datetime : "N/A";
+
+                    // Bind slab data
+                    if (data.lsch_load_shedding_slabs != null && data.lsch_load_shedding_slabs.Count > 0)
+                    {
+                        gvSlabs.DataSource = data.lsch_load_shedding_slabs;
+                        gvSlabs.DataBind();
+                    }
+                    else
+                    {
+                        gvSlabs.DataSource = null;
+                        gvSlabs.DataBind();
+                    }
                 }
                 else
                 {
@@ -142,6 +154,9 @@ namespace UDIL.Read
                     lblRespLschDateTime.Text = "N/A";
                     lblRespLschStartDateTime.Text = "N/A";
                     lblRespLschEndDateTime.Text = "N/A";
+
+                    gvSlabs.DataSource = null;
+                    gvSlabs.DataBind();
                 }
 
                 pnlResponse.Visible = true;
@@ -168,6 +183,7 @@ namespace UDIL.Read
 
         private LschReadResponse GetLschData(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/on_demand_parameter_read");
             request.Method = "POST";
@@ -222,6 +238,13 @@ namespace UDIL.Read
             public string lsch_datetime { get; set; }
             public string lsch_start_datetime { get; set; }
             public string lsch_end_datetime { get; set; }
+            public List<LschSlab> lsch_load_shedding_slabs { get; set; }
+        }
+
+        public class LschSlab
+        {
+            public string action_time { get; set; }
+            public string relay_operate { get; set; }
         }
 
         private string ReadWebExceptionResponse(WebException ex)

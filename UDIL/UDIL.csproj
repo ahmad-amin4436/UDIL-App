@@ -591,6 +591,7 @@
     <Compile Include="Shared\CommunicationHistoryGridHelper.cs" />
     <Compile Include="Shared\MeterValidationGridBinder.cs" />
     <Compile Include="Shared\OperationPageSupport.cs" />
+    <Compile Include="Shared\SessionHelper.cs" />
     <Compile Include="Shared\SessionManager.cs" />
     <Compile Include="Shared\TrackerUiHelper.cs" />
     <Compile Include="Site.Master.cs">

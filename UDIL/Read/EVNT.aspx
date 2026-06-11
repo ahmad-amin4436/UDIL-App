@@ -47,15 +47,15 @@
                                     <asp:Label ID="lblAuxrStartDateTime" runat="server"
                                         AssociatedControlID="auxrStartDateTime" CssClass="form-label"
                                         Text="Start DateTime"></asp:Label>
-                                    <asp:TextBox ID="auxrStartDateTime" runat="server" CssClass="form-control"
-                                        placeholder="YYYY-MM-DD HH:mm:ss" Text="2026-05-13 09:00:00" />
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <asp:Label ID="lblAuxrEndDateTime" runat="server"
-                                        AssociatedControlID="auxrEndDateTime" CssClass="form-label"
-                                        Text="End DateTime"></asp:Label>
-                                    <asp:TextBox ID="auxrEndDateTime" runat="server" CssClass="form-control"
-                                        placeholder="YYYY-MM-DD HH:mm:ss" Text="2026-05-13 11:00:00" />
+                                     <asp:TextBox ID="auxrStartDateTime" runat="server" CssClass="form-control"
+                                         TextMode="DateTimeLocal" Text="2026-05-13T09:00:00" />
+                                 </div>
+                                 <div class="col-md-6 mb-3">
+                                     <asp:Label ID="lblAuxrEndDateTime" runat="server"
+                                         AssociatedControlID="auxrEndDateTime" CssClass="form-label"
+                                         Text="End DateTime"></asp:Label>
+                                     <asp:TextBox ID="auxrEndDateTime" runat="server" CssClass="form-control"
+                                         TextMode="DateTimeLocal" Text="2026-05-13T11:00:00" />
                                 </div>
                             </div>
                             <div class="position-relative d-inline-block">

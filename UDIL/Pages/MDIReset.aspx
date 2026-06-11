@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblMrRequestDateTime" runat="server" AssociatedControlID="mrRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="mrRequestDateTime" runat="server" Text="2023-04-26 11:20:00" CssClass="form-control" placeholder="2023-04-26 11:20:00" />
+                                <asp:TextBox ID="mrRequestDateTime" runat="server" Text="2023-04-26T11:20:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                         </div>
                         <div class="row">
@@ -37,7 +37,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblMrMdiResetTime" runat="server" AssociatedControlID="mrMdiResetTime" CssClass="form-label" Text="MDI Reset Time"></asp:Label>
-                                <asp:TextBox ID="mrMdiResetTime" runat="server" CssClass="form-control" placeholder="MDI Reset Time" Text="13:00:00" />
+                                <asp:TextBox ID="mrMdiResetTime" runat="server" CssClass="form-control" TextMode="Time" Text="13:00" />
                             </div>
                         </div>
                         <div class="position-relative d-inline-block">

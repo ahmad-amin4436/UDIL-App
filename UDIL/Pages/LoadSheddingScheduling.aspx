@@ -27,17 +27,17 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsRequestDateTime" runat="server" AssociatedControlID="tsRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-27 15:37:00" CssClass="form-control" placeholder="2025-12-27 15:37:00" />
+                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-27T15:37:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsStartDateTime" runat="server" AssociatedControlID="tsStartDateTime" CssClass="form-label" Text="Start DateTime"></asp:Label>
-                                <asp:TextBox ID="tsStartDateTime" runat="server" Text="2026-12-30 11:45:00" CssClass="form-control" placeholder="2026-12-30 11:45:00" />
+                                <asp:TextBox ID="tsStartDateTime" runat="server" Text="2026-12-30T11:45:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsEndDateTime" runat="server" AssociatedControlID="tsEndDateTime" CssClass="form-label" Text="End DateTime"></asp:Label>
-                                <asp:TextBox ID="tsEndDateTime" runat="server" Text="2026-12-30 13:00:00" CssClass="form-control" placeholder="2026-12-30 13:00:00" />
+                                <asp:TextBox ID="tsEndDateTime" runat="server" Text="2026-12-30T13:00:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                         </div>
                         <div class="row">
@@ -48,7 +48,7 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab1Time" runat="server" CssClass="form-label" Text="Slab 1 - Action Time"></asp:Label>
-                                        <asp:TextBox ID="tsSlab1Time" runat="server" CssClass="form-control" placeholder="12:00:00" Text="12:00:00" />
+                                        <asp:TextBox ID="tsSlab1Time" runat="server" CssClass="form-control" TextMode="Time" Text="12:00" />
                                     </div>
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab1Relay" runat="server" CssClass="form-label" Text="Slab 1 - Relay Operation (0=OFF, 1=ON)"></asp:Label>
@@ -63,7 +63,7 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab2Time" runat="server" CssClass="form-label" Text="Slab 2 - Action Time"></asp:Label>
-                                        <asp:TextBox ID="tsSlab2Time" runat="server" CssClass="form-control" placeholder="12:15:00" Text="12:15:00" />
+                                        <asp:TextBox ID="tsSlab2Time" runat="server" CssClass="form-control" TextMode="Time" Text="12:15" />
                                     </div>
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab2Relay" runat="server" CssClass="form-label" Text="Slab 2 - Relay Operation (0=OFF, 1=ON)"></asp:Label>
@@ -78,7 +78,7 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab3Time" runat="server" CssClass="form-label" Text="Slab 3 - Action Time"></asp:Label>
-                                        <asp:TextBox ID="tsSlab3Time" runat="server" CssClass="form-control" placeholder="12:30:00" Text="12:30:00" />
+                                        <asp:TextBox ID="tsSlab3Time" runat="server" CssClass="form-control" TextMode="Time" Text="12:30" />
                                     </div>
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab3Relay" runat="server" CssClass="form-label" Text="Slab 3 - Relay Operation (0=OFF, 1=ON)"></asp:Label>
@@ -93,7 +93,7 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab4Time" runat="server" CssClass="form-label" Text="Slab 4 - Action Time"></asp:Label>
-                                        <asp:TextBox ID="tsSlab4Time" runat="server" CssClass="form-control" placeholder="12:45:00" Text="12:45:00" />
+                                        <asp:TextBox ID="tsSlab4Time" runat="server" CssClass="form-control" TextMode="Time" Text="12:45" />
                                     </div>
                                     <div class="col-md-6">
                                         <asp:Label ID="lblSlab4Relay" runat="server" CssClass="form-label" Text="Slab 4 - Relay Operation (0=OFF, 1=ON)"></asp:Label>

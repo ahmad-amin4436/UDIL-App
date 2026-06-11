@@ -62,8 +62,8 @@ namespace UDIL.Pages
             
            
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
-            string activationDateTime = tsActivationDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
+            string activationDateTime = NormalizeDateTimeFormat(tsActivationDateTime.Text.Trim());
             string dataType = tsDataType.SelectedValue;
             string samplingInterval = tsSamplingInterval.Text.Trim();
             string samplingInitialTime = tsSamplingInitialTime.Text.Trim();
@@ -187,6 +187,24 @@ namespace UDIL.Pages
                 lblMeterDataSamplingMessage.Text = "Error: " + ex.Message;
                 lblMeterDataSamplingMessage.CssClass = "text-danger";
             }
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -385,6 +403,7 @@ namespace UDIL.Pages
 
         private MeterDataSamplingResponse PostMeterDataSampling(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/meter_data_sampling");
             request.Method = "POST";

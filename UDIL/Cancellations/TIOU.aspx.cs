@@ -265,6 +265,7 @@ namespace UDIL.Cancellations
 
         private IPPortUpdateResponse PostIPPortUpdate(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_ip_port");
             request.Method = "POST";
@@ -301,6 +302,7 @@ namespace UDIL.Cancellations
 
         private TIOUCancellationResponse PostTIOUCancellation(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             string url = $"{baseUrl}/parameterization_cancellation";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

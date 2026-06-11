@@ -64,9 +64,9 @@ namespace UDIL.Pages
             // Store MSN in session if it exists on this page (overwrites existing value)
            
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = tsRequestDateTime.Text.Trim();
-            string opticalPortOnDateTime = tsOpticalPortOnDateTime.Text.Trim();
-            string opticalPortOffDateTime = tsOpticalPortOffDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(tsRequestDateTime.Text.Trim());
+            string opticalPortOnDateTime = NormalizeDateTimeFormat(tsOpticalPortOnDateTime.Text.Trim());
+            string opticalPortOffDateTime = NormalizeDateTimeFormat(tsOpticalPortOffDateTime.Text.Trim());
 
             string privateKey = SessionManager.PrivateKey;
 
@@ -188,22 +188,24 @@ namespace UDIL.Pages
             }
         }
 
-        private string NormalizeTimeWithSeconds(string timeValue)
+        private string NormalizeDateTimeFormat(string dateTimeValue)
         {
-            if (string.IsNullOrEmpty(timeValue))
+            if (string.IsNullOrEmpty(dateTimeValue))
             {
-                return timeValue;
+                return dateTimeValue;
             }
 
-            string[] parts = timeValue.Split(':');
+            // Replace 'T' separator from datetime-local input with space for API format
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            // Ensure seconds are present
+            string[] parts = dateTimeValue.Split(':');
             if (parts.Length == 2)
             {
-                string hour = parts[0].PadLeft(2, '0');
-                string minute = parts[1].PadLeft(2, '0');
-                return $"{hour}:{minute}:00";
+                return $"{dateTimeValue}:00";
             }
 
-            return timeValue;
+            return dateTimeValue;
         }
 
         protected void timerTracker_Tick(object sender, EventArgs e)
@@ -383,6 +385,7 @@ namespace UDIL.Pages
 
         private ActivateOpticalPortResponse PostActivateOpticalPort(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/activate_meter_optical_port");
             request.Method = "POST";

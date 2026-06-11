@@ -62,7 +62,7 @@ namespace UDIL.Pages
             }
 
             string globalDeviceIdArray = $"[\"{globalDeviceId}\"]";
-            string requestDateTime = wsRequestDateTime.Text.Trim();
+            string requestDateTime = NormalizeDateTimeFormat(wsRequestDateTime.Text.Trim());
             
             // Build major alarms list from individual fields
             var majorAlarms = new List<Dictionary<string, string>>();
@@ -207,6 +207,24 @@ namespace UDIL.Pages
                 lblWakeSimNumberMessage.Text = "Error: " + ex.Message;
                 lblWakeSimNumberMessage.CssClass = "text-danger";
             }
+        }
+
+        private string NormalizeDateTimeFormat(string dateTimeValue)
+        {
+            if (string.IsNullOrEmpty(dateTimeValue))
+            {
+                return dateTimeValue;
+            }
+
+            dateTimeValue = dateTimeValue.Replace("T", " ");
+
+            string[] parts = dateTimeValue.Split(':');
+            if (parts.Length == 2)
+            {
+                return $"{dateTimeValue}:00";
+            }
+
+            return dateTimeValue;
         }
 
         private string NormalizeTimeWithSeconds(string timeValue)
@@ -453,6 +471,7 @@ namespace UDIL.Pages
 
         private UpdateMajorAlarmsResponse PostUpdateMajorAlarms(string transactionId, string privateKey, string postData)
         {
+            SessionHelper.Unlock();
             string baseUrl = GetBaseUrl();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(baseUrl + "/update_major_alarms");
             request.Method = "POST";

@@ -26,13 +26,13 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsRequestDateTime" runat="server" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-04 12:15:00" CssClass="form-control" placeholder="2025-12-04 12:15:00" />
+                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-04T12:15:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsActivationDateTime" runat="server" CssClass="form-label" Text="Activation DateTime"></asp:Label>
-                                <asp:TextBox ID="tsActivationDateTime" runat="server" Text="2026-01-30 11:55:00" CssClass="form-control" placeholder="2026-01-30 11:55:00" />
+                                <asp:TextBox ID="tsActivationDateTime" runat="server" Text="2026-01-30T11:55:00" CssClass="form-control" TextMode="DateTimeLocal" />
                             </div>
                         </div>
                         <div class="row">

@@ -27,17 +27,17 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsRequestDateTime" runat="server" AssociatedControlID="tsRequestDateTime" CssClass="form-label" Text="Request DateTime"></asp:Label>
-                                <asp:TextBox ID="tsRequestDateTime" runat="server" Text="2025-12-27 15:37:00" CssClass="form-control" placeholder="2025-12-27 15:37:00" />
+                                <asp:TextBox ID="tsRequestDateTime" runat="server" TextMode="DateTimeLocal" Text="2025-12-27T15:37:00" CssClass="form-control" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsOpticalPortOnDateTime" runat="server" AssociatedControlID="tsOpticalPortOnDateTime" CssClass="form-label" Text="Optical Port On DateTime"></asp:Label>
-                                <asp:TextBox ID="tsOpticalPortOnDateTime" runat="server" CssClass="form-control" placeholder="2026-04-21 16:17:00" Text="2026-04-21 16:17:00" />
+                                <asp:TextBox ID="tsOpticalPortOnDateTime" runat="server" TextMode="DateTimeLocal" CssClass="form-control" Text="2026-04-21T16:17:00" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <asp:Label ID="lblTsOpticalPortOffDateTime" runat="server" AssociatedControlID="tsOpticalPortOffDateTime" CssClass="form-label" Text="Optical Port Off DateTime"></asp:Label>
-                                <asp:TextBox ID="tsOpticalPortOffDateTime" runat="server" CssClass="form-control" placeholder="2050-04-21 16:17:00" Text="2050-04-21 16:17:00" />
+                                <asp:TextBox ID="tsOpticalPortOffDateTime" runat="server" TextMode="DateTimeLocal" CssClass="form-control" Text="2050-04-21T16:17:00" />
                             </div>
                         </div>
                         <div class="position-relative d-inline-block">
